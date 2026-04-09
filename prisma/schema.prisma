@@ -1,0 +1,161 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── AUTH ────────────────────────────────────────────────────────────────────
+
+model User {
+  id             String        @id @default(cuid())
+  email          String        @unique
+  name           String?
+  passwordHash   String
+  role           String        @default("OWNER") // SUPERADMIN | OWNER
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+// ─── ORGANIZATION (BARBERSHOP) ────────────────────────────────────────────────
+
+model Organization {
+  id           String        @id @default(cuid())
+  slug         String        @unique
+  name         String
+  description  String?
+  logoUrl      String?
+  coverImageUrl String?                         // Banner/portada de la página pública
+  primaryColor String        @default("#18181b")
+  accentColor  String        @default("#f59e0b")
+  phone        String?
+  address      String?
+  instagramUrl String?                          // Link a Instagram
+  tiktokUrl    String?                          // Link a TikTok
+  welcomeMessage String?                        // Mensaje de bienvenida en la página pública
+  bookingConfirmationMessage String?            // Mensaje post-reserva personalizado
+  minAdvanceHours Int        @default(0)        // Mínimo de horas de anticipación para reservar
+  maxDaysAhead    Int        @default(30)       // Máximo de días adelante para reservar
+  active       Boolean       @default(true)
+  plan         String        @default("FREE")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  users          User[]
+  staff          Staff[]
+  services       Service[]
+  appointments   Appointment[]
+  blockedSlots   BlockedSlot[]
+  vacationBlocks VacationBlock[]
+}
+
+// ─── STAFF (BARBERS) ─────────────────────────────────────────────────────────
+
+model Staff {
+  id                   String         @id @default(cuid())
+  name                 String
+  bio                  String?
+  avatarUrl            String?
+  order                Int            @default(0)   // Display order in booking page
+  maxAppointmentsPerDay Int?                        // null = unlimited
+  active               Boolean        @default(true)
+  organization         Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId       String
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+
+  schedules    WorkSchedule[]
+  appointments Appointment[]
+}
+
+// ─── WORK SCHEDULE ────────────────────────────────────────────────────────────
+
+model WorkSchedule {
+  id        String   @id @default(cuid())
+  staff     Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  staffId   String
+  dayOfWeek Int      // 0=Sunday 1=Monday ... 6=Saturday
+  startTime String   // "09:00"
+  endTime   String   // "18:00"
+  bufferMin Int      @default(0)   // Minutes blocked after each appointment
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([staffId, dayOfWeek])
+}
+
+// ─── SERVICE ─────────────────────────────────────────────────────────────────
+
+model Service {
+  id             String       @id @default(cuid())
+  name           String
+  description    String?
+  imageUrl       String?      // Photo of the result/style
+  durationMin    Int
+  price          Float
+  featured       Boolean      @default(false)  // Highlighted as popular/recommended
+  order          Int          @default(0)       // Display order
+  active         Boolean      @default(true)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  appointments Appointment[]
+}
+
+// ─── APPOINTMENT ─────────────────────────────────────────────────────────────
+
+model Appointment {
+  id             String       @id @default(cuid())
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  service        Service      @relation(fields: [serviceId], references: [id])
+  serviceId      String
+  staff          Staff        @relation(fields: [staffId], references: [id])
+  staffId        String
+  date           String
+  startTime      String
+  endTime        String
+  clientName     String
+  clientPhone    String
+  clientEmail    String?
+  notes          String?
+  status         String       @default("PENDING")
+  paid           Boolean      @default(false)   // Cobrado en caja
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+// ─── BLOCKED SLOTS ────────────────────────────────────────────────────────────
+
+model BlockedSlot {
+  id             String       @id @default(cuid())
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  staffId        String?
+  date           String
+  startTime      String
+  endTime        String
+  reason         String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+// ─── VACATION BLOCKS ──────────────────────────────────────────────────────────
+
+model VacationBlock {
+  id             String       @id @default(cuid())
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  staffId        String?      // null = all staff
+  startDate      String       // "2024-12-24"
+  endDate        String       // "2024-12-31"
+  reason         String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
