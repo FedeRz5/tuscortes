@@ -74,6 +74,10 @@ export function BookingWizard({ org }: { org: OrgWithData }) {
 
   async function handleBook(e: React.FormEvent) {
     e.preventDefault();
+    if (form.phone.trim().length < 6) {
+      setError("El teléfono debe tener al menos 6 caracteres.");
+      return;
+    }
     setLoading(true); setError("");
     const res = await fetch("/api/public/book", {
       method: "POST",

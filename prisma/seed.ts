@@ -1,10 +1,9 @@
-import path from "node:path";
+import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
-import { PrismaLibSql } from "@prisma/adapter-libsql";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { hash } from "bcryptjs";
 
-const dbPath = path.resolve(process.cwd(), "prisma", "dev.db");
-const adapter = new PrismaLibSql({ url: `file:${dbPath}` });
+const adapter = new PrismaPg({ connectionString: process.env.MIGRATE_URL ?? process.env.DATABASE_URL! });
 const prisma = new PrismaClient({ adapter });
 
 async function main() {

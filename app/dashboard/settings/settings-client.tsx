@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { CheckCircle, ExternalLink } from "lucide-react";
+import { ImageUpload } from "@/components/ui/image-upload";
 import type { Organization } from "@prisma/client";
 
 export function SettingsClient({ org }: { org: Organization }) {
@@ -104,16 +105,21 @@ export function SettingsClient({ org }: { org: Organization }) {
             <CardDescription>Lo que ven tus clientes al entrar a tu link</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="space-y-1.5">
-              <Label>URL del logo</Label>
-              <Input value={form.logoUrl} onChange={(e) => setForm({ ...form, logoUrl: e.target.value })} placeholder="https://..." />
-            </div>
-            <div className="space-y-1.5">
-              <Label>URL de imagen de portada (banner)</Label>
-              <Input value={form.coverImageUrl} onChange={(e) => setForm({ ...form, coverImageUrl: e.target.value })} placeholder="https://..." />
-              {form.coverImageUrl && (
-                <img src={form.coverImageUrl} alt="Preview portada" className="mt-2 h-28 w-full rounded-lg object-cover border border-zinc-200" />
-              )}
+            <div className="flex gap-6">
+              <ImageUpload
+                label="Logo"
+                value={form.logoUrl || null}
+                onChange={(url) => setForm({ ...form, logoUrl: url ?? "" })}
+                aspect="square"
+              />
+              <div className="flex-1">
+                <ImageUpload
+                  label="Imagen de portada (banner)"
+                  value={form.coverImageUrl || null}
+                  onChange={(url) => setForm({ ...form, coverImageUrl: url ?? "" })}
+                  aspect="wide"
+                />
+              </div>
             </div>
             <div className="space-y-1.5">
               <Label>Mensaje de bienvenida</Label>

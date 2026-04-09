@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { Plus, Pencil, Trash2, Clock, ChevronUp, ChevronDown, Star } from "lucide-react";
+import { ImageUpload } from "@/components/ui/image-upload";
 import type { Service } from "@prisma/client";
 
 const EMPTY_FORM = {
@@ -138,13 +139,12 @@ export function ServicesClient({ services: initial, orgId }: { services: Service
                 <Label>Descripción (opcional)</Label>
                 <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={2} />
               </div>
-              <div className="space-y-1.5">
-                <Label>URL de imagen del resultado (opcional)</Label>
-                <Input value={form.imageUrl} onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} placeholder="https://..." />
-                {form.imageUrl && (
-                  <img src={form.imageUrl} alt="Preview" className="mt-1 h-24 w-full rounded-lg object-cover border border-zinc-200" />
-                )}
-              </div>
+              <ImageUpload
+                label="Imagen del servicio (opcional)"
+                value={form.imageUrl || null}
+                onChange={(url) => setForm({ ...form, imageUrl: url ?? "" })}
+                aspect="wide"
+              />
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <Label>Duración (min)</Label>

@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { Plus, Pencil, Trash2, User, ChevronUp, ChevronDown } from "lucide-react";
+import { ImageUpload } from "@/components/ui/image-upload";
 import type { Staff, WorkSchedule } from "@prisma/client";
 
 type StaffWithSchedules = Staff & { schedules: WorkSchedule[] };
@@ -132,13 +133,12 @@ export function StaffClient({ staff: initial, orgId }: { staff: StaffWithSchedul
                 <Label>Bio (opcional)</Label>
                 <Textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder="Breve descripción..." rows={2} />
               </div>
-              <div className="space-y-1.5">
-                <Label>URL de foto (opcional)</Label>
-                <Input value={form.avatarUrl} onChange={(e) => setForm({ ...form, avatarUrl: e.target.value })} placeholder="https://..." />
-                {form.avatarUrl && (
-                  <img src={form.avatarUrl} alt="Preview" className="mt-1 h-16 w-16 rounded-full object-cover border border-zinc-200" />
-                )}
-              </div>
+              <ImageUpload
+                label="Foto (opcional)"
+                value={form.avatarUrl || null}
+                onChange={(url) => setForm({ ...form, avatarUrl: url ?? "" })}
+                aspect="square"
+              />
               <div className="space-y-1.5">
                 <Label>Máximo de turnos por día (opcional)</Label>
                 <Input

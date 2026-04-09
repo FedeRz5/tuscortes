@@ -74,9 +74,9 @@ export const BookingSchema = z.object({
   serviceId: z.string().cuid(),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   startTime: z.string().regex(/^\d{2}:\d{2}$/),
-  clientName: z.string().min(1).max(100),
-  clientPhone: z.string().min(6).max(30),
-  clientEmail: z.string().email().optional().nullable().or(z.literal("")),
+  clientName: z.string().min(1, "El nombre es requerido").max(100),
+  clientPhone: z.string().min(6, "El teléfono debe tener al menos 6 caracteres").max(30, "El teléfono es demasiado largo"),
+  clientEmail: z.string().email("Email inválido").optional().nullable().or(z.literal("")),
   notes: z.string().max(500).optional().nullable(),
 });
 
