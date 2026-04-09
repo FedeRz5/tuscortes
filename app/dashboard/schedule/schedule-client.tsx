@@ -127,41 +127,44 @@ export function ScheduleClient({ staff }: { staff: StaffWithSchedules[] }) {
                 return (
                   <div
                     key={day}
-                    className={`flex items-center gap-4 rounded-lg border p-4 transition-colors ${
+                    className={`rounded-lg border p-3 transition-colors ${
                       enabled ? "border-zinc-200 bg-white" : "border-zinc-100 bg-zinc-50"
                     }`}
                   >
-                    <Switch
-                      checked={enabled}
-                      onCheckedChange={() => handleToggleDay(selectedStaff.id, day)}
-                      disabled={saving === day}
-                    />
-                    <span className={`w-24 text-sm font-medium shrink-0 ${enabled ? "text-zinc-900" : "text-zinc-400"}`}>
-                      {DAY_NAMES[day]}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <Switch
+                        checked={enabled}
+                        onCheckedChange={() => handleToggleDay(selectedStaff.id, day)}
+                        disabled={saving === day}
+                      />
+                      <span className={`flex-1 text-sm font-medium ${enabled ? "text-zinc-900" : "text-zinc-400"}`}>
+                        {DAY_NAMES[day]}
+                      </span>
+                      {!enabled && <span className="text-xs text-zinc-400 italic">No trabaja</span>}
+                    </div>
 
-                    {enabled && schedule ? (
-                      <div className="flex items-center gap-4 flex-wrap">
-                        <div className="flex items-center gap-2">
+                    {enabled && schedule && (
+                      <div className="mt-3 grid grid-cols-3 gap-2">
+                        <div className="space-y-1">
                           <span className="text-xs text-zinc-500">Desde</span>
                           <TimeSelect
                             value={schedule.startTime}
                             onChange={(v) => upsertSchedule(selectedStaff.id, day, { startTime: v })}
                           />
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="space-y-1">
                           <span className="text-xs text-zinc-500">Hasta</span>
                           <TimeSelect
                             value={schedule.endTime}
                             onChange={(v) => upsertSchedule(selectedStaff.id, day, { endTime: v })}
                           />
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="space-y-1">
                           <span className="text-xs text-zinc-500">Buffer</span>
                           <select
                             value={schedule.bufferMin}
                             onChange={(e) => upsertSchedule(selectedStaff.id, day, { bufferMin: parseInt(e.target.value) })}
-                            className="h-8 rounded-md border border-zinc-200 bg-white px-2 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900"
+                            className="h-8 w-full rounded-md border border-zinc-200 bg-white px-2 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900"
                           >
                             {BUFFER_OPTIONS.map((m) => (
                               <option key={m} value={m}>{m === 0 ? "Sin buffer" : `+${m} min`}</option>
@@ -169,8 +172,6 @@ export function ScheduleClient({ staff }: { staff: StaffWithSchedules[] }) {
                           </select>
                         </div>
                       </div>
-                    ) : (
-                      !enabled && <span className="text-xs text-zinc-400 italic">No trabaja</span>
                     )}
                   </div>
                 );

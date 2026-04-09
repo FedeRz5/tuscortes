@@ -77,13 +77,13 @@ export function RevenueClient({ stats, appointments: initial, canExport }: Props
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-zinc-900">Ingresos</h1>
           <p className="text-zinc-500 text-sm mt-1">Control de caja y facturación</p>
         </div>
         {canExport && (
-          <Button variant="outline" onClick={handleExport} disabled={exporting}>
+          <Button variant="outline" onClick={handleExport} disabled={exporting} className="w-full sm:w-auto">
             <Download className="h-4 w-4 mr-2" />
             {exporting ? "Exportando..." : "Exportar CSV"}
           </Button>
@@ -166,49 +166,47 @@ export function RevenueClient({ stats, appointments: initial, canExport }: Props
                 <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">
                   {formatDate(date)}
                 </p>
-                <Card>
-                  <CardContent className="p-0">
-                    <table className="w-full text-sm">
-                      <tbody className="divide-y divide-zinc-100">
-                        {apts.map((apt) => (
-                          <tr key={apt.id} className="flex items-center gap-4 px-4 py-3 flex-wrap">
-                            <td className="w-14 shrink-0 font-mono text-zinc-700">{apt.startTime}</td>
-                            <td className="flex-1 min-w-0">
+                <div className="space-y-2">
+                  {apts.map((apt) => (
+                    <Card key={apt.id}>
+                      <CardContent className="p-3 sm:p-4">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex items-start gap-3 min-w-0">
+                            <span className="text-sm font-mono text-zinc-500 shrink-0 pt-0.5">{apt.startTime}</span>
+                            <div className="min-w-0">
                               <p className="font-medium text-zinc-900 truncate">{apt.clientName}</p>
-                              <p className="text-zinc-400 text-xs">{apt.service.name} · {apt.staff.name}</p>
-                            </td>
-                            <td className="shrink-0 font-semibold text-zinc-900">
-                              {formatPrice(apt.service.price)}
-                            </td>
-                            <td className="shrink-0">
-                              <Badge variant={apt.status === "CANCELLED" ? "danger" : apt.status === "COMPLETED" ? "success" : "default"}>
-                                {apt.status === "CANCELLED" ? "Cancelado" : apt.status === "COMPLETED" ? "Completado" : apt.status === "CONFIRMED" ? "Confirmado" : "Pendiente"}
-                              </Badge>
-                            </td>
-                            <td className="shrink-0">
-                              {apt.status !== "CANCELLED" && (
-                                <button
-                                  onClick={() => togglePaid(apt.id, !apt.paid)}
-                                  className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full transition-colors ${
-                                    apt.paid
-                                      ? "bg-green-100 text-green-700 hover:bg-green-200"
-                                      : "bg-zinc-100 text-zinc-500 hover:bg-zinc-200"
-                                  }`}
-                                >
-                                  {apt.paid ? (
-                                    <><CheckCircle2 className="h-3.5 w-3.5" /> Cobrado</>
-                                  ) : (
-                                    <><Circle className="h-3.5 w-3.5" /> Marcar cobrado</>
-                                  )}
-                                </button>
+                              <p className="text-zinc-400 text-xs mt-0.5">{apt.service.name} · {apt.staff.name}</p>
+                            </div>
+                          </div>
+                          <div className="flex flex-col items-end gap-1.5 shrink-0">
+                            <span className="font-semibold text-zinc-900 text-sm">{formatPrice(apt.service.price)}</span>
+                            <Badge variant={apt.status === "CANCELLED" ? "danger" : apt.status === "COMPLETED" ? "success" : "default"}>
+                              {apt.status === "CANCELLED" ? "Cancelado" : apt.status === "COMPLETED" ? "Completado" : apt.status === "CONFIRMED" ? "Confirmado" : "Pendiente"}
+                            </Badge>
+                          </div>
+                        </div>
+                        {apt.status !== "CANCELLED" && (
+                          <div className="mt-2 pt-2 border-t border-zinc-50">
+                            <button
+                              onClick={() => togglePaid(apt.id, !apt.paid)}
+                              className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full transition-colors ${
+                                apt.paid
+                                  ? "bg-green-100 text-green-700 hover:bg-green-200"
+                                  : "bg-zinc-100 text-zinc-500 hover:bg-zinc-200"
+                              }`}
+                            >
+                              {apt.paid ? (
+                                <><CheckCircle2 className="h-3.5 w-3.5" /> Cobrado</>
+                              ) : (
+                                <><Circle className="h-3.5 w-3.5" /> Marcar cobrado</>
                               )}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </CardContent>
-                </Card>
+                            </button>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
               </div>
             ))}
           </div>

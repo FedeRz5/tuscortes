@@ -261,16 +261,16 @@ export default function HomePage() {
                     ))}
                   </ul>
 
-                  <Link
-                    href={plan.href}
-                    className={`block w-full text-center rounded-xl px-6 py-3 text-sm font-bold transition-all ${
+                  <button
+                    disabled
+                    className={`block w-full text-center rounded-xl px-6 py-3 text-sm font-bold cursor-not-allowed opacity-50 ${
                       plan.popular
-                        ? "bg-white text-indigo-600 hover:bg-indigo-50"
-                        : "bg-indigo-600 text-white hover:bg-indigo-500"
+                        ? "bg-white text-indigo-600"
+                        : "bg-indigo-600 text-white"
                     }`}
                   >
-                    {plan.cta}
-                  </Link>
+                    Próximamente
+                  </button>
                 </div>
               </StaggerItem>
             ))}

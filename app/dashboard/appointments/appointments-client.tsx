@@ -46,13 +46,13 @@ export function AppointmentsClient({ appointments: initial }: { appointments: Ap
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-zinc-900">Turnos</h1>
           <p className="text-zinc-500 text-sm mt-1">Próximos turnos agendados</p>
         </div>
         <Select value={filterStatus} onValueChange={setFilterStatus}>
-          <SelectTrigger className="w-44">
+          <SelectTrigger className="w-full sm:w-44">
             <SelectValue placeholder="Filtrar por estado" />
           </SelectTrigger>
           <SelectContent>
@@ -80,15 +80,15 @@ export function AppointmentsClient({ appointments: initial }: { appointments: Ap
               {apts.map((apt) => (
                 <Card key={apt.id}>
                   <CardContent className="p-4">
-                    <div className="flex items-center justify-between gap-4 flex-wrap">
-                      <div className="flex items-center gap-4">
-                        <div className="text-center w-16 shrink-0">
-                          <p className="text-xl font-bold text-zinc-900">{apt.startTime}</p>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">
+                      <div className="flex items-start gap-3">
+                        <div className="text-center w-14 shrink-0 pt-0.5">
+                          <p className="text-lg font-bold text-zinc-900 leading-tight">{apt.startTime}</p>
                           <p className="text-xs text-zinc-400">{apt.endTime}</p>
                         </div>
-                        <div>
+                        <div className="min-w-0">
                           <p className="font-semibold text-zinc-900">{apt.clientName}</p>
-                          <div className="flex items-center gap-3 mt-1 text-sm text-zinc-500 flex-wrap">
+                          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-sm text-zinc-500">
                             {apt.clientPhone && (
                               <span className="flex items-center gap-1">
                                 <Phone className="h-3.5 w-3.5" /> {apt.clientPhone}
@@ -109,7 +109,7 @@ export function AppointmentsClient({ appointments: initial }: { appointments: Ap
                           )}
                         </div>
                       </div>
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2 shrink-0 ml-17 sm:ml-0">
                         <Badge variant={STATUS_BADGE[apt.status] ?? "default"}>
                           {STATUS_LABELS[apt.status]}
                         </Badge>
@@ -117,7 +117,7 @@ export function AppointmentsClient({ appointments: initial }: { appointments: Ap
                           value={apt.status}
                           onValueChange={(v) => updateStatus(apt.id, v)}
                         >
-                          <SelectTrigger className="h-8 w-36 text-xs">
+                          <SelectTrigger className="h-8 w-32 text-xs">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>

@@ -46,7 +46,7 @@ export function SettingsClient({ org }: { org: Organization }) {
   const bookingUrl = `/b/${org.slug}`;
 
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="space-y-6 max-w-2xl w-full">
       <div>
         <h1 className="text-2xl font-bold text-zinc-900">Configuración</h1>
         <p className="text-zinc-500 text-sm mt-1">Personalizá tu barbería</p>
@@ -105,7 +105,7 @@ export function SettingsClient({ org }: { org: Organization }) {
             <CardDescription>Lo que ven tus clientes al entrar a tu link</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex gap-6">
+            <div className="flex flex-col sm:flex-row gap-4">
               <ImageUpload
                 label="Logo"
                 value={form.logoUrl || null}
