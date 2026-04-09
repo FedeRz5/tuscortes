@@ -23,11 +23,11 @@ export default async function BookingPage({ params }: Props) {
   const org = await prisma.organization.findUnique({
     where: { slug, active: true },
     include: {
-      services: { where: { active: true }, orderBy: { name: "asc" } },
+      services: { where: { active: true }, orderBy: [{ featured: "desc" }, { order: "asc" }] },
       staff: {
         where: { active: true },
         include: { schedules: { where: { enabled: true } } },
-        orderBy: { name: "asc" },
+        orderBy: { order: "asc" },
       },
     },
   });
