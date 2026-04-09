@@ -15,7 +15,7 @@ export interface PlanLimits {
 export const PLAN_LIMITS: Record<Plan, PlanLimits> = {
   FREE: {
     maxStaff: 1,
-    maxAppointmentsPerMonth: 80,
+    maxAppointmentsPerMonth: 40,
     features: {
       customization: false,
       vacationBlocks: false,
@@ -49,15 +49,15 @@ export const PLAN_LIMITS: Record<Plan, PlanLimits> = {
 };
 
 export const PLAN_LABELS: Record<Plan, string> = {
-  FREE: "Free",
+  FREE: "Starter",
   PRO: "Pro",
   PREMIUM: "Premium",
 };
 
 export const PLAN_PRICES: Record<Plan, string> = {
-  FREE: "Gratis",
-  PRO: "USD 15/mes",
-  PREMIUM: "USD 35/mes",
+  FREE: "$12.500/mes",
+  PRO: "$20.999/mes",
+  PREMIUM: "$32.900/mes",
 };
 
 export function getLimits(plan: string): PlanLimits {

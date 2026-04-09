@@ -34,8 +34,8 @@ function CardSetup({ active }: { active: boolean }) {
   }, [active]);
 
   return (
-    <div className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4 shadow-xl space-y-2.5">
-      <p className="text-zinc-500 text-[10px] font-semibold uppercase tracking-wider mb-1">
+    <div className="rounded-2xl bg-white border border-gray-100 p-4 shadow-xl space-y-2.5">
+      <p className="text-gray-400 text-[10px] font-semibold uppercase tracking-wider mb-1">
         Configurando tu barbería
       </p>
       {[
@@ -45,7 +45,7 @@ function CardSetup({ active }: { active: boolean }) {
       ].map(({ label, value }, i) => (
         <motion.div
           key={`${key}-${label}`}
-          className="flex items-start gap-2.5 rounded-xl bg-zinc-800 px-3 py-2.5"
+          className="flex items-start gap-2.5 rounded-xl bg-gray-50 border border-gray-200 px-3 py-2.5"
           initial={{ opacity: 0, x: 16 }}
           animate={active ? { opacity: 1, x: 0 } : { opacity: 0, x: 16 }}
           transition={{ delay: i * 0.18, duration: 0.4 }}
@@ -54,8 +54,8 @@ function CardSetup({ active }: { active: boolean }) {
             <Check className="h-2.5 w-2.5 text-white" strokeWidth={3} />
           </div>
           <div>
-            <p className="text-[10px] text-zinc-500 leading-none mb-0.5">{label}</p>
-            <p className="text-xs text-zinc-200 font-medium">{value}</p>
+            <p className="text-[10px] text-gray-400 leading-none mb-0.5">{label}</p>
+            <p className="text-xs text-gray-800 font-medium">{value}</p>
           </div>
         </motion.div>
       ))}
@@ -98,21 +98,21 @@ function CardShare({ active }: { active: boolean }) {
   }, [cycle, active]);
 
   return (
-    <div className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4 shadow-xl space-y-3">
-      <p className="text-zinc-500 text-[10px] font-semibold uppercase tracking-wider">
+    <div className="rounded-2xl bg-white border border-gray-100 p-4 shadow-xl space-y-3">
+      <p className="text-gray-400 text-[10px] font-semibold uppercase tracking-wider">
         Tu link está listo ✦
       </p>
 
       {/* Browser bar */}
-      <div className="rounded-xl bg-zinc-950 border border-zinc-800 px-3 py-3">
+      <div className="rounded-xl bg-gray-50 border border-gray-200 px-3 py-3">
         <div className="flex items-center gap-1.5 mb-2.5">
           <div className="flex gap-1">
             {["bg-red-500/60", "bg-yellow-500/60", "bg-green-500/60"].map(c => (
               <div key={c} className={`h-1.5 w-1.5 rounded-full ${c}`} />
             ))}
           </div>
-          <div className="flex-1 h-5 rounded-md bg-zinc-800 flex items-center px-2 overflow-hidden">
-            <span className="text-[9px] font-mono text-zinc-300 truncate leading-none">
+          <div className="flex-1 h-5 rounded-md bg-gray-100 flex items-center px-2 overflow-hidden">
+            <span className="text-[9px] font-mono text-gray-700 truncate leading-none">
               {url}
               <motion.span
                 className="inline-block w-[1px] h-[9px] bg-indigo-400 ml-[1px] align-middle"
@@ -205,19 +205,19 @@ function CardBook({ active }: { active: boolean }) {
   }, [allTyped, active]);
 
   return (
-    <div className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4 shadow-xl">
+    <div className="rounded-2xl bg-white border border-gray-100 p-4 shadow-xl">
       <AnimatePresence mode="wait">
         {!confirmed ? (
           <motion.div key={`form-${cycle}`} className="space-y-2.5" exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.2 }}>
-            <p className="text-zinc-500 text-[10px] font-semibold uppercase tracking-wider">Tus datos</p>
+            <p className="text-gray-400 text-[10px] font-semibold uppercase tracking-wider">Tus datos</p>
             <div className="rounded-xl bg-indigo-500/10 border border-indigo-500/20 px-3 py-2">
               <p className="text-[9px] text-indigo-400 font-medium">Carlos · Corte · Lun 10:00hs</p>
             </div>
             {/* Nombre */}
-            <div className="rounded-xl bg-zinc-800 border border-zinc-700 px-3 py-2">
-              <p className="text-[9px] text-zinc-500 mb-0.5">Nombre</p>
+            <div className="rounded-xl bg-gray-50 border border-gray-200 px-3 py-2">
+              <p className="text-[9px] text-gray-400 mb-0.5">Nombre</p>
               <div className="flex items-center h-4">
-                <span className="text-xs text-zinc-200 font-medium">{nombre}</span>
+                <span className="text-xs text-gray-800 font-medium">{nombre}</span>
                 {nombre !== "Martín García" && nombre.length > 0 && (
                   <motion.span
                     className="inline-block w-[1px] h-[11px] bg-indigo-400 ml-[1px]"
@@ -228,10 +228,10 @@ function CardBook({ active }: { active: boolean }) {
               </div>
             </div>
             {/* Teléfono */}
-            <div className="rounded-xl bg-zinc-800 border border-zinc-700 px-3 py-2">
-              <p className="text-[9px] text-zinc-500 mb-0.5">Teléfono</p>
+            <div className="rounded-xl bg-gray-50 border border-gray-200 px-3 py-2">
+              <p className="text-[9px] text-gray-400 mb-0.5">Teléfono</p>
               <div className="flex items-center h-4">
-                <span className="text-xs text-zinc-200 font-medium">{telefono}</span>
+                <span className="text-xs text-gray-800 font-medium">{telefono}</span>
                 {telefono.length > 0 && telefono !== "11 4523-9801" && (
                   <motion.span
                     className="inline-block w-[1px] h-[11px] bg-indigo-400 ml-[1px]"
@@ -243,7 +243,7 @@ function CardBook({ active }: { active: boolean }) {
             </div>
             <motion.div
               className={`w-full text-[11px] font-bold rounded-xl py-2.5 text-center transition-colors ${
-                allTyped ? "bg-orange-500 text-white" : "bg-zinc-700 text-zinc-500"
+                allTyped ? "bg-orange-500 text-white" : "bg-gray-200 text-gray-400"
               }`}
               animate={allTyped ? { scale: [1, 1.03, 1] } : {}}
               transition={{ duration: 0.35 }}
@@ -321,19 +321,19 @@ function Step({ step, index }: { step: typeof STEPS[0]; index: number }) {
   return (
     <div
       ref={ref}
-      className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16 py-16 lg:py-20 border-b border-white/5 last:border-0"
+      className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16 py-16 lg:py-20 border-b border-gray-100 last:border-0"
     >
       {/* Text */}
       <motion.div
         className="flex-1 space-y-4"
-        animate={{ opacity: inView ? 1 : 0.35, x: inView ? 0 : -10 }}
+        animate={{ opacity: inView ? 1 : 0.4, x: inView ? 0 : -10 }}
         transition={{ duration: 0.5 }}
       >
         <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-500/10 border border-indigo-500/20">
           <span className="text-lg font-black text-indigo-400">{step.number}</span>
         </div>
         <h3 className="text-2xl sm:text-3xl font-black">{step.title}</h3>
-        <p className="text-zinc-400 leading-relaxed max-w-sm">{step.desc}</p>
+        <p className="text-gray-500 leading-relaxed max-w-sm">{step.desc}</p>
         {/* Progress dots */}
         <div className="flex gap-2 pt-1">
           {STEPS.map((_, j) => (
@@ -367,7 +367,7 @@ function Step({ step, index }: { step: typeof STEPS[0]; index: number }) {
 
 export function StickySteps() {
   return (
-    <section id="como-funciona" className="border-t border-white/5">
+    <section id="como-funciona" className="border-t border-gray-100">
       <div className="max-w-4xl mx-auto px-6">
         {/* Header */}
         <div className="py-20 text-center">
@@ -381,7 +381,7 @@ export function StickySteps() {
             ¿Cómo funciona?
           </motion.h2>
           <motion.p
-            className="text-zinc-500 mt-3 text-base"
+            className="text-gray-400 mt-3 text-base"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}

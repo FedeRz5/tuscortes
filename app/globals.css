@@ -7,6 +7,27 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes hero-up {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero-1 {
+  animation: hero-up 0.7s cubic-bezier(0.25, 0.1, 0.25, 1) 0.05s both;
+}
+.hero-2 {
+  animation: hero-up 0.7s cubic-bezier(0.25, 0.1, 0.25, 1) 0.2s both;
+}
+.hero-3 {
+  animation: hero-up 0.6s cubic-bezier(0.25, 0.1, 0.25, 1) 0.35s both;
+}
+.hero-4 {
+  animation: hero-up 0.6s cubic-bezier(0.25, 0.1, 0.25, 1) 0.48s both;
+}
+.hero-5 {
+  animation: hero-up 0.5s cubic-bezier(0.25, 0.1, 0.25, 1) 0.6s both;
+}
+
 @keyframes zoom-in-95 {
   from { opacity: 0; transform: scale(0.95); }
   to   { opacity: 1; transform: scale(1); }
@@ -148,8 +169,8 @@
 /* ─── Base ────────────────────────────────────────────────────────────────── */
 
 body {
-  background: #09090b;
-  color: #fafafa;
+  background: #ffffff;
+  color: #111827;
   font-family: system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
