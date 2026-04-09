@@ -74,7 +74,7 @@ function CardSetup({ active }: { active: boolean }) {
 
 // ─── Card 02: Share ───────────────────────────────────────────────────────────
 
-const URL_TEXT = "tuscortes.com/mi-barberia";
+const URL_TEXT = "tuagenda.com/mi-barberia";
 // tipeo: 400 + 25*45 = 1525ms · copiado: +600ms · pausa: +2000ms
 const SHARE_LOOP = 400 + URL_TEXT.length * 45 + 600 + 2000;
 
@@ -303,7 +303,7 @@ const STEPS = [
   {
     number: "02",
     title: "Compartís tu link",
-    desc: "Pegalo en tu bio de Instagram o envialo por WhatsApp. tuscortes.com/tu-barberia",
+    desc: "Pegalo en tu bio de Instagram o envialo por WhatsApp. tuagenda.com/tu-barberia",
     Card: CardShare,
   },
   {

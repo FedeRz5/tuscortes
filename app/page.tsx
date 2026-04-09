@@ -11,8 +11,8 @@ import { HeroBg } from "@/components/landing/hero-bg";
 
 // ─── MercadoPago ─────────────────────────────────────────────────────────────
 const MP_LINKS = {
-  PRO: "https://mpago.la/pro-tuscortes",
-  PREMIUM: "https://mpago.la/premium-tuscortes",
+  PRO: "https://mpago.la/pro-tuagenda",
+  PREMIUM: "https://mpago.la/premium-tuagenda",
 };
 
 // ─── Planes ───────────────────────────────────────────────────────────────────
@@ -96,9 +96,9 @@ export default function HomePage() {
               whileHover={{ scale: 1.1, rotate: -5 }}
               transition={{ type: "spring", stiffness: 400 }}
             >
-              <span className="text-white font-black text-sm">TC</span>
+              <span className="text-white font-black text-sm">TA</span>
             </motion.div>
-            <span className="font-bold text-lg tracking-tight">TusCortes</span>
+            <span className="font-bold text-lg tracking-tight">Tu Agenda</span>
           </div>
           <div className="hidden sm:flex items-center gap-6 text-sm text-zinc-400">
             <motion.a href="#como-funciona" className="hover:text-white transition-colors" whileHover={{ y: -1 }}>Cómo funciona</motion.a>
@@ -307,11 +307,11 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">
             <div className="h-7 w-7 rounded-lg bg-indigo-500 flex items-center justify-center">
-              <span className="text-white font-black text-xs">TC</span>
+              <span className="text-white font-black text-xs">TA</span>
             </div>
-            <span className="font-bold text-sm">TusCortes</span>
+            <span className="font-bold text-sm">Tu Agenda</span>
           </div>
-          <p className="text-zinc-600 text-sm">© {new Date().getFullYear()} TusCortes. Todos los derechos reservados.</p>
+          <p className="text-zinc-600 text-sm">© {new Date().getFullYear()} Tu Agenda. Todos los derechos reservados.</p>
           <Link href="/login" className="text-sm text-zinc-500 hover:text-white transition-colors">
             Acceder al panel →
           </Link>

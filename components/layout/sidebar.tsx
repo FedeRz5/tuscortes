@@ -49,7 +49,7 @@ export function Sidebar({ role, orgName }: SidebarProps) {
           <p className="text-xs text-zinc-400 uppercase tracking-wider font-medium">
             {role === "SUPERADMIN" ? "Super Admin" : "Panel"}
           </p>
-          <p className="font-semibold text-zinc-900 truncate">{orgName ?? "TusCortes"}</p>
+          <p className="font-semibold text-zinc-900 truncate">{orgName ?? "Tu Agenda"}</p>
         </div>
       </div>
 

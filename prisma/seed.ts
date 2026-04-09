@@ -13,10 +13,10 @@ async function main() {
   // ─── Superadmin ───────────────────────────────────────────────────────────
   const superadminHash = await hash("admin123", 12);
   const superadmin = await prisma.user.upsert({
-    where: { email: "admin@tuscortes.com" },
+    where: { email: "admin@tuagenda.com" },
     update: {},
     create: {
-      email: "admin@tuscortes.com",
+      email: "admin@tuagenda.com",
       name: "Super Admin",
       passwordHash: superadminHash,
       role: "SUPERADMIN",
@@ -108,7 +108,7 @@ async function main() {
 
   console.log("\n🎉 Seed complete!");
   console.log("\n📋 Credentials:");
-  console.log("  Superadmin → admin@tuscortes.com / admin123");
+  console.log("  Superadmin → admin@tuagenda.com / admin123");
   console.log("  Barbershop owner → owner@barberia.com / demo123");
   console.log("  Public booking page → /b/barberia-demo");
 }
