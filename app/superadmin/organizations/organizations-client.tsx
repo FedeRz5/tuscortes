@@ -8,7 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
-import { Plus, ExternalLink, Users, Calendar } from "lucide-react";
+import { Plus, ExternalLink, Users, Calendar, Trash2 } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { Organization } from "@prisma/client";
 
 type OrgWithCount = Organization & {
@@ -71,6 +72,22 @@ export function OrganizationsClient({ organizations: initial }: { organizations:
     });
     const data = await res.json();
     setOrgs((prev) => prev.map((o) => (o.id === org.id ? { ...o, ...data } : o)));
+  }
+
+  async function handleChangePlan(org: OrgWithCount, plan: string) {
+    const res = await fetch(`/api/organizations/${org.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ plan }),
+    });
+    const data = await res.json();
+    setOrgs((prev) => prev.map((o) => (o.id === org.id ? { ...o, ...data } : o)));
+  }
+
+  async function handleDelete(org: OrgWithCount) {
+    if (!confirm(`¿Eliminar "${org.name}" y todos sus datos? Esta acción no se puede deshacer.`)) return;
+    await fetch(`/api/organizations/${org.id}`, { method: "DELETE" });
+    setOrgs((prev) => prev.filter((o) => o.id !== org.id));
   }
 
   return (
@@ -189,14 +206,23 @@ export function OrganizationsClient({ organizations: initial }: { organizations:
                       <Calendar className="h-4 w-4" /> {org._count.appointments} turnos
                     </span>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
+                    <Select value={org.plan} onValueChange={(v) => handleChangePlan(org, v)}>
+                      <SelectTrigger className="h-8 w-28 text-xs">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="FREE">Starter</SelectItem>
+                        <SelectItem value="PRO">Pro</SelectItem>
+                        <SelectItem value="PREMIUM">Premium</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <Switch checked={org.active} onCheckedChange={() => handleToggleActive(org)} />
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => window.open(`/b/${org.slug}`, "_blank")}
-                    >
+                    <Button variant="ghost" size="icon" onClick={() => window.open(`/b/${org.slug}`, "_blank")}>
                       <ExternalLink className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" onClick={() => handleDelete(org)}>
+                      <Trash2 className="h-4 w-4 text-red-500" />
                     </Button>
                   </div>
                 </div>

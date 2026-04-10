@@ -1,7 +1,6 @@
 import { requireAuth, ok, err, withErrorHandler } from "@/lib/api";
 import { OrganizationPatchSchema } from "@/lib/schemas";
 import prisma from "@/lib/prisma";
-import { NextResponse } from "next/server";
 
 export const PATCH = withErrorHandler(async (req, ctx) => {
   const { session, error } = await requireAuth();
@@ -26,4 +25,14 @@ export const PATCH = withErrorHandler(async (req, ctx) => {
 
   const org = await prisma.organization.update({ where: { id }, data: parsed.data });
   return ok(org);
+});
+
+export const DELETE = withErrorHandler(async (_req, ctx) => {
+  const { session, error } = await requireAuth();
+  if (error) return error;
+  if (session.user.role !== "SUPERADMIN") return err("Forbidden", 403);
+
+  const { id } = await ctx.params;
+  await prisma.organization.delete({ where: { id } });
+  return ok({ deleted: true });
 });
