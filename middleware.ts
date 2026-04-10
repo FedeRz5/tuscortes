@@ -1,28 +1,22 @@
 import NextAuth from "next-auth";
 import { authConfig } from "@/auth.config";
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 
 const { auth } = NextAuth(authConfig);
 
-export default auth((req: NextRequest & { auth: ReturnType<typeof auth> extends Promise<infer T> ? T : never }) => {
+export default auth((req) => {
   const { pathname } = req.nextUrl;
   const session = req.auth;
 
-  // Rutas que requieren autenticación
-  if (pathname.startsWith("/dashboard") || pathname.startsWith("/superadmin")) {
-    if (!session) {
-      const loginUrl = new URL("/login", req.url);
-      loginUrl.searchParams.set("callbackUrl", pathname);
-      return NextResponse.redirect(loginUrl);
-    }
+  if (!session) {
+    const loginUrl = new URL("/login", req.url);
+    loginUrl.searchParams.set("callbackUrl", pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
-  // Superadmin: solo SUPERADMIN puede entrar
-  if (pathname.startsWith("/superadmin")) {
-    if (session?.user?.role !== "SUPERADMIN") {
-      return NextResponse.redirect(new URL("/dashboard", req.url));
-    }
+  // Solo SUPERADMIN puede acceder a /superadmin
+  if (pathname.startsWith("/superadmin") && session.user?.role !== "SUPERADMIN") {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 
   return NextResponse.next();

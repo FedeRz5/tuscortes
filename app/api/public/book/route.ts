@@ -2,6 +2,7 @@ import { ok, err, withErrorHandler } from "@/lib/api";
 import { BookingSchema } from "@/lib/schemas";
 import { getLimits } from "@/lib/plans";
 import prisma from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { generateSlots } from "@/lib/slots";
 import { sendAppointmentConfirmation, sendNewAppointmentNotification } from "@/lib/email";
 import { NextResponse } from "next/server";
@@ -75,24 +76,32 @@ export const POST = withErrorHandler(async (req) => {
 
   const slot = slots.find((s) => s.startTime === startTime);
   if (!slot || !slot.available) {
-    return err("Slot no disponible. Por favor elegí otro horario.", 409);
+    return err("Ese horario ya no está disponible. Por favor elegí otro.", 409);
   }
 
-  const appointment = await prisma.appointment.create({
-    data: {
-      organizationId: org.id,
-      serviceId,
-      staffId,
-      date,
-      startTime,
-      endTime: slot.endTime,
-      clientName,
-      clientPhone,
-      clientEmail,
-      notes,
-      status: "CONFIRMED",
-    },
-  });
+  let appointment;
+  try {
+    appointment = await prisma.appointment.create({
+      data: {
+        organizationId: org.id,
+        serviceId,
+        staffId,
+        date,
+        startTime,
+        endTime: slot.endTime,
+        clientName,
+        clientPhone,
+        clientEmail,
+        notes,
+        status: "CONFIRMED",
+      },
+    });
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002") {
+      return err("Ese horario ya fue tomado por otra persona. Por favor elegí otro.", 409);
+    }
+    throw e;
+  }
 
   // Enviar email de confirmación si el cliente dejó email
   if (clientEmail) {

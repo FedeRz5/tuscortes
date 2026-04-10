@@ -33,6 +33,9 @@ export const WorkScheduleSchema = z.object({
   endTime: z.string().regex(/^\d{2}:\d{2}$/, "Formato inválido HH:MM"),
   enabled: z.boolean(),
   bufferMin: z.number().int().min(0).max(120).optional().default(0),
+}).refine((d) => !d.enabled || d.startTime < d.endTime, {
+  message: "La hora de inicio debe ser anterior a la hora de fin",
+  path: ["endTime"],
 });
 
 export const OrganizationCreateSchema = z.object({
@@ -86,4 +89,7 @@ export const VacationBlockSchema = z.object({
   startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   reason: z.string().max(200).optional().nullable(),
+}).refine((d) => d.startDate <= d.endDate, {
+  message: "La fecha de inicio debe ser anterior o igual a la fecha de fin",
+  path: ["endDate"],
 });
