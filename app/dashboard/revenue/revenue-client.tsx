@@ -16,12 +16,21 @@ interface PeriodStats {
   count: number;
 }
 
+interface StaffStat {
+  id: string;
+  name: string;
+  count: number;
+  total: number;
+  collected: number;
+}
+
 interface Props {
   stats: {
     today: PeriodStats;
     week: PeriodStats;
     month: PeriodStats;
   };
+  staffStats: StaffStat[];
   appointments: AppointmentFull[];
   canExport: boolean;
 }
@@ -32,7 +41,7 @@ const PERIODS = [
   { key: "month" as const, label: "Este mes" },
 ];
 
-export function RevenueClient({ stats, appointments: initial, canExport }: Props) {
+export function RevenueClient({ stats, staffStats, appointments: initial, canExport }: Props) {
   const [appointments, setAppointments] = useState(initial);
   const [activePeriod, setActivePeriod] = useState<"today" | "week" | "month">("today");
   const [exporting, setExporting] = useState(false);
@@ -146,6 +155,55 @@ export function RevenueClient({ stats, appointments: initial, canExport }: Props
           </CardContent>
         </Card>
       </div>
+
+      {/* Stats por barbero */}
+      {staffStats.length > 0 && (
+        <div>
+          <h2 className="text-sm font-semibold text-zinc-500 uppercase tracking-wider mb-3">
+            Por barbero · este mes
+          </h2>
+          <div className="space-y-2">
+            {staffStats.map((s) => {
+              const rate = s.total > 0 ? Math.round((s.collected / s.total) * 100) : 0;
+              return (
+                <Card key={s.id}>
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between gap-4 flex-wrap">
+                      <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 rounded-full bg-zinc-900 flex items-center justify-center text-white text-xs font-bold shrink-0">
+                          {s.name[0].toUpperCase()}
+                        </div>
+                        <div>
+                          <p className="font-medium text-zinc-900">{s.name}</p>
+                          <p className="text-xs text-zinc-400">{s.count} turno{s.count !== 1 ? "s" : ""}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-6 text-sm">
+                        <div className="text-right">
+                          <p className="text-xs text-zinc-400">Facturado</p>
+                          <p className="font-semibold text-zinc-900">{formatPrice(s.total)}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-xs text-zinc-400">Cobrado</p>
+                          <p className="font-semibold text-green-700">{formatPrice(s.collected)}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-xs text-zinc-400">Cobrado</p>
+                          <p className={`font-semibold ${rate >= 80 ? "text-green-700" : rate >= 50 ? "text-amber-600" : "text-red-600"}`}>{rate}%</p>
+                        </div>
+                      </div>
+                    </div>
+                    {/* Barra de progreso */}
+                    <div className="mt-3 h-1.5 bg-zinc-100 rounded-full overflow-hidden">
+                      <div className="h-full bg-green-500 rounded-full" style={{ width: `${rate}%` }} />
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Appointments table */}
       <div>

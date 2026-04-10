@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Calendar,
+  CalendarDays,
   Users,
   Scissors,
   Clock,
@@ -24,6 +25,7 @@ import { cn } from "@/lib/utils";
 const ownerLinks = [
   { href: "/dashboard", label: "Panel", icon: LayoutDashboard },
   { href: "/dashboard/appointments", label: "Turnos", icon: Calendar },
+  { href: "/dashboard/calendar", label: "Agenda", icon: CalendarDays },
   { href: "/dashboard/services", label: "Servicios", icon: Scissors },
   { href: "/dashboard/staff", label: "Barberos", icon: Users },
   { href: "/dashboard/schedule", label: "Horarios", icon: Clock },

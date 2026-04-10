@@ -5,6 +5,7 @@ import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { generateSlots } from "@/lib/slots";
 import { sendAppointmentConfirmation, sendNewAppointmentNotification } from "@/lib/email";
+import { sendAppointmentConfirmationWA, sendNewAppointmentNotificationWA } from "@/lib/whatsapp";
 import { NextResponse } from "next/server";
 
 export const POST = withErrorHandler(async (req) => {
@@ -103,34 +104,42 @@ export const POST = withErrorHandler(async (req) => {
     throw e;
   }
 
-  // Enviar email de confirmación si el cliente dejó email
+  // Notificaciones al cliente (email + WhatsApp)
   if (clientEmail) {
-    try {
-      await sendAppointmentConfirmation({
-        to: clientEmail,
-        clientName,
-        orgName: org.name,
-        orgPhone: org.phone,
-        orgAddress: org.address,
-        confirmationMessage: org.bookingConfirmationMessage,
-        service: service.name,
-        staff: staffMember.name,
-        date,
-        startTime,
-        endTime: slot.endTime,
-        price: service.price,
-      });
-      console.log("[email] Enviado OK a:", clientEmail);
-    } catch (e) {
-      console.error("[email] Error cliente:", e);
-    }
+    sendAppointmentConfirmation({
+      to: clientEmail,
+      clientName,
+      orgName: org.name,
+      orgPhone: org.phone,
+      orgAddress: org.address,
+      confirmationMessage: org.bookingConfirmationMessage,
+      service: service.name,
+      staff: staffMember.name,
+      date,
+      startTime,
+      endTime: slot.endTime,
+      price: service.price,
+    }).catch((e) => console.error("[email] Error cliente:", e));
   }
 
-  // Notificar al dueño de la barbería
+  sendAppointmentConfirmationWA({
+    clientPhone,
+    clientName,
+    orgName: org.name,
+    orgPhone: org.phone,
+    service: service.name,
+    staff: staffMember.name,
+    date,
+    startTime,
+    endTime: slot.endTime,
+  }).catch((e) => console.error("[whatsapp] Error cliente:", e));
+
+  // Notificaciones al dueño (email + WhatsApp)
   const owner = await prisma.user.findFirst({
     where: { organizationId: org.id, role: "OWNER" },
     select: { email: true },
   });
+
   if (owner?.email) {
     sendNewAppointmentNotification({
       to: owner.email,
@@ -146,6 +155,19 @@ export const POST = withErrorHandler(async (req) => {
       price: service.price,
       notes,
     }).catch((e) => console.error("[email] Error dueño:", e));
+  }
+
+  if (org.phone) {
+    sendNewAppointmentNotificationWA({
+      ownerPhone: org.phone,
+      clientName,
+      clientPhone,
+      service: service.name,
+      staff: staffMember.name,
+      date,
+      startTime,
+      endTime: slot.endTime,
+    }).catch((e) => console.error("[whatsapp] Error dueño:", e));
   }
 
   return ok(appointment, 201);

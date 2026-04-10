@@ -221,6 +221,84 @@ function escapeHtml(str: string): string {
     .replace(/'/g, "&#x27;");
 }
 
+interface AppointmentReminderParams {
+  to: string;
+  clientName: string;
+  orgName: string;
+  orgPhone?: string | null;
+  orgAddress?: string | null;
+  service: string;
+  staff: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  price: number;
+}
+
+export async function sendAppointmentReminder(params: AppointmentReminderParams) {
+  const resend = getResend();
+  const from = process.env.RESEND_FROM ?? "TusCortes <noreply@tuscortes.com.ar>";
+  const dateFormatted = formatDate(params.date);
+  const priceFormatted = formatPrice(params.price);
+
+  const html = `
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/></head>
+<body style="margin:0;padding:0;background:#f4f4f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f5;padding:32px 16px;">
+    <tr><td align="center">
+      <table width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;">
+        <tr>
+          <td style="background:#111827;border-radius:12px 12px 0 0;padding:28px 32px;text-align:center;">
+            <p style="margin:0;color:#9ca3af;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;">TusCortes</p>
+            <h1 style="margin:8px 0 0;color:#ffffff;font-size:22px;font-weight:800;">⏰ Recordatorio de turno</h1>
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#ffffff;padding:32px;">
+            <p style="margin:0 0 24px;color:#374151;font-size:15px;">
+              Hola <strong>${escapeHtml(params.clientName)}</strong>, te recordamos que mañana tenés turno en <strong>${escapeHtml(params.orgName)}</strong>.
+            </p>
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#f9fafb;border-radius:10px;overflow:hidden;margin-bottom:24px;">
+              <tr><td style="padding:20px 24px;">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  ${row("📋 Servicio", params.service)}
+                  ${row("✂️ Barbero", params.staff)}
+                  ${row("📅 Fecha", dateFormatted)}
+                  ${row("🕐 Horario", `${params.startTime} — ${params.endTime}`)}
+                  ${row("💰 Precio", priceFormatted)}
+                </table>
+              </td></tr>
+            </table>
+            ${params.orgAddress || params.orgPhone ? `
+            <p style="margin:0 0 6px;color:#6b7280;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Datos de la barbería</p>
+            <table width="100%" cellpadding="0" cellspacing="0">
+              ${params.orgAddress ? `<tr><td style="padding:3px 0;color:#374151;font-size:14px;">📍 ${escapeHtml(params.orgAddress)}</td></tr>` : ""}
+              ${params.orgPhone ? `<tr><td style="padding:3px 0;color:#374151;font-size:14px;">📞 ${escapeHtml(params.orgPhone)}</td></tr>` : ""}
+            </table>
+            ` : ""}
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#f9fafb;border-radius:0 0 12px 12px;padding:18px 32px;text-align:center;border-top:1px solid #e5e7eb;">
+            <p style="margin:0;color:#9ca3af;font-size:12px;">TusCortes · tuscortes.com.ar</p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`.trim();
+
+  await resend.emails.send({
+    from,
+    to: params.to,
+    subject: `Recordatorio: tu turno en ${params.orgName} es mañana a las ${params.startTime}`,
+    html,
+  });
+}
+
 function row(label: string, value: string) {
   return `
     <tr>
