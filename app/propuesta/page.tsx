@@ -90,7 +90,7 @@ const FEATURES = [
   {
     icon: Smartphone,
     title: "Página de reservas propia",
-    desc: "Cada barbería tiene su link único (ej: tuagenda.com/b/tu-barberia) con tu logo, colores y fotos. Sin apps a descargar.",
+    desc: "Cada barbería tiene su link único (ej: tuscortes.com/b/tu-barberia) con tu logo, colores y fotos. Sin apps a descargar.",
     color: "bg-blue-50 text-blue-600",
   },
   {
@@ -146,7 +146,7 @@ export default function PropuestaPage() {
                 <Scissors className="h-5 w-5 text-white" />
               </div>
               <span className="text-xl font-black tracking-tight">
-                Tu Agenda
+                TusCortes
               </span>
             </div>
 
@@ -231,10 +231,10 @@ export default function PropuestaPage() {
           <section className="print:break-inside-avoid">
             <Label>La solución</Label>
             <h2 className="text-3xl font-black mb-4">
-              Tu Agenda: reservas automáticas, sin fricción
+              TusCortes: reservas automáticas, sin fricción
             </h2>
             <p className="text-gray-500 text-lg mb-10">
-              Tu Agenda es un sistema de gestión de turnos online desarrollado
+              TusCortes es un sistema de gestión de turnos online desarrollado
               específicamente para barberías argentinas. En menos de 5 minutos
               tenés tu página de reservas activa, tu equipo cargado y tus
               horarios configurados. Desde ese momento, los turnos se llenan
@@ -411,7 +411,7 @@ export default function PropuestaPage() {
 
           {/* ── POR QUÉ ELEGIRNOS ───────────────────────────────────── */}
           <section className="print:break-inside-avoid">
-            <Label>¿Por qué Tu Agenda?</Label>
+            <Label>¿Por qué TusCortes?</Label>
             <h2 className="text-3xl font-black mb-8">
               Pensado para el mercado argentino
             </h2>
@@ -475,7 +475,7 @@ export default function PropuestaPage() {
                 </div>
                 <div className="flex items-center gap-2 bg-white/10 rounded-xl px-5 py-3 text-sm">
                   <Mail className="h-4 w-4 text-indigo-200" />
-                  <span>hola@tuagenda.com.ar</span>
+                  <span>hola@tuscortes.com.ar</span>
                 </div>
               </div>
             </div>
@@ -485,11 +485,11 @@ export default function PropuestaPage() {
           <footer className="border-t border-gray-100 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-400 print:break-inside-avoid">
             <div className="flex items-center gap-2">
               <Scissors className="h-4 w-4 text-indigo-500" />
-              <span className="font-bold text-gray-600">Tu Agenda</span>
+              <span className="font-bold text-gray-600">TusCortes</span>
               <span>— Sistema de turnos para barberías</span>
             </div>
             <span>
-              © {new Date().getFullYear()} Tu Agenda. Todos los derechos
+              © {new Date().getFullYear()} TusCortes. Todos los derechos
               reservados.
             </span>
           </footer>

@@ -22,7 +22,7 @@ function addMinutes(time: string, min: number) {
 async function main() {
   console.log("🌱 Seeding database...");
 
-  const SUPERADMIN_EMAIL    = process.env.SEED_SUPERADMIN_EMAIL    ?? "admin@tuagenda.com";
+  const SUPERADMIN_EMAIL    = process.env.SEED_SUPERADMIN_EMAIL    ?? "admin@tuscortes.com";
   const SUPERADMIN_PASSWORD = process.env.SEED_SUPERADMIN_PASSWORD ?? "admin123";
   const DEMO_EMAIL          = process.env.SEED_DEMO_EMAIL          ?? "owner@ramoscutz.com";
   const DEMO_PASSWORD       = process.env.SEED_DEMO_PASSWORD       ?? "demo123";

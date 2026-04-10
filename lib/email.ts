@@ -36,7 +36,7 @@ function formatPrice(n: number) {
 
 export async function sendAppointmentConfirmation(params: AppointmentConfirmationParams) {
   const resend = getResend();
-  const from = process.env.RESEND_FROM ?? "Tu Agenda <noreply@tuagenda.com.ar>";
+  const from = process.env.RESEND_FROM ?? "TusCortes <noreply@tuscortes.com.ar>";
 
   const dateFormatted = formatDate(params.date);
   const priceFormatted = formatPrice(params.price);
@@ -58,7 +58,7 @@ export async function sendAppointmentConfirmation(params: AppointmentConfirmatio
           <!-- Header -->
           <tr>
             <td style="background:#111827;border-radius:12px 12px 0 0;padding:28px 32px;text-align:center;">
-              <p style="margin:0;color:#9ca3af;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;">Tu Agenda</p>
+              <p style="margin:0;color:#9ca3af;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;">TusCortes</p>
               <h1 style="margin:8px 0 0;color:#ffffff;font-size:22px;font-weight:800;">✅ Turno confirmado</h1>
             </td>
           </tr>
@@ -111,8 +111,8 @@ export async function sendAppointmentConfirmation(params: AppointmentConfirmatio
           <tr>
             <td style="background:#f9fafb;border-radius:0 0 12px 12px;padding:18px 32px;text-align:center;border-top:1px solid #e5e7eb;">
               <p style="margin:0;color:#9ca3af;font-size:12px;">
-                Este mail fue generado automáticamente por <strong>Tu Agenda</strong>.<br/>
-                tuagenda.com.ar
+                Este mail fue generado automáticamente por <strong>TusCortes</strong>.<br/>
+                tuscortes.com.ar
               </p>
             </td>
           </tr>

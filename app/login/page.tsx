@@ -12,7 +12,7 @@ export default async function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-zinc-50">
       <div className="w-full max-w-sm px-4">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-zinc-900">Tu Agenda</h1>
+          <h1 className="text-3xl font-bold text-zinc-900">TusCortes</h1>
           <p className="text-zinc-500 mt-2">Ingresá a tu panel</p>
         </div>
         <LoginForm />

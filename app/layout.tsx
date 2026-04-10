@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Tu Agenda — Turnos online para tu barbería",
+  title: "TusCortes — Turnos online para tu barbería",
   description: "Reservá tu turno en segundos. Sin esperas, sin llamadas.",
 };
 

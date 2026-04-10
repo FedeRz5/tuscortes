@@ -9,8 +9,8 @@ import { HeroBg } from "@/components/landing/hero-bg";
 
 // ─── MercadoPago ─────────────────────────────────────────────────────────────
 const MP_LINKS = {
-  PRO: "https://mpago.la/pro-tuagenda",
-  PREMIUM: "https://mpago.la/premium-tuagenda",
+  PRO: "https://mpago.la/pro-tuscortes",
+  PREMIUM: "https://mpago.la/premium-tuscortes",
 };
 
 // ─── Planes ───────────────────────────────────────────────────────────────────
@@ -81,7 +81,7 @@ export default function HomePage() {
             <div className="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center">
               <span className="text-white font-black text-sm">TA</span>
             </div>
-            <span className="font-bold text-lg tracking-tight text-gray-900">Tu Agenda</span>
+            <span className="font-bold text-lg tracking-tight text-gray-900">TusCortes</span>
           </div>
           <div className="hidden sm:flex items-center gap-6 text-sm text-gray-500">
             <a href="#como-funciona" className="hover:text-gray-900 transition-colors">Cómo funciona</a>
@@ -151,7 +151,7 @@ export default function HomePage() {
                     <div className="h-3 w-3 rounded-full bg-green-400/70" />
                   </div>
                   <div className="flex-1 bg-white border border-gray-200 rounded-md px-3 py-1 text-xs text-gray-400 font-mono">
-                    tuagenda.com/barberia-carlos
+                    tuscortes.com/barberia-carlos
                   </div>
                 </div>
                 {/* Contenido simulado de la página de reservas */}
@@ -305,9 +305,9 @@ export default function HomePage() {
             <div className="h-7 w-7 rounded-lg bg-indigo-600 flex items-center justify-center">
               <span className="text-white font-black text-xs">TA</span>
             </div>
-            <span className="font-bold text-sm text-gray-900">Tu Agenda</span>
+            <span className="font-bold text-sm text-gray-900">TusCortes</span>
           </div>
-          <p className="text-gray-400 text-sm">© {new Date().getFullYear()} Tu Agenda. Todos los derechos reservados.</p>
+          <p className="text-gray-400 text-sm">© {new Date().getFullYear()} TusCortes. Todos los derechos reservados.</p>
           <Link href="/login" className="text-sm text-gray-400 hover:text-gray-900 transition-colors">
             Acceder al panel →
           </Link>

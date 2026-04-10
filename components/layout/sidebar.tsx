@@ -63,7 +63,7 @@ export function Sidebar({ role, orgName }: SidebarProps) {
           <p className="text-xs text-zinc-400 uppercase tracking-wider font-medium">
             {role === "SUPERADMIN" ? "Super Admin" : "Panel"}
           </p>
-          <p className="font-semibold text-zinc-900 truncate">{orgName ?? "Tu Agenda"}</p>
+          <p className="font-semibold text-zinc-900 truncate">{orgName ?? "TusCortes"}</p>
         </div>
         <button
           className="md:hidden p-1 text-zinc-400 hover:text-zinc-900"
@@ -112,7 +112,7 @@ export function Sidebar({ role, orgName }: SidebarProps) {
     <>
       {/* Mobile top header */}
       <header className="md:hidden fixed top-0 inset-x-0 z-30 h-14 bg-white border-b border-zinc-200 flex items-center justify-between px-4">
-        <p className="font-semibold text-zinc-900">{orgName ?? "Tu Agenda"}</p>
+        <p className="font-semibold text-zinc-900">{orgName ?? "TusCortes"}</p>
         <button onClick={() => setOpen(true)} className="p-1 text-zinc-600">
           <Menu className="h-5 w-5" />
         </button>

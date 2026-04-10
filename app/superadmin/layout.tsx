@@ -10,7 +10,7 @@ export default async function SuperadminLayout({ children }: { children: React.R
   return (
     <Providers>
       <div className="flex h-screen overflow-hidden bg-zinc-50">
-        <Sidebar role="SUPERADMIN" orgName="Tu Agenda" />
+        <Sidebar role="SUPERADMIN" orgName="TusCortes" />
         <main className="flex-1 overflow-y-auto">
           <div className="pt-14 md:pt-0 p-4 md:p-8">{children}</div>
         </main>
