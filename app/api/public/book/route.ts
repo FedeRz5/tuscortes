@@ -3,7 +3,7 @@ import { BookingSchema } from "@/lib/schemas";
 import { getLimits } from "@/lib/plans";
 import prisma from "@/lib/prisma";
 import { generateSlots } from "@/lib/slots";
-import { sendAppointmentConfirmation } from "@/lib/email";
+import { sendAppointmentConfirmation, sendNewAppointmentNotification } from "@/lib/email";
 import { NextResponse } from "next/server";
 
 export const POST = withErrorHandler(async (req) => {
@@ -113,8 +113,30 @@ export const POST = withErrorHandler(async (req) => {
       });
       console.log("[email] Enviado OK a:", clientEmail);
     } catch (e) {
-      console.error("[email] Error:", e); // no bloquea la reserva
+      console.error("[email] Error cliente:", e);
     }
+  }
+
+  // Notificar al dueño de la barbería
+  const owner = await prisma.user.findFirst({
+    where: { organizationId: org.id, role: "OWNER" },
+    select: { email: true },
+  });
+  if (owner?.email) {
+    sendNewAppointmentNotification({
+      to: owner.email,
+      orgName: org.name,
+      clientName,
+      clientPhone,
+      clientEmail,
+      service: service.name,
+      staff: staffMember.name,
+      date,
+      startTime,
+      endTime: slot.endTime,
+      price: service.price,
+      notes,
+    }).catch((e) => console.error("[email] Error dueño:", e));
   }
 
   return ok(appointment, 201);

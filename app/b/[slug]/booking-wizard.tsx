@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 import type { Organization, Service, Staff, WorkSchedule } from "@prisma/client";
 
 type OrgWithData = Organization & {
@@ -41,6 +43,8 @@ export function BookingWizard({ org }: { org: OrgWithData }) {
   const [slots, setSlots] = useState<TimeSlot[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [form, setForm] = useState({ name: "", phone: "", email: "", notes: "" });
+  const [phoneError, setPhoneError] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [loading, setLoading] = useState(false);
   const [booked, setBooked] = useState(false);
   const [error, setError] = useState("");
@@ -74,10 +78,24 @@ export function BookingWizard({ org }: { org: OrgWithData }) {
 
   async function handleBook(e: React.FormEvent) {
     e.preventDefault();
-    if (form.phone.trim().length < 6) {
-      setError("El teléfono debe tener al menos 6 caracteres.");
-      return;
+    let valid = true;
+
+    if (!form.phone || !isValidPhoneNumber(form.phone)) {
+      setPhoneError("Ingresá un número de teléfono válido");
+      valid = false;
+    } else {
+      setPhoneError("");
     }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!form.email || !emailRegex.test(form.email)) {
+      setEmailError("Ingresá un email válido");
+      valid = false;
+    } else {
+      setEmailError("");
+    }
+
+    if (!valid) return;
     setLoading(true); setError("");
     const res = await fetch("/api/public/book", {
       method: "POST",
@@ -315,18 +333,32 @@ export function BookingWizard({ org }: { org: OrgWithData }) {
               </div>
               <div className="space-y-1.5">
                 <Label>Teléfono / WhatsApp *</Label>
-                <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+54 11 1234-5678" required />
+                <PhoneInput
+                  international
+                  defaultCountry="AR"
+                  value={form.phone}
+                  onChange={(v) => { setForm({ ...form, phone: v ?? "" }); setPhoneError(""); }}
+                  className={`phone-input-wrapper ${phoneError ? "phone-input-error" : ""}`}
+                />
+                {phoneError && <p className="text-xs text-red-500">{phoneError}</p>}
               </div>
               <div className="space-y-1.5">
-                <Label>Email (opcional)</Label>
-                <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="juan@email.com" />
+                <Label>Email *</Label>
+                <Input
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => { setForm({ ...form, email: e.target.value }); setEmailError(""); }}
+                  placeholder="juan@email.com"
+                  className={emailError ? "border-red-400 focus-visible:ring-red-400" : ""}
+                />
+                {emailError && <p className="text-xs text-red-500">{emailError}</p>}
               </div>
               <div className="space-y-1.5">
                 <Label>Notas (opcional)</Label>
                 <Textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} rows={2} placeholder="Alguna indicación especial..." />
               </div>
               {error && <p className="text-sm text-red-600">{error}</p>}
-              <Button type="submit" disabled={loading || !form.name || !form.phone} className="w-full h-12 text-base font-semibold" style={{ backgroundColor: primaryColor }}>
+              <Button type="submit" disabled={loading || !form.name || !form.phone || !form.email} className="w-full h-12 text-base font-semibold" style={{ backgroundColor: primaryColor }}>
                 {loading ? "Reservando..." : "Confirmar turno"}
               </Button>
               <p className="text-xs text-zinc-400 text-center">No necesitás crear una cuenta para reservar</p>

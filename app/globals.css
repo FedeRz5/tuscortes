@@ -182,3 +182,44 @@ body {
 html {
   scroll-behavior: smooth;
 }
+
+/* ─── Phone Input ─────────────────────────────────────────────────────────── */
+
+.phone-input-wrapper .PhoneInput {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  border: 1px solid #e4e4e7;
+  border-radius: 8px;
+  padding: 0 12px;
+  background: #fff;
+  transition: border-color 0.15s;
+}
+
+.phone-input-wrapper .PhoneInput:focus-within {
+  border-color: #111827;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(17,24,39,0.08);
+}
+
+.phone-input-error .PhoneInput {
+  border-color: #f87171;
+}
+
+.phone-input-wrapper .PhoneInputInput {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: #111827;
+  background: transparent;
+}
+
+.phone-input-wrapper .PhoneInputCountrySelect {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  cursor: pointer;
+}
