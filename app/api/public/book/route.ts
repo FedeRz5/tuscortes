@@ -3,6 +3,7 @@ import { BookingSchema } from "@/lib/schemas";
 import { getLimits } from "@/lib/plans";
 import prisma from "@/lib/prisma";
 import { generateSlots } from "@/lib/slots";
+import { sendAppointmentConfirmation } from "@/lib/email";
 import { NextResponse } from "next/server";
 
 export const POST = withErrorHandler(async (req) => {
@@ -33,8 +34,12 @@ export const POST = withErrorHandler(async (req) => {
     }
   }
 
-  const service = await prisma.service.findUnique({ where: { id: serviceId, active: true } });
+  const [service, staffMember] = await Promise.all([
+    prisma.service.findUnique({ where: { id: serviceId, active: true } }),
+    prisma.staff.findUnique({ where: { id: staffId } }),
+  ]);
   if (!service) return err("Service not found", 404);
+  if (!staffMember) return err("Staff not found", 404);
 
   const dayOfWeek = new Date(date + "T00:00:00").getDay();
   const schedule = await prisma.workSchedule.findUnique({
@@ -88,6 +93,24 @@ export const POST = withErrorHandler(async (req) => {
       status: "CONFIRMED",
     },
   });
+
+  // Enviar email de confirmación si el cliente dejó email
+  if (clientEmail) {
+    sendAppointmentConfirmation({
+      to: clientEmail,
+      clientName,
+      orgName: org.name,
+      orgPhone: org.phone,
+      orgAddress: org.address,
+      confirmationMessage: org.bookingConfirmationMessage,
+      service: service.name,
+      staff: staffMember.name,
+      date,
+      startTime,
+      endTime: slot.endTime,
+      price: service.price,
+    }).catch((e) => console.error("Email error:", e)); // fire-and-forget, no bloquea la respuesta
+  }
 
   return ok(appointment, 201);
 });
