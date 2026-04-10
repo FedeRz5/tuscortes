@@ -32,15 +32,18 @@ export const GET = withErrorHandler(async (req) => {
     orderBy: [{ date: "asc" }, { startTime: "asc" }],
   });
 
+  // Sanitiza strings para prevenir CSV injection (fórmulas que empiezan con =, +, -, @)
+  const csvStr = (s: string) => `"${s.replace(/^[=+\-@\t\r]/, "'$&").replace(/"/g, '""')}"`;
+
   const header = "Fecha,Hora,Cliente,Teléfono,Servicio,Barbero,Precio,Estado,Cobrado";
   const rows = appointments.map((a) =>
     [
       a.date,
       a.startTime,
-      `"${a.clientName}"`,
-      a.clientPhone,
-      `"${a.service.name}"`,
-      `"${a.staff.name}"`,
+      csvStr(a.clientName),
+      csvStr(a.clientPhone),
+      csvStr(a.service.name),
+      csvStr(a.staff.name),
       a.service.price.toFixed(2),
       a.status,
       a.paid ? "Sí" : "No",

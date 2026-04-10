@@ -6,6 +6,10 @@ export default async function OrganizationsPage() {
     orderBy: { createdAt: "desc" },
     include: {
       _count: { select: { appointments: true, staff: true, users: true } },
+      users: {
+        where: { role: "OWNER" },
+        select: { id: true, name: true, email: true },
+      },
     },
   });
 

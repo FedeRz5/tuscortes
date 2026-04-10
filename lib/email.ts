@@ -67,7 +67,7 @@ export async function sendAppointmentConfirmation(params: AppointmentConfirmatio
           <tr>
             <td style="background:#ffffff;padding:32px;">
               <p style="margin:0 0 24px;color:#374151;font-size:15px;">
-                Hola <strong>${params.clientName}</strong>, tu turno en <strong>${params.orgName}</strong> quedó confirmado.
+                Hola <strong>${escapeHtml(params.clientName)}</strong>, tu turno en <strong>${escapeHtml(params.orgName)}</strong> quedó confirmado.
               </p>
 
               <!-- Appointment details -->
@@ -90,7 +90,7 @@ export async function sendAppointmentConfirmation(params: AppointmentConfirmatio
               <table width="100%" cellpadding="0" cellspacing="0" style="background:#eff6ff;border-left:3px solid #3b82f6;border-radius:0 8px 8px 0;margin-bottom:24px;">
                 <tr>
                   <td style="padding:14px 18px;">
-                    <p style="margin:0;color:#1d4ed8;font-size:14px;">${params.confirmationMessage}</p>
+                    <p style="margin:0;color:#1d4ed8;font-size:14px;">${escapeHtml(params.confirmationMessage)}</p>
                   </td>
                 </tr>
               </table>
@@ -100,8 +100,8 @@ export async function sendAppointmentConfirmation(params: AppointmentConfirmatio
               <!-- Contact info -->
               <p style="margin:0 0 6px;color:#6b7280;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Datos de la barbería</p>
               <table width="100%" cellpadding="0" cellspacing="0">
-                ${params.orgAddress ? `<tr><td style="padding:3px 0;color:#374151;font-size:14px;">📍 ${params.orgAddress}</td></tr>` : ""}
-                ${params.orgPhone ? `<tr><td style="padding:3px 0;color:#374151;font-size:14px;">📞 ${params.orgPhone}</td></tr>` : ""}
+                ${params.orgAddress ? `<tr><td style="padding:3px 0;color:#374151;font-size:14px;">📍 ${escapeHtml(params.orgAddress)}</td></tr>` : ""}
+                ${params.orgPhone ? `<tr><td style="padding:3px 0;color:#374151;font-size:14px;">📞 ${escapeHtml(params.orgPhone)}</td></tr>` : ""}
               </table>
               ` : ""}
             </td>
@@ -171,7 +171,7 @@ export async function sendNewAppointmentNotification(params: NewAppointmentNotif
         <tr>
           <td style="background:#ffffff;padding:32px;">
             <p style="margin:0 0 20px;color:#374151;font-size:15px;">
-              <strong>${params.clientName}</strong> reservó un turno en tu barbería.
+              <strong>${escapeHtml(params.clientName)}</strong> reservó un turno en tu barbería.
             </p>
             <table width="100%" cellpadding="0" cellspacing="0" style="background:#f9fafb;border-radius:10px;margin-bottom:20px;">
               <tr><td style="padding:20px 24px;">
@@ -212,11 +212,20 @@ export async function sendNewAppointmentNotification(params: NewAppointmentNotif
   });
 }
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#x27;");
+}
+
 function row(label: string, value: string) {
   return `
     <tr>
       <td style="padding:6px 0;color:#6b7280;font-size:13px;width:40%;">${label}</td>
-      <td style="padding:6px 0;color:#111827;font-size:13px;font-weight:600;">${value}</td>
+      <td style="padding:6px 0;color:#111827;font-size:13px;font-weight:600;">${escapeHtml(value)}</td>
     </tr>
   `;
 }
