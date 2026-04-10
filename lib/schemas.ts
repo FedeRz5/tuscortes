@@ -63,6 +63,7 @@ export const OrganizationPatchSchema = z.object({
   maxDaysAhead: z.number().int().min(1).max(365).optional(),
   active: z.boolean().optional(),
   plan: z.enum(["FREE", "PRO", "PREMIUM"]).optional(),
+  adminNotes: z.string().max(2000).optional().nullable(),
 });
 
 export const AppointmentPatchSchema = z.object({

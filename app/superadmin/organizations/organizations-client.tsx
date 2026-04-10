@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,17 +9,40 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, ExternalLink, Users, Calendar, Trash2, ChevronDown, ChevronUp, Pencil } from "lucide-react";
-import type { Organization } from "@prisma/client";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Plus, ExternalLink, Users, Calendar, Trash2, ChevronDown, ChevronUp,
+  Pencil, LogIn, StickyNote, CreditCard, ToggleLeft, UserCog, Search,
+} from "lucide-react";
+import type { Organization, ActivityLog } from "@prisma/client";
 
 type Owner = { id: string; name: string | null; email: string };
 
 type OrgWithData = Organization & {
   _count: { appointments: number; staff: number; users: number };
   users: Owner[];
+  activityLogs: ActivityLog[];
 };
 
 const EMPTY_FORM = { name: "", slug: "", ownerEmail: "", ownerPassword: "", ownerName: "" };
+
+const ACTION_META: Record<string, { label: string; icon: React.ElementType; color: string }> = {
+  ORG_CREATED:    { label: "Creada",      icon: Plus,       color: "text-green-600" },
+  ORG_DELETED:    { label: "Eliminada",   icon: Trash2,     color: "text-red-600" },
+  PLAN_CHANGED:   { label: "Plan",        icon: CreditCard, color: "text-blue-600" },
+  STATUS_CHANGED: { label: "Estado",      icon: ToggleLeft, color: "text-amber-600" },
+  OWNER_EDITED:   { label: "Dueño",       icon: UserCog,    color: "text-purple-600" },
+};
+
+function timeAgo(date: Date | string) {
+  const diff = Date.now() - new Date(date).getTime();
+  const min = Math.floor(diff / 60000);
+  if (min < 1) return "ahora";
+  if (min < 60) return `hace ${min}m`;
+  const hrs = Math.floor(min / 60);
+  if (hrs < 24) return `hace ${hrs}h`;
+  return `hace ${Math.floor(hrs / 24)}d`;
+}
 
 export function OrganizationsClient({ organizations: initial }: { organizations: OrgWithData[] }) {
   const [orgs, setOrgs] = useState(initial);
@@ -28,12 +51,35 @@ export function OrganizationsClient({ organizations: initial }: { organizations:
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [filterPlan, setFilterPlan] = useState("ALL");
+  const [filterStatus, setFilterStatus] = useState("ALL");
 
   // Owner edit state
   const [editingOwner, setEditingOwner] = useState<Owner | null>(null);
   const [ownerForm, setOwnerForm] = useState({ name: "", email: "", password: "" });
   const [ownerLoading, setOwnerLoading] = useState(false);
   const [ownerError, setOwnerError] = useState("");
+
+  // Notes state
+  const [editingNotes, setEditingNotes] = useState<string | null>(null);
+  const [notesValue, setNotesValue] = useState("");
+  const [notesSaving, setNotesSaving] = useState(false);
+
+  const filtered = useMemo(() => {
+    return orgs.filter((org) => {
+      const matchSearch =
+        !search ||
+        org.name.toLowerCase().includes(search.toLowerCase()) ||
+        org.slug.toLowerCase().includes(search.toLowerCase());
+      const matchPlan = filterPlan === "ALL" || org.plan === filterPlan;
+      const matchStatus =
+        filterStatus === "ALL" ||
+        (filterStatus === "active" && org.active) ||
+        (filterStatus === "inactive" && !org.active);
+      return matchSearch && matchPlan && matchStatus;
+    });
+  }, [orgs, search, filterPlan, filterStatus]);
 
   function slugify(name: string) {
     return name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -52,7 +98,7 @@ export function OrganizationsClient({ organizations: initial }: { organizations:
     });
     const data = await res.json();
     if (!res.ok) { setError(data.error ?? "Error al crear"); setLoading(false); return; }
-    setOrgs((prev) => [{ ...data, _count: { appointments: 0, staff: 0, users: 1 }, users: [{ id: data.ownerId ?? "", name: form.ownerName, email: form.ownerEmail }] }, ...prev]);
+    setOrgs((prev) => [{ ...data, _count: { appointments: 0, staff: 0, users: 1 }, users: [{ id: data.ownerId ?? "", name: form.ownerName, email: form.ownerEmail }], activityLogs: [] }, ...prev]);
     setForm(EMPTY_FORM);
     setOpen(false);
     setLoading(false);
@@ -114,12 +160,40 @@ export function OrganizationsClient({ organizations: initial }: { organizations:
     setOwnerLoading(false);
   }
 
+  function openNotesEdit(org: OrgWithData) {
+    setEditingNotes(org.id);
+    setNotesValue(org.adminNotes ?? "");
+  }
+
+  async function handleSaveNotes(orgId: string) {
+    setNotesSaving(true);
+    const res = await fetch(`/api/organizations/${orgId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ adminNotes: notesValue }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      setOrgs((prev) => prev.map((o) => (o.id === orgId ? { ...o, adminNotes: data.adminNotes } : o)));
+    }
+    setEditingNotes(null);
+    setNotesSaving(false);
+  }
+
+  async function handleImpersonate(owner: Owner) {
+    const res = await fetch(`/api/superadmin/impersonate/${owner.id}`, { method: "POST" });
+    const data = await res.json();
+    if (!res.ok) { alert(data.error ?? "Error"); return; }
+    window.location.href = `/superadmin/impersonate?token=${data.token}`;
+  }
+
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-zinc-900">Barberías</h1>
-          <p className="text-zinc-500 text-sm mt-1">{orgs.length} barberías registradas</p>
+          <p className="text-zinc-500 text-sm mt-1">{filtered.length} de {orgs.length} barberías</p>
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
@@ -165,6 +239,36 @@ export function OrganizationsClient({ organizations: initial }: { organizations:
         </Dialog>
       </div>
 
+      {/* Filtros */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+          <Input
+            placeholder="Buscar por nombre o URL..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-9"
+          />
+        </div>
+        <Select value={filterPlan} onValueChange={setFilterPlan}>
+          <SelectTrigger className="w-36"><SelectValue placeholder="Plan" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ALL">Todos los planes</SelectItem>
+            <SelectItem value="FREE">Starter</SelectItem>
+            <SelectItem value="PRO">Pro</SelectItem>
+            <SelectItem value="PREMIUM">Premium</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select value={filterStatus} onValueChange={setFilterStatus}>
+          <SelectTrigger className="w-36"><SelectValue placeholder="Estado" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ALL">Todos</SelectItem>
+            <SelectItem value="active">Activas</SelectItem>
+            <SelectItem value="inactive">Inactivas</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       {/* Owner edit dialog */}
       <Dialog open={!!editingOwner} onOpenChange={(v) => { if (!v) setEditingOwner(null); }}>
         <DialogContent>
@@ -193,8 +297,12 @@ export function OrganizationsClient({ organizations: initial }: { organizations:
         </DialogContent>
       </Dialog>
 
+      {/* Lista */}
       <div className="space-y-3">
-        {orgs.map((org) => (
+        {filtered.length === 0 && (
+          <p className="text-center text-zinc-400 text-sm py-12">No hay barberías que coincidan con los filtros.</p>
+        )}
+        {filtered.map((org) => (
           <Card key={org.id}>
             <CardContent className="p-5">
               {/* Row principal */}
@@ -209,7 +317,13 @@ export function OrganizationsClient({ organizations: initial }: { organizations:
                       <Badge variant={org.active ? "success" : "secondary"}>{org.active ? "Activa" : "Inactiva"}</Badge>
                       <Badge variant="outline">{org.plan}</Badge>
                     </div>
-                    <p className="text-sm text-zinc-400 mt-0.5">/b/{org.slug}</p>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <p className="text-sm text-zinc-400">/b/{org.slug}</p>
+                      <span className="text-zinc-200">·</span>
+                      <p className="text-xs text-zinc-400">
+                        Alta: {new Date(org.createdAt).toLocaleDateString("es-AR", { day: "2-digit", month: "2-digit", year: "2-digit" })}
+                      </p>
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-4 flex-wrap">
@@ -240,25 +354,93 @@ export function OrganizationsClient({ organizations: initial }: { organizations:
                 </div>
               </div>
 
-              {/* Panel expandible — dueños */}
+              {/* Panel expandible */}
               {expanded === org.id && (
-                <div className="mt-4 pt-4 border-t border-zinc-100">
-                  <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3">Cuentas del dueño</p>
-                  {org.users.length === 0 ? (
-                    <p className="text-sm text-zinc-400 italic">Sin cuentas registradas</p>
-                  ) : (
-                    <div className="space-y-2">
-                      {org.users.map((owner) => (
-                        <div key={owner.id} className="flex items-center justify-between gap-4 rounded-lg bg-zinc-50 border border-zinc-100 px-4 py-3">
-                          <div>
-                            <p className="font-medium text-zinc-900 text-sm">{owner.name ?? "Sin nombre"}</p>
-                            <p className="text-zinc-500 text-xs mt-0.5">{owner.email}</p>
+                <div className="mt-4 pt-4 border-t border-zinc-100 space-y-5">
+
+                  {/* Cuentas del dueño */}
+                  <div>
+                    <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3">Cuentas del dueño</p>
+                    {org.users.length === 0 ? (
+                      <p className="text-sm text-zinc-400 italic">Sin cuentas registradas</p>
+                    ) : (
+                      <div className="space-y-2">
+                        {org.users.map((owner) => (
+                          <div key={owner.id} className="flex items-center justify-between gap-4 rounded-lg bg-zinc-50 border border-zinc-100 px-4 py-3">
+                            <div>
+                              <p className="font-medium text-zinc-900 text-sm">{owner.name ?? "Sin nombre"}</p>
+                              <p className="text-zinc-500 text-xs mt-0.5">{owner.email}</p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Button variant="outline" size="sm" onClick={() => openOwnerEdit(owner)}>
+                                <Pencil className="h-3.5 w-3.5 mr-1.5" /> Editar
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleImpersonate(owner)}
+                                title="Ver dashboard como este dueño (cerrará tu sesión de superadmin)"
+                              >
+                                <LogIn className="h-3.5 w-3.5 mr-1.5" /> Entrar
+                              </Button>
+                            </div>
                           </div>
-                          <Button variant="outline" size="sm" onClick={() => openOwnerEdit(owner)}>
-                            <Pencil className="h-3.5 w-3.5 mr-1.5" /> Editar
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Notas internas */}
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <StickyNote className="h-3.5 w-3.5" /> Notas internas
+                      </p>
+                      {editingNotes !== org.id && (
+                        <Button variant="ghost" size="sm" className="h-6 text-xs" onClick={() => openNotesEdit(org)}>
+                          <Pencil className="h-3 w-3 mr-1" /> Editar
+                        </Button>
+                      )}
+                    </div>
+                    {editingNotes === org.id ? (
+                      <div className="space-y-2">
+                        <Textarea
+                          value={notesValue}
+                          onChange={(e) => setNotesValue(e.target.value)}
+                          placeholder="Notas privadas sobre este cliente (plan, pagos, acuerdos, etc.)"
+                          className="text-sm min-h-[80px]"
+                        />
+                        <div className="flex gap-2">
+                          <Button size="sm" onClick={() => handleSaveNotes(org.id)} disabled={notesSaving}>
+                            {notesSaving ? "Guardando..." : "Guardar"}
                           </Button>
+                          <Button size="sm" variant="outline" onClick={() => setEditingNotes(null)}>Cancelar</Button>
                         </div>
-                      ))}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-zinc-500 italic">
+                        {org.adminNotes || "Sin notas."}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Actividad reciente */}
+                  {org.activityLogs.length > 0 && (
+                    <div>
+                      <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Actividad reciente</p>
+                      <div className="space-y-1">
+                        {org.activityLogs.map((log) => {
+                          const meta = ACTION_META[log.action];
+                          const Icon = meta?.icon ?? Plus;
+                          return (
+                            <div key={log.id} className="flex items-start gap-2 text-xs text-zinc-500 py-1">
+                              <Icon className={`h-3.5 w-3.5 mt-0.5 shrink-0 ${meta?.color ?? "text-zinc-400"}`} />
+                              <span className="flex-1">{log.detail ?? log.action}</span>
+                              <span className="text-zinc-300 shrink-0">{timeAgo(log.createdAt)}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   )}
                 </div>

@@ -2,10 +2,11 @@ import { requireSuperadmin, ok, err, withErrorHandler } from "@/lib/api";
 import { OrganizationCreateSchema } from "@/lib/schemas";
 import { hash } from "bcryptjs";
 import prisma from "@/lib/prisma";
+import { logActivity } from "@/lib/activity";
 import { NextResponse } from "next/server";
 
 export const POST = withErrorHandler(async (req) => {
-  const { error } = await requireSuperadmin();
+  const { session, error } = await requireSuperadmin();
   if (error) return error;
 
   const body = await req.json();
@@ -30,6 +31,13 @@ export const POST = withErrorHandler(async (req) => {
         create: { email: ownerEmail, name: ownerName, passwordHash, role: "OWNER" },
       },
     },
+  });
+
+  logActivity({
+    organizationId: org.id,
+    action: "ORG_CREATED",
+    detail: `Barbería "${org.name}" creada con plan FREE`,
+    performedBy: session!.user.email!,
   });
 
   return ok(org, 201);

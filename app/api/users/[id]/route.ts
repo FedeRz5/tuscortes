@@ -1,4 +1,5 @@
 import { requireAuth, ok, err, withErrorHandler } from "@/lib/api";
+import { logActivity } from "@/lib/activity";
 import prisma from "@/lib/prisma";
 import { hash } from "bcryptjs";
 import { z } from "zod";
@@ -27,7 +28,18 @@ export const PATCH = withErrorHandler(async (req, ctx) => {
   const user = await prisma.user.update({
     where: { id },
     data,
-    select: { id: true, name: true, email: true, role: true, createdAt: true },
+    select: { id: true, name: true, email: true, role: true, organizationId: true, createdAt: true },
+  });
+
+  const changes = [];
+  if (parsed.data.name) changes.push("nombre");
+  if (parsed.data.email) changes.push("email");
+  if (parsed.data.password) changes.push("contraseña");
+  logActivity({
+    organizationId: user.organizationId ?? undefined,
+    action: "OWNER_EDITED",
+    detail: `Dueño "${user.email}" editado (${changes.join(", ")})`,
+    performedBy: session.user.email!,
   });
 
   return ok(user);

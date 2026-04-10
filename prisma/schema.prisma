@@ -41,6 +41,7 @@ model Organization {
   maxDaysAhead    Int        @default(30)       // Máximo de días adelante para reservar
   active       Boolean       @default(true)
   plan         String        @default("FREE")
+  adminNotes   String?
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 
@@ -50,6 +51,7 @@ model Organization {
   appointments   Appointment[]
   blockedSlots   BlockedSlot[]
   vacationBlocks VacationBlock[]
+  activityLogs   ActivityLog[]
 }
 
 // ─── STAFF (BARBERS) ─────────────────────────────────────────────────────────
@@ -109,6 +111,25 @@ model Service {
 }
 
 // ─── APPOINTMENT ─────────────────────────────────────────────────────────────
+
+model ActivityLog {
+  id             String        @id @default(cuid())
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String?
+  action         String
+  detail         String?
+  performedBy    String
+  createdAt      DateTime      @default(now())
+}
+
+model ImpersonationToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique @default(cuid())
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
 
 model Appointment {
   id             String       @id @default(cuid())

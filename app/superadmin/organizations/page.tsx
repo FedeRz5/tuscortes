@@ -10,6 +10,10 @@ export default async function OrganizationsPage() {
         where: { role: "OWNER" },
         select: { id: true, name: true, email: true },
       },
+      activityLogs: {
+        orderBy: { createdAt: "desc" },
+        take: 5,
+      },
     },
   });
 
