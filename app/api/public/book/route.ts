@@ -96,24 +96,25 @@ export const POST = withErrorHandler(async (req) => {
 
   // Enviar email de confirmación si el cliente dejó email
   if (clientEmail) {
-    console.log("[email] Intentando enviar a:", clientEmail);
-    sendAppointmentConfirmation({
-      to: clientEmail,
-      clientName,
-      orgName: org.name,
-      orgPhone: org.phone,
-      orgAddress: org.address,
-      confirmationMessage: org.bookingConfirmationMessage,
-      service: service.name,
-      staff: staffMember.name,
-      date,
-      startTime,
-      endTime: slot.endTime,
-      price: service.price,
-    }).then(() => console.log("[email] Enviado OK a:", clientEmail))
-      .catch((e) => console.error("[email] Error:", e));
-  } else {
-    console.log("[email] Sin email de cliente, no se envía.");
+    try {
+      await sendAppointmentConfirmation({
+        to: clientEmail,
+        clientName,
+        orgName: org.name,
+        orgPhone: org.phone,
+        orgAddress: org.address,
+        confirmationMessage: org.bookingConfirmationMessage,
+        service: service.name,
+        staff: staffMember.name,
+        date,
+        startTime,
+        endTime: slot.endTime,
+        price: service.price,
+      });
+      console.log("[email] Enviado OK a:", clientEmail);
+    } catch (e) {
+      console.error("[email] Error:", e); // no bloquea la reserva
+    }
   }
 
   return ok(appointment, 201);
