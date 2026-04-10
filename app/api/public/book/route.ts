@@ -96,6 +96,7 @@ export const POST = withErrorHandler(async (req) => {
 
   // Enviar email de confirmación si el cliente dejó email
   if (clientEmail) {
+    console.log("[email] Intentando enviar a:", clientEmail);
     sendAppointmentConfirmation({
       to: clientEmail,
       clientName,
@@ -109,7 +110,10 @@ export const POST = withErrorHandler(async (req) => {
       startTime,
       endTime: slot.endTime,
       price: service.price,
-    }).catch((e) => console.error("Email error:", e)); // fire-and-forget, no bloquea la respuesta
+    }).then(() => console.log("[email] Enviado OK a:", clientEmail))
+      .catch((e) => console.error("[email] Error:", e));
+  } else {
+    console.log("[email] Sin email de cliente, no se envía.");
   }
 
   return ok(appointment, 201);
