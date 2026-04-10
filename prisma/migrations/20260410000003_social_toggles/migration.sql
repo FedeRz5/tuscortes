@@ -1,0 +1,2 @@
+ALTER TABLE "Organization" ADD COLUMN "showInstagram" BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE "Organization" ADD COLUMN "showTiktok" BOOLEAN NOT NULL DEFAULT true;

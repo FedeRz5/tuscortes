@@ -33,8 +33,10 @@ model Organization {
   accentColor  String        @default("#f59e0b")
   phone        String?
   address      String?
-  instagramUrl String?                          // Link a Instagram
-  tiktokUrl    String?                          // Link a TikTok
+  instagramUrl     String?
+  showInstagram    Boolean  @default(true)
+  tiktokUrl        String?
+  showTiktok       Boolean  @default(true)
   welcomeMessage String?                        // Mensaje de bienvenida en la página pública
   bookingConfirmationMessage String?            // Mensaje post-reserva personalizado
   minAdvanceHours Int        @default(0)        // Mínimo de horas de anticipación para reservar
