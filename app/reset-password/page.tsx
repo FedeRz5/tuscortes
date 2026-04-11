@@ -16,6 +16,7 @@ export default function ResetPasswordPage({
 }) {
   const router = useRouter();
   const [token, setToken] = useState<string | null>(null);
+  const [resolving, setResolving] = useState(true);
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,7 +24,10 @@ export default function ResetPasswordPage({
   const [error, setError] = useState("");
 
   useEffect(() => {
-    searchParams.then((p) => setToken(p.token ?? null));
+    searchParams.then((p) => {
+      setToken(p.token ?? null);
+      setResolving(false);
+    });
   }, [searchParams]);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -56,6 +60,8 @@ export default function ResetPasswordPage({
     setDone(true);
     setTimeout(() => router.push("/login"), 3000);
   }
+
+  if (resolving) return null;
 
   if (!token) {
     return (
