@@ -305,6 +305,56 @@ export async function sendAppointmentReminder(params: AppointmentReminderParams)
   });
 }
 
+export async function sendPasswordResetEmail({ to, resetUrl }: { to: string; resetUrl: string }) {
+  const resend = getResend();
+  const from = process.env.RESEND_FROM ?? "TusCortes <noreply@tuscortes.com.ar>";
+
+  const html = `
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/></head>
+<body style="margin:0;padding:0;background:#f4f4f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f5;padding:32px 16px;">
+    <tr><td align="center">
+      <table width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;">
+        <tr>
+          <td style="background:#111827;border-radius:12px 12px 0 0;padding:28px 32px;text-align:center;">
+            <p style="margin:0;color:#9ca3af;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;">TusCortes</p>
+            <h1 style="margin:8px 0 0;color:#ffffff;font-size:22px;font-weight:800;">🔑 Recuperar contraseña</h1>
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#ffffff;padding:32px;text-align:center;">
+            <p style="margin:0 0 24px;color:#374151;font-size:15px;text-align:left;">
+              Recibimos una solicitud para resetear tu contraseña. Hacé click en el botón para crear una nueva.
+            </p>
+            <a href="${resetUrl}" style="display:inline-block;background:#111827;color:#ffffff;font-size:15px;font-weight:700;padding:14px 32px;border-radius:10px;text-decoration:none;">
+              Cambiar contraseña
+            </a>
+            <p style="margin:24px 0 0;color:#9ca3af;font-size:12px;">
+              Este link es válido por <strong>1 hora</strong>. Si no solicitaste esto, ignorá este mail.
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#f9fafb;border-radius:0 0 12px 12px;padding:18px 32px;text-align:center;border-top:1px solid #e5e7eb;">
+            <p style="margin:0;color:#9ca3af;font-size:12px;">TusCortes · tuscortes.com.ar</p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`.trim();
+
+  await resend.emails.send({
+    from,
+    to,
+    subject: "Recuperá tu contraseña de TusCortes",
+    html,
+  });
+}
+
 function row(label: string, value: string) {
   return `
     <tr>

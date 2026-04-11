@@ -12,8 +12,10 @@ export default auth((req) => {
   const isPublicRoute =
     pathname === "/" ||
     pathname === "/login" ||
+    pathname === "/forgot-password" ||
+    pathname === "/reset-password" ||
     pathname.startsWith("/b/") ||
-    pathname.startsWith("/api/auth/") ||   // NextAuth routes
+    pathname.startsWith("/api/auth/") ||
     pathname.startsWith("/api/public/") ||
     pathname.startsWith("/_next/") ||
     pathname.startsWith("/favicon");
