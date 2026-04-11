@@ -2,8 +2,10 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Clock, CheckCircle, XCircle } from "lucide-react";
+import { Calendar, Clock, CheckCircle, ArrowRight } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import Link from "next/link";
+import { CopyButton } from "@/components/ui/copy-button";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -12,7 +14,7 @@ export default async function DashboardPage() {
   const orgId = session.user.organizationId;
   const today = new Date().toISOString().split("T")[0];
 
-  const [todayAppointments, totalThisMonth, pendingCount, staffCount] = await Promise.all([
+  const [todayAppointments, totalThisMonth, pendingCount, staffCount, servicesCount, org] = await Promise.all([
     prisma.appointment.findMany({
       where: { organizationId: orgId, date: today },
       include: { service: true, staff: true },
@@ -27,7 +29,13 @@ export default async function DashboardPage() {
     }),
     prisma.appointment.count({ where: { organizationId: orgId, status: "PENDING" } }),
     prisma.staff.count({ where: { organizationId: orgId, active: true } }),
+    prisma.service.count({ where: { organizationId: orgId, active: true } }),
+    prisma.organization.findUnique({ where: { id: orgId }, select: { slug: true } }),
   ]);
+
+  const bookingUrl = org ? `${process.env.NEXT_PUBLIC_APP_URL ?? "https://tuscortes.com"}/b/${org.slug}` : "";
+  const qrUrl = bookingUrl ? `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(bookingUrl)}&bgcolor=ffffff` : "";
+  const showOnboarding = staffCount === 0 || servicesCount === 0;
 
   const stats = [
     { label: "Turnos hoy", value: todayAppointments.length, icon: Calendar, color: "text-blue-600" },
@@ -42,6 +50,33 @@ export default async function DashboardPage() {
         <h1 className="text-2xl font-bold text-zinc-900">Panel principal</h1>
         <p className="text-zinc-500">{formatDate(today)}</p>
       </div>
+
+      {/* Onboarding */}
+      {showOnboarding && (
+        <Card className="border-indigo-200 bg-indigo-50">
+          <CardContent className="pt-5 pb-5">
+            <p className="font-semibold text-indigo-900 mb-1">¡Bienvenido a TusCortes!</p>
+            <p className="text-sm text-indigo-700 mb-4">Completá estos pasos para empezar a recibir turnos.</p>
+            <div className="space-y-2">
+              <OnboardingStep
+                done={staffCount > 0}
+                label="Agregá tu primer barbero"
+                href="/dashboard/staff"
+              />
+              <OnboardingStep
+                done={servicesCount > 0}
+                label="Agregá un servicio"
+                href="/dashboard/services"
+              />
+              <OnboardingStep
+                done={staffCount > 0 && servicesCount > 0}
+                label="Configurá los horarios"
+                href="/dashboard/schedule"
+              />
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map(({ label, value, icon: Icon, color }) => (
@@ -58,6 +93,35 @@ export default async function DashboardPage() {
           </Card>
         ))}
       </div>
+
+      {/* Página pública + QR */}
+      {bookingUrl && (
+        <Card>
+          <CardHeader><CardTitle>Tu página de reservas</CardTitle></CardHeader>
+          <CardContent>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+              {qrUrl && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={qrUrl} alt="QR código de reservas" className="h-[180px] w-[180px] rounded-lg border border-zinc-200 shrink-0" />
+              )}
+              <div className="space-y-3 flex-1 min-w-0">
+                <p className="text-sm text-zinc-500">Compartí este link con tus clientes o mostrá el QR en tu local.</p>
+                <div className="flex items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2">
+                  <code className="flex-1 text-sm font-mono text-zinc-700 truncate">{bookingUrl}</code>
+                  <CopyButton text={bookingUrl} />
+                </div>
+                <Link
+                  href={bookingUrl.replace(process.env.NEXT_PUBLIC_APP_URL ?? "https://tuscortes.com", "")}
+                  target="_blank"
+                  className="inline-flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-800 font-medium"
+                >
+                  Ver página pública <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>
@@ -111,5 +175,25 @@ export default async function DashboardPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+function OnboardingStep({ done, label, href }: { done: boolean; label: string; href: string }) {
+  return (
+    <Link
+      href={done ? "#" : href}
+      className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
+        done
+          ? "bg-white/60 text-indigo-400 cursor-default"
+          : "bg-white hover:bg-indigo-100 text-indigo-800 font-medium"
+      }`}
+    >
+      <span className={`flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold shrink-0 ${
+        done ? "bg-green-500 text-white" : "bg-indigo-200 text-indigo-700"
+      }`}>
+        {done ? "✓" : "→"}
+      </span>
+      <span className={done ? "line-through" : ""}>{label}</span>
+    </Link>
   );
 }

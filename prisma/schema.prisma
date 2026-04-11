@@ -136,6 +136,15 @@ model ImpersonationToken {
   createdAt DateTime @default(now())
 }
 
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
 model Appointment {
   id             String       @id @default(cuid())
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)

@@ -9,8 +9,9 @@ import { HeroBg } from "@/components/landing/hero-bg";
 
 // ─── MercadoPago ─────────────────────────────────────────────────────────────
 const MP_LINKS = {
-  PRO: "https://mpago.la/pro-tuscortes",
-  PREMIUM: "https://mpago.la/premium-tuscortes",
+  STARTER: "https://mpago.la/1J6RZ4a",
+  PRO: "https://mpago.la/2S9r3ks",
+  PREMIUM: "https://mpago.la/2VmuEJi",
 };
 
 // ─── Planes ───────────────────────────────────────────────────────────────────
@@ -21,7 +22,7 @@ const PLANS = [
     period: "/mes",
     desc: "Para arrancar y ver si te sirve.",
     popular: false,
-    href: "/login",
+    href: MP_LINKS.STARTER,
     features: [
       { text: "1 barbero", ok: true },
       { text: "40 turnos por mes", ok: true },

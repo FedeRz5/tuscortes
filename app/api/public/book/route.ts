@@ -6,6 +6,7 @@ import { Prisma } from "@prisma/client";
 import { generateSlots } from "@/lib/slots";
 import { sendAppointmentConfirmation, sendNewAppointmentNotification } from "@/lib/email";
 import { sendAppointmentConfirmationWA, sendNewAppointmentNotificationWA } from "@/lib/whatsapp";
+import { generateCancelToken } from "@/lib/cancel-token";
 
 export const POST = withErrorHandler(async (req) => {
   const body = await req.json();
@@ -104,6 +105,10 @@ export const POST = withErrorHandler(async (req) => {
   }
 
   // Notificaciones al cliente (email + WhatsApp)
+  const cancelToken = generateCancelToken(appointment.id);
+  const origin = new URL(req.url).origin;
+  const cancelUrl = `${origin}/b/cancel?id=${appointment.id}&token=${cancelToken}`;
+
   if (clientEmail) {
     sendAppointmentConfirmation({
       to: clientEmail,
@@ -118,6 +123,7 @@ export const POST = withErrorHandler(async (req) => {
       startTime,
       endTime: slot.endTime,
       price: service.price,
+      cancelUrl,
     }).catch((e) => console.error("[email] Error cliente:", e));
   }
 

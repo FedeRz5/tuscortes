@@ -17,7 +17,7 @@ type OrgWithData = Organization & {
 
 type TimeSlot = { startTime: string; endTime: string; available: boolean };
 
-const STEP_LABELS = ["Servicio", "Barbero", "Fecha", "Horario", "Tus datos"];
+const STEP_LABELS = ["Servicio", "Barbero", "Fecha", "Horario", "Tus datos", "Confirmar"];
 
 function getNextDays(org: OrgWithData) {
   const days = [];
@@ -76,17 +76,14 @@ export function BookingWizard({ org }: { org: OrgWithData }) {
   }
   function selectSlot(s: TimeSlot) { setSlot(s); setStep(4); }
 
-  async function handleBook(e: React.FormEvent) {
-    e.preventDefault();
+  function handleNextToSummary() {
     let valid = true;
-
     if (!form.phone || !isValidPhoneNumber(form.phone)) {
       setPhoneError("Ingresá un número de teléfono válido");
       valid = false;
     } else {
       setPhoneError("");
     }
-
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!form.email || !emailRegex.test(form.email)) {
       setEmailError("Ingresá un email válido");
@@ -94,8 +91,11 @@ export function BookingWizard({ org }: { org: OrgWithData }) {
     } else {
       setEmailError("");
     }
+    if (valid) setStep(5);
+  }
 
-    if (!valid) return;
+  async function handleBook(e?: React.FormEvent) {
+    e?.preventDefault();
     setLoading(true); setError("");
     const res = await fetch("/api/public/book", {
       method: "POST",
@@ -324,16 +324,10 @@ export function BookingWizard({ org }: { org: OrgWithData }) {
               <button onClick={() => setStep(3)} className="text-zinc-400 hover:text-zinc-900"><ChevronLeft className="h-5 w-5" /></button>
               <h2 className="text-lg font-bold text-zinc-900">Tus datos</h2>
             </div>
-            <div className="rounded-xl border border-zinc-100 bg-white p-4 space-y-2 text-sm">
-              <Row label="Servicio" value={service!.name} />
-              <Row label="Barbero" value={staff!.name} />
-              <Row label="Fecha" value={new Date(date! + "T00:00:00").toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long" })} />
-              <Row label="Horario" value={`${slot!.startTime} - ${slot!.endTime}`} />
-            </div>
-            <form onSubmit={handleBook} className="space-y-4">
+            <div className="space-y-4">
               <div className="space-y-1.5">
                 <Label>Nombre y apellido *</Label>
-                <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Juan García" required />
+                <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Juan García" />
               </div>
               <div className="space-y-1.5">
                 <Label>Teléfono / WhatsApp *</Label>
@@ -361,12 +355,50 @@ export function BookingWizard({ org }: { org: OrgWithData }) {
                 <Label>Notas (opcional)</Label>
                 <Textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} rows={2} placeholder="Alguna indicación especial..." />
               </div>
-              {error && <p className="text-sm text-red-600">{error}</p>}
-              <Button type="submit" disabled={loading || !form.name || !form.phone || !form.email} className="w-full h-12 text-base font-semibold" style={{ backgroundColor: primaryColor }}>
-                {loading ? "Reservando..." : "Confirmar turno"}
+              <Button
+                onClick={handleNextToSummary}
+                disabled={!form.name}
+                className="w-full h-12 text-base font-semibold"
+                style={{ backgroundColor: primaryColor }}
+              >
+                Revisar reserva →
               </Button>
               <p className="text-xs text-zinc-400 text-center">No necesitás crear una cuenta para reservar</p>
-            </form>
+            </div>
+          </div>
+        )}
+
+        {/* Step 5: Summary + confirm */}
+        {step === 5 && (
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <button onClick={() => setStep(4)} className="text-zinc-400 hover:text-zinc-900"><ChevronLeft className="h-5 w-5" /></button>
+              <h2 className="text-lg font-bold text-zinc-900">Confirmá tu turno</h2>
+            </div>
+            <div className="rounded-xl border border-zinc-200 bg-white p-5 space-y-3 text-sm">
+              <p className="text-xs text-zinc-400 uppercase tracking-wider font-medium mb-1">Tu reserva</p>
+              <Row label="Servicio" value={service!.name} />
+              <Row label="Barbero" value={staff!.name} />
+              <Row label="Fecha" value={new Date(date! + "T00:00:00").toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long" })} />
+              <Row label="Horario" value={`${slot!.startTime} — ${slot!.endTime}`} />
+              <Row label="Precio" value={`$${service!.price.toLocaleString("es-AR")}`} />
+            </div>
+            <div className="rounded-xl border border-zinc-200 bg-white p-5 space-y-3 text-sm">
+              <p className="text-xs text-zinc-400 uppercase tracking-wider font-medium mb-1">Tus datos</p>
+              <Row label="Nombre" value={form.name} />
+              <Row label="Teléfono" value={form.phone} />
+              <Row label="Email" value={form.email} />
+              {form.notes && <Row label="Notas" value={form.notes} />}
+            </div>
+            {error && <p className="text-sm text-red-600 text-center">{error}</p>}
+            <Button
+              onClick={() => handleBook()}
+              disabled={loading}
+              className="w-full h-12 text-base font-semibold"
+              style={{ backgroundColor: primaryColor }}
+            >
+              {loading ? "Reservando..." : "Confirmar turno"}
+            </Button>
           </div>
         )}
       </div>

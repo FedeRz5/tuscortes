@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/layout/sidebar";
 import prisma from "@/lib/prisma";
 import { Providers } from "@/components/providers";
+import { NewAppointmentNotifier } from "@/components/notifications/new-appointment-notifier";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
@@ -24,6 +25,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <main className="flex-1 overflow-y-auto">
           <div className="pt-14 md:pt-0 p-4 md:p-8">{children}</div>
         </main>
+        <NewAppointmentNotifier />
       </div>
     </Providers>
   );

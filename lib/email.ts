@@ -19,6 +19,7 @@ interface AppointmentConfirmationParams {
   startTime: string;  // "10:30"
   endTime: string;    // "11:00"
   price: number;
+  cancelUrl?: string;
 }
 
 function formatDate(dateStr: string) {
@@ -110,6 +111,11 @@ export async function sendAppointmentConfirmation(params: AppointmentConfirmatio
           <!-- Footer -->
           <tr>
             <td style="background:#f9fafb;border-radius:0 0 12px 12px;padding:18px 32px;text-align:center;border-top:1px solid #e5e7eb;">
+              ${params.cancelUrl ? `
+              <p style="margin:0 0 10px;font-size:12px;color:#9ca3af;">
+                ¿Necesitás cancelar? <a href="${params.cancelUrl}" style="color:#ef4444;text-decoration:underline;">Cancelar turno</a>
+              </p>
+              ` : ""}
               <p style="margin:0;color:#9ca3af;font-size:12px;">
                 Este mail fue generado automáticamente por <strong>TusCortes</strong>.<br/>
                 tuscortes.com.ar
