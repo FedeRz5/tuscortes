@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Check, CheckCircle2, XCircle, CreditCard } from "lucide-react";
 import { Reveal, StaggerContainer, StaggerItem } from "@/components/landing/reveal";
 import { MagneticButton } from "@/components/landing/magnetic-button";
@@ -77,11 +78,8 @@ export default function HomePage() {
       {/* ── Navbar ── */}
       <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/95">
         <nav className="flex items-center justify-between px-6 py-4 max-w-6xl mx-auto">
-          <div className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center">
-              <span className="text-white font-black text-sm">TA</span>
-            </div>
-            <span className="font-bold text-lg tracking-tight text-gray-900">TusCortes</span>
+          <div className="flex items-center">
+            <Image src="/logo.jpeg" alt="TusCortes" width={150} height={50} className="object-contain" />
           </div>
           <div className="hidden sm:flex items-center gap-6 text-sm text-gray-500">
             <a href="#como-funciona" className="hover:text-gray-900 transition-colors">Cómo funciona</a>
@@ -301,11 +299,8 @@ export default function HomePage() {
       {/* ── Footer ── */}
       <footer className="border-t border-gray-100 px-6 py-8">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2.5">
-            <div className="h-7 w-7 rounded-lg bg-indigo-600 flex items-center justify-center">
-              <span className="text-white font-black text-xs">TA</span>
-            </div>
-            <span className="font-bold text-sm text-gray-900">TusCortes</span>
+          <div className="flex items-center">
+            <Image src="/logo.jpeg" alt="TusCortes" width={120} height={40} className="object-contain" />
           </div>
           <p className="text-gray-400 text-sm">© {new Date().getFullYear()} TusCortes. Todos los derechos reservados.</p>
           <Link href="/login" className="text-sm text-gray-400 hover:text-gray-900 transition-colors">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -64,10 +65,10 @@ export function Sidebar({ role, orgName }: SidebarProps) {
     <>
       <div className="flex h-14 items-center border-b border-zinc-200 px-5 justify-between">
         <div>
-          <p className="text-xs text-zinc-400 uppercase tracking-wider font-medium">
-            {role === "SUPERADMIN" ? "Super Admin" : "Panel"}
+          <Image src="/logo.jpeg" alt="TusCortes" width={120} height={40} className="object-contain" />
+          <p className="text-xs text-zinc-400 uppercase tracking-wider font-medium leading-none">
+            {role === "SUPERADMIN" ? "Super Admin" : orgName ?? ""}
           </p>
-          <p className="font-semibold text-zinc-900 truncate">{orgName ?? "TusCortes"}</p>
         </div>
         <button
           className="md:hidden p-1 text-zinc-400 hover:text-zinc-900"
@@ -116,7 +117,7 @@ export function Sidebar({ role, orgName }: SidebarProps) {
     <>
       {/* Mobile top header */}
       <header className="md:hidden fixed top-0 inset-x-0 z-30 h-14 bg-white border-b border-zinc-200 flex items-center justify-between px-4">
-        <p className="font-semibold text-zinc-900">{orgName ?? "TusCortes"}</p>
+        <Image src="/logo.jpeg" alt="TusCortes" width={110} height={36} className="object-contain" />
         <button onClick={() => setOpen(true)} className="p-1 text-zinc-600">
           <Menu className="h-5 w-5" />
         </button>
