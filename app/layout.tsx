@@ -4,6 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "TusCortes — Turnos online para tu barbería",
   description: "Reservá tu turno en segundos. Sin esperas, sin llamadas.",
+  icons: { icon: "/logo.png" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
