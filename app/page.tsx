@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, CheckCircle2, XCircle, CreditCard } from "lucide-react";
 import { Reveal, StaggerContainer, StaggerItem } from "@/components/landing/reveal";
@@ -71,6 +72,36 @@ const PLANS = [
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function HomePage() {
+  useEffect(() => {
+    const ids = ["como-funciona", "planes"];
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            history.replaceState(null, "", `#${entry.target.id}`);
+          }
+        });
+      },
+      { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
+    );
+
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    const handleScroll = () => {
+      if (window.scrollY < 80) history.replaceState(null, "", "/");
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-white text-gray-900 overflow-x-hidden">
       <HeroBg />
@@ -209,7 +240,9 @@ export default function HomePage() {
       </section>
 
       {/* ── Steps ── */}
-      <StickySteps />
+      <div id="como-funciona">
+        <StickySteps />
+      </div>
 
       {/* ── Pricing ── */}
       <section id="planes" className="px-6 py-24 border-t border-gray-100 bg-gray-50/50">
