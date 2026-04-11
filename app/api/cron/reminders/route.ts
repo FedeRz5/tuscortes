@@ -11,19 +11,19 @@ export const GET = async (req: Request) => {
     }
   }
 
-  // Calcular fecha de mañana en hora Argentina (UTC-3)
-  const nowUTC = Date.now();
-  const argOffset = -3 * 60 * 60 * 1000;
-  const tomorrowArg = new Date(nowUTC + argOffset + 24 * 60 * 60 * 1000);
-  const tomorrowStr = tomorrowArg.toISOString().split("T")[0];
+  // Calcular fecha de mañana en zona horaria de Argentina
+  const tomorrowStr = new Intl.DateTimeFormat("sv-SE", {
+    timeZone: "America/Argentina/Buenos_Aires",
+  }).format(new Date(Date.now() + 24 * 60 * 60 * 1000));
 
-  // Buscar turnos de mañana que no tengan recordatorio enviado
+  // Buscar turnos de mañana que no tengan recordatorio enviado (máx 200 para evitar timeout)
   const appointments = await prisma.appointment.findMany({
     where: {
       date: tomorrowStr,
       status: { notIn: ["CANCELLED"] },
       reminderSentAt: null,
     },
+    take: 200,
     include: {
       service: true,
       staff: true,

@@ -44,7 +44,8 @@ export async function GET(req: Request) {
         prisma.staff.findUnique({ where: { id: staffId } }),
       ]);
 
-    if (!service) return NextResponse.json({ error: "Service not found" }, { status: 404 });
+    if (!service || service.organizationId !== org.id) return NextResponse.json({ error: "Service not found" }, { status: 404 });
+    if (!staffRecord || staffRecord.organizationId !== org.id) return NextResponse.json([]);
     if (vacations.length > 0) return NextResponse.json([]);
     if (!schedule || !schedule.enabled) return NextResponse.json([]);
 

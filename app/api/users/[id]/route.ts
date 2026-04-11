@@ -22,7 +22,7 @@ export const PATCH = withErrorHandler(async (req, ctx) => {
   if (!parsed.success) return err(parsed.error.issues[0].message);
 
   const { password, ...rest } = parsed.data;
-  const data: Record<string, unknown> = { ...rest };
+  const data: { name?: string; email?: string; active?: boolean; passwordHash?: string } = { ...rest };
   if (password) data.passwordHash = await hash(password, 12);
 
   const user = await prisma.user.update({

@@ -122,6 +122,9 @@ model ActivityLog {
   detail         String?
   performedBy    String
   createdAt      DateTime      @default(now())
+
+  @@index([organizationId])
+  @@index([createdAt])
 }
 
 model ImpersonationToken {
@@ -153,6 +156,9 @@ model Appointment {
   reminderSentAt DateTime?                      // Fecha en que se envió el recordatorio
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
+
+  @@index([organizationId, date])
+  @@index([staffId, date])
 }
 
 // ─── BLOCKED SLOTS ────────────────────────────────────────────────────────────
@@ -168,6 +174,8 @@ model BlockedSlot {
   reason         String?
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
+
+  @@index([organizationId, date])
 }
 
 // ─── VACATION BLOCKS ──────────────────────────────────────────────────────────
@@ -182,4 +190,6 @@ model VacationBlock {
   reason         String?
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
+
+  @@index([organizationId, startDate, endDate])
 }

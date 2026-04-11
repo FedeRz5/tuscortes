@@ -6,7 +6,6 @@ import { Prisma } from "@prisma/client";
 import { generateSlots } from "@/lib/slots";
 import { sendAppointmentConfirmation, sendNewAppointmentNotification } from "@/lib/email";
 import { sendAppointmentConfirmationWA, sendNewAppointmentNotificationWA } from "@/lib/whatsapp";
-import { NextResponse } from "next/server";
 
 export const POST = withErrorHandler(async (req) => {
   const body = await req.json();
@@ -40,8 +39,8 @@ export const POST = withErrorHandler(async (req) => {
     prisma.service.findUnique({ where: { id: serviceId, active: true } }),
     prisma.staff.findUnique({ where: { id: staffId } }),
   ]);
-  if (!service) return err("Service not found", 404);
-  if (!staffMember) return err("Staff not found", 404);
+  if (!service || service.organizationId !== org.id) return err("Servicio no encontrado", 404);
+  if (!staffMember || staffMember.organizationId !== org.id) return err("Barbero no encontrado", 404);
 
   const dayOfWeek = new Date(date + "T00:00:00").getDay();
   const schedule = await prisma.workSchedule.findUnique({

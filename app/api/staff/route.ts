@@ -2,7 +2,6 @@ import { requireAuth, ok, err, withErrorHandler } from "@/lib/api";
 import { StaffSchema } from "@/lib/schemas";
 import { getLimits } from "@/lib/plans";
 import prisma from "@/lib/prisma";
-import { NextResponse } from "next/server";
 
 export const POST = withErrorHandler(async (req) => {
   const { session, error } = await requireAuth();

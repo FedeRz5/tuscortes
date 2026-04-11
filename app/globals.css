@@ -184,9 +184,10 @@ html {
 }
 
 /* ─── Phone Input ─────────────────────────────────────────────────────────── */
+/* className se aplica al mismo div.PhoneInput, por eso usamos .phone-input-wrapper directamente */
 
-.phone-input-wrapper .PhoneInput {
-  display: flex;
+.phone-input-wrapper {
+  display: flex !important;
   align-items: center;
   gap: 8px;
   height: 40px;
@@ -197,20 +198,18 @@ html {
   transition: border-color 0.15s;
 }
 
-.phone-input-wrapper .PhoneInput:focus-within {
+.phone-input-wrapper:focus-within {
   border-color: #111827;
-  outline: none;
   box-shadow: 0 0 0 2px rgba(17,24,39,0.08);
 }
 
-.phone-input-error .PhoneInput {
-  border-color: #f87171;
+.phone-input-error {
+  border-color: #f87171 !important;
 }
 
 .phone-input-wrapper .PhoneInputInput {
   flex: 1 !important;
   min-width: 0 !important;
-  width: 100% !important;
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
@@ -218,12 +217,12 @@ html {
   color: #111827;
   background: transparent;
   padding: 0;
+  height: 100%;
 }
 
 .phone-input-wrapper .PhoneInputCountrySelect {
   border: none;
   outline: none;
   background: transparent;
-  font-size: 14px;
   cursor: pointer;
 }

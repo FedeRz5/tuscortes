@@ -3,7 +3,6 @@ import { OrganizationCreateSchema } from "@/lib/schemas";
 import { hash } from "bcryptjs";
 import prisma from "@/lib/prisma";
 import { logActivity } from "@/lib/activity";
-import { NextResponse } from "next/server";
 
 export const POST = withErrorHandler(async (req) => {
   const { session, error } = await requireSuperadmin();
