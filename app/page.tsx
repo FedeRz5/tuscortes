@@ -115,7 +115,7 @@ export default function HomePage() {
                 href="/login"
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-orange-500 px-8 py-4 text-base font-bold text-white hover:bg-orange-400 transition-all shadow-lg shadow-orange-500/25"
               >
-                Empezar gratis <ArrowRight className="h-4 w-4" />
+                Ver planes <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 href="/b/demo"
@@ -126,7 +126,7 @@ export default function HomePage() {
             </div>
 
             <div className="hero-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-400 justify-center lg:justify-start">
-              {["Sin tarjeta de crédito", "Cancela cuando quieras", "Listo en 5 minutos"].map((t) => (
+              {["Pagos por MercadoPago", "Cancela cuando quieras", "Listo en 5 minutos"].map((t) => (
                 <span key={t} className="flex items-center gap-1.5">
                   <Check className="h-3.5 w-3.5 text-indigo-500 shrink-0" />
                   {t}
@@ -260,16 +260,18 @@ export default function HomePage() {
                     ))}
                   </ul>
 
-                  <button
-                    disabled
-                    className={`block w-full text-center rounded-xl px-6 py-3 text-sm font-bold cursor-not-allowed opacity-50 ${
+                  <a
+                    href={plan.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`block w-full text-center rounded-xl px-6 py-3 text-sm font-bold transition-opacity hover:opacity-90 ${
                       plan.popular
                         ? "bg-white text-indigo-600"
                         : "bg-indigo-600 text-white"
                     }`}
                   >
-                    Próximamente
-                  </button>
+                    {plan.cta}
+                  </a>
                 </div>
               </StaggerItem>
             ))}
@@ -285,13 +287,13 @@ export default function HomePage() {
               <h2 className="text-3xl sm:text-4xl font-black mb-3 leading-tight text-white">
                 Mañana ya estás<br />tomando turnos.
               </h2>
-              <p className="text-indigo-200 mb-8 text-sm">Configurás en 5 minutos. Sin tarjeta.</p>
-              <Link
-                href="/login"
+              <p className="text-indigo-200 mb-8 text-sm">Configurás en 5 minutos. Planes desde $12.500/mes.</p>
+              <a
+                href="#planes"
                 className="inline-flex items-center gap-2 rounded-xl bg-orange-500 px-10 py-4 text-base font-bold text-white hover:bg-orange-400 transition-all shadow-lg shadow-orange-500/30"
               >
-                Empezar gratis <ArrowRight className="h-4 w-4" />
-              </Link>
+                Ver planes <ArrowRight className="h-4 w-4" />
+              </a>
             </div>
           </Reveal>
         </div>
