@@ -1,34 +1,23 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle } from "lucide-react";
 
-export default function ResetPasswordPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ token?: string }>;
-}) {
+export default function ResetPasswordPage() {
   const router = useRouter();
-  const [token, setToken] = useState<string | null>(null);
-  const [resolving, setResolving] = useState(true);
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    searchParams.then((p) => {
-      setToken(p.token ?? null);
-      setResolving(false);
-    });
-  }, [searchParams]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -60,8 +49,6 @@ export default function ResetPasswordPage({
     setDone(true);
     setTimeout(() => router.push("/login"), 3000);
   }
-
-  if (resolving) return null;
 
   if (!token) {
     return (
