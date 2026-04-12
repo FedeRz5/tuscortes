@@ -21,7 +21,7 @@ const PLANS = [
     name: "Starter",
     price: "$12.500",
     period: "/mes",
-    desc: "Para arrancar y ver si te sirve.",
+    desc: "Lo esencial para comenzar a gestionar turnos online.",
     popular: false,
     href: MP_LINKS.STARTER,
     features: [
@@ -38,7 +38,7 @@ const PLANS = [
     name: "Pro",
     price: "$20.999",
     period: "/mes",
-    desc: "Todo lo que necesitás para no perder ni un turno.",
+    desc: "La solución completa para barberías en crecimiento.",
     popular: true,
     href: MP_LINKS.PRO,
     features: [
@@ -55,7 +55,7 @@ const PLANS = [
     name: "Premium",
     price: "$32.900",
     period: "/mes",
-    desc: "Para barberías que ya juegan en otra liga.",
+    desc: "Para barberías con equipo completo y alta demanda.",
     popular: false,
     href: MP_LINKS.PREMIUM,
     features: [
@@ -137,8 +137,8 @@ export default function HomePage() {
             </h1>
 
             <p className="hero-3 text-lg text-gray-500 max-w-md mb-10 leading-relaxed mx-auto lg:mx-0">
-              Tu barbería tiene su propia página de reservas. Los clientes
-              eligen horario solos — sin llamadas, sin olvidos, sin vos en el medio.
+              Tu barbería tiene su propia página de reservas online. Los clientes
+              eligen día y horario de forma autónoma — sin llamadas, sin olvidos, sin interrupciones.
             </p>
 
             <div className="hero-4 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-10">
@@ -318,7 +318,7 @@ export default function HomePage() {
           <Reveal>
             <div className="rounded-3xl bg-indigo-600 px-8 py-16">
               <h2 className="text-3xl sm:text-4xl font-black mb-3 leading-tight text-white">
-                Mañana ya estás<br />tomando turnos.
+                Empezá a recibir turnos<br />online desde hoy.
               </h2>
               <p className="text-indigo-200 mb-8 text-sm">Configurás en 5 minutos. Planes desde $12.500/mes.</p>
               <a
