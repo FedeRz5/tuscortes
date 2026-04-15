@@ -4,12 +4,12 @@ import "./globals.css";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://tuscortes.com";
 
 export const metadata: Metadata = {
-  title: "TusCortes — Turnos online para tu barbería",
+  title: "TusCortes",
   description: "Reservá tu turno en segundos. Sin esperas, sin llamadas.",
   icons: { icon: "/logo.png" },
   metadataBase: new URL(APP_URL),
   openGraph: {
-    title: "TusCortes — Turnos online para tu barbería",
+    title: "TusCortes",
     description: "Reservá tu turno en segundos. Sin esperas, sin llamadas.",
     url: APP_URL,
     siteName: "TusCortes",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "TusCortes — Turnos online para tu barbería",
+    title: "TusCortes",
     description: "Reservá tu turno en segundos. Sin esperas, sin llamadas.",
     images: ["/logo.png"],
   },
