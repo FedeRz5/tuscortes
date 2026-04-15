@@ -81,7 +81,7 @@ export const IntroScene: React.FC = () => {
             height: 120,
             width: "auto",
             objectFit: "contain",
-            filter: `brightness(0) invert(1) drop-shadow(0 0 40px ${C.primaryGlow})`,
+            filter: `drop-shadow(0 0 40px ${C.primaryGlow})`,
           }}
         />
 

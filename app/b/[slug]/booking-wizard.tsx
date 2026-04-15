@@ -46,8 +46,9 @@ function getNextDays(org: OrgWithData) {
   return days.slice(0, maxDays);
 }
 
-// Caché de slots por {staffId}:{serviceId}:{date} para no refetchear al navegar atrás
-const slotsCache = new Map<string, TimeSlot[]>();
+// Caché de slots con TTL de 60s para no refetchear al navegar atrás pero siempre mostrar disponibilidad actual
+const slotsCache = new Map<string, { slots: TimeSlot[]; ts: number }>();
+const SLOTS_CACHE_TTL = 60_000; // 60 segundos
 
 export function BookingWizard({ org }: { org: OrgWithData }) {
   const [step, setStep] = useState(0);
@@ -71,7 +72,7 @@ export function BookingWizard({ org }: { org: OrgWithData }) {
   async function loadSlots(staffId: string, serviceId: string, dateStr: string) {
     const cacheKey = `${staffId}:${serviceId}:${dateStr}`;
     const cached = slotsCache.get(cacheKey);
-    if (cached) { setSlots(cached); return; }
+    if (cached && Date.now() - cached.ts < SLOTS_CACHE_TTL) { setSlots(cached.slots); return; }
 
     setLoadingSlots(true);
     setSlots([]);
@@ -81,7 +82,7 @@ export function BookingWizard({ org }: { org: OrgWithData }) {
       );
       const data = await res.json();
       const result = Array.isArray(data) ? data : [];
-      slotsCache.set(cacheKey, result);
+      slotsCache.set(cacheKey, { slots: result, ts: Date.now() });
       setSlots(result);
     } finally {
       setLoadingSlots(false);
@@ -135,6 +136,7 @@ export function BookingWizard({ org }: { org: OrgWithData }) {
     const data = await res.json();
     setLoading(false);
     if (!res.ok) { setError(data.error ?? "Error al reservar. Intentá nuevamente."); return; }
+    slotsCache.clear(); // Invalidar caché para que el slot aparezca bloqueado en la próxima reserva
     setBooked(true);
   }
 
@@ -159,7 +161,7 @@ export function BookingWizard({ org }: { org: OrgWithData }) {
             <p className="text-zinc-600 text-sm bg-white rounded-xl border p-4">{org.bookingConfirmationMessage}</p>
           )}
           <Button className="w-full" style={{ backgroundColor: primaryColor, color: primaryText }}
-            onClick={() => { setBooked(false); setStep(0); setService(null); setStaff(null); setDate(null); setSlot(null); setForm({ name: "", phone: "", email: "", notes: "" }); }}
+            onClick={() => window.location.reload()}
           >
             Reservar otro turno
           </Button>

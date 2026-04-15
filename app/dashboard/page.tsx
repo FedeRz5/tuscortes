@@ -32,12 +32,12 @@ export default async function DashboardPage() {
     prisma.appointment.count({ where: { organizationId: orgId, status: "PENDING" } }),
     prisma.staff.count({ where: { organizationId: orgId, active: true } }),
     prisma.service.count({ where: { organizationId: orgId, active: true } }),
-    prisma.organization.findUnique({ where: { id: orgId }, select: { slug: true, name: true } }),
+    prisma.organization.findUnique({ where: { id: orgId }, select: { slug: true, name: true, phone: true } }),
   ]);
 
   const bookingUrl = org ? `${process.env.NEXT_PUBLIC_APP_URL ?? "https://tuscortes.com"}/b/${org.slug}` : "";
   const qrUrl = bookingUrl ? `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(bookingUrl)}&bgcolor=ffffff` : "";
-  const showOnboarding = staffCount === 0 || servicesCount === 0;
+  const showOnboarding = staffCount === 0 || servicesCount === 0 || !org?.phone;
 
   const stats = [
     { label: "Turnos hoy", value: todayAppointments.length, icon: Calendar, color: "text-blue-600" },
@@ -74,6 +74,12 @@ export default async function DashboardPage() {
                 done={staffCount > 0 && servicesCount > 0}
                 label="Configurá los horarios"
                 href="/dashboard/schedule"
+              />
+              <OnboardingStep
+                done={!!org?.phone}
+                label="Agregá tu número de WhatsApp"
+                href="/dashboard/settings"
+                description={!org?.phone ? "⚠️ Sin teléfono solo recibirás avisos por email" : undefined}
               />
             </div>
           </CardContent>
@@ -182,7 +188,7 @@ export default async function DashboardPage() {
   );
 }
 
-function OnboardingStep({ done, label, href }: { done: boolean; label: string; href: string }) {
+function OnboardingStep({ done, label, href, description }: { done: boolean; label: string; href: string; description?: string }) {
   return (
     <Link
       href={done ? "#" : href}
@@ -197,7 +203,10 @@ function OnboardingStep({ done, label, href }: { done: boolean; label: string; h
       }`}>
         {done ? "✓" : "→"}
       </span>
-      <span className={done ? "line-through" : ""}>{label}</span>
+      <span className="flex-1">
+        <span className={done ? "line-through" : ""}>{label}</span>
+        {description && <span className="block text-xs text-amber-600 font-normal mt-0.5">{description}</span>}
+      </span>
     </Link>
   );
 }

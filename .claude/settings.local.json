@@ -18,7 +18,8 @@
       "Bash(xargs sed *)",
       "Bash(npm install *)",
       "Bash(sed -i 's/color: C\\\\.orange }}>Cortes/color: \"#EF4444\" }}>Cortes/g' scenes/ColdOpen.tsx scenes/Intro.tsx scenes/Outro.tsx)",
-      "Bash(sed -i 's/color: \"#F97316\" }}>Cortes/color: \"#EF4444\" }}>Cortes/g' scenes/DashboardScene.tsx scenes/RevenueStaff.tsx)"
+      "Bash(sed -i 's/color: \"#F97316\" }}>Cortes/color: \"#EF4444\" }}>Cortes/g' scenes/DashboardScene.tsx scenes/RevenueStaff.tsx)",
+      "Bash(npm list *)"
     ],
     "defaultMode": "bypassPermissions"
   },

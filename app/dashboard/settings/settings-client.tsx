@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { CheckCircle, ExternalLink, ImageIcon, Info } from "lucide-react";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 import { Switch } from "@/components/ui/switch";
 import { ImageUpload } from "@/components/ui/image-upload";
 import type { Organization } from "@prisma/client";
@@ -91,7 +93,16 @@ export function SettingsClient({ org }: { org: Organization }) {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <Label>Teléfono / WhatsApp</Label>
-                <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+54 11 1234-5678" />
+                <PhoneInput
+                  international
+                  defaultCountry="AR"
+                  value={form.phone}
+                  onChange={(v) => setForm({ ...form, phone: v ?? "" })}
+                  className="phone-input-wrapper"
+                />
+                <p className="text-xs text-amber-600 font-medium">
+                  📲 Necesario para recibir avisos de turnos por WhatsApp. Sin número, solo llegará por email.
+                </p>
               </div>
               <div className="space-y-1.5">
                 <Label>Dirección</Label>

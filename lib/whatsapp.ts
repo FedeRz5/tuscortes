@@ -1,28 +1,42 @@
-function getInstance() {
-  const instanceId = process.env.ULTRAMSG_INSTANCE_ID;
-  const token = process.env.ULTRAMSG_TOKEN;
-  if (!instanceId || !token) return null;
-  return { instanceId, token };
+import twilio from "twilio";
+
+function getClient() {
+  const sid = process.env.TWILIO_ACCOUNT_SID;
+  const token = process.env.TWILIO_AUTH_TOKEN;
+  if (!sid || !token) return null;
+  return twilio(sid, token);
+}
+
+function getFrom() {
+  return process.env.TWILIO_WHATSAPP_FROM ?? "whatsapp:+14155238886"; // sandbox default
+}
+
+/** Normalize any phone number to the whatsapp:+XXXXXXXXX format Twilio expects */
+function waPhone(phone: string) {
+  const normalized = phone.startsWith("+") ? phone : `+${phone}`;
+  return `whatsapp:${normalized}`;
 }
 
 async function sendWhatsApp(to: string, body: string) {
-  const creds = getInstance();
-  if (!creds) return; // Variables no configuradas → skip silencioso
+  const client = getClient();
+  if (!client) return;
 
-  // UltraMsg espera el número sin el "+" al inicio
-  const phone = to.replace(/^\+/, "");
-
-  const res = await fetch(`https://api.ultramsg.com/${creds.instanceId}/messages/chat`, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({ token: creds.token, to: phone, body }),
+  await client.messages.create({
+    from: getFrom(),
+    to: waPhone(to),
+    body,
   });
-
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`UltraMsg error: ${text}`);
-  }
 }
+
+function formatDate(dateStr: string) {
+  return new Date(dateStr + "T00:00:00").toLocaleDateString("es-AR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  });
+}
+
+// ─── Confirmación al cliente ────────────────────────────────────────────────
 
 interface AppointmentWAParams {
   clientPhone: string;
@@ -34,14 +48,6 @@ interface AppointmentWAParams {
   date: string;      // "2026-04-15"
   startTime: string; // "10:30"
   endTime: string;
-}
-
-function formatDate(dateStr: string) {
-  return new Date(dateStr + "T00:00:00").toLocaleDateString("es-AR", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  });
 }
 
 export async function sendAppointmentConfirmationWA(params: AppointmentWAParams) {
@@ -56,10 +62,14 @@ export async function sendAppointmentConfirmationWA(params: AppointmentWAParams)
     `📅 *Fecha:* ${dateFormatted}`,
     `🕐 *Horario:* ${params.startTime} — ${params.endTime}`,
     params.orgPhone ? `📞 *Contacto:* ${params.orgPhone}` : null,
+    ``,
+    `_Powered by TusCortes_`,
   ].filter(Boolean).join("\n");
 
   await sendWhatsApp(params.clientPhone, message);
 }
+
+// ─── Recordatorio al cliente ────────────────────────────────────────────────
 
 interface AppointmentReminderWAParams {
   clientPhone: string;
@@ -85,10 +95,14 @@ export async function sendAppointmentReminderWA(params: AppointmentReminderWAPar
     `📅 *Fecha:* ${dateFormatted}`,
     `🕐 *Horario:* ${params.startTime} — ${params.endTime}`,
     params.orgPhone ? `📞 *Contacto:* ${params.orgPhone}` : null,
+    ``,
+    `_Powered by TusCortes_`,
   ].filter(Boolean).join("\n");
 
   await sendWhatsApp(params.clientPhone, message);
 }
+
+// ─── Notificación al dueño ──────────────────────────────────────────────────
 
 interface NewAppointmentWAParams {
   ownerPhone: string;
