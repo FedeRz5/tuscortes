@@ -15,7 +15,10 @@
       "Bash(sed -i 's|import { useEffect, useState } from \"react\";|import Image from \"next/image\";\\\\nimport { useEffect, useState } from \"react\";|' components/layout/sidebar.tsx)",
       "Bash(sed -i 's|{/\\\\* eslint-disable-next-line @next\\\\/next\\\\/no-img-element \\\\*/}\\\\s*||g' components/layout/sidebar.tsx)",
       "Bash(sed -i 's|<img src=\"/logo.jpeg\" alt=\"TusCortes\" className=\"h-8 object-contain\" />|<Image src=\"/logo.jpeg\" alt=\"TusCortes\" width={96} height={32} className=\"h-8 w-auto object-contain\" />|g' components/layout/sidebar.tsx)",
-      "Bash(xargs sed *)"
+      "Bash(xargs sed *)",
+      "Bash(npm install *)",
+      "Bash(sed -i 's/color: C\\\\.orange }}>Cortes/color: \"#EF4444\" }}>Cortes/g' scenes/ColdOpen.tsx scenes/Intro.tsx scenes/Outro.tsx)",
+      "Bash(sed -i 's/color: \"#F97316\" }}>Cortes/color: \"#EF4444\" }}>Cortes/g' scenes/DashboardScene.tsx scenes/RevenueStaff.tsx)"
     ],
     "defaultMode": "bypassPermissions"
   },

@@ -28,6 +28,8 @@
     "@radix-ui/react-switch": "^1.2.6",
     "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-toast": "^1.2.15",
+    "@remotion/cli": "^4.0.448",
+    "@remotion/player": "^4.0.448",
     "@supabase/supabase-js": "^2.102.1",
     "@types/pg": "^8.20.0",
     "bcryptjs": "^3.0.3",
@@ -43,6 +45,7 @@
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-phone-number-input": "^3.4.16",
+    "remotion": "^4.0.448",
     "resend": "^6.10.0",
     "tailwind-merge": "^3.5.0",
     "zod": "^4.3.6"
