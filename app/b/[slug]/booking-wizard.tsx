@@ -19,6 +19,18 @@ type TimeSlot = { startTime: string; endTime: string; available: boolean };
 
 const STEP_LABELS = ["Servicio", "Barbero", "Fecha", "Horario", "Tus datos", "Confirmar"];
 
+/** Returns black or white depending on which has better contrast against the given hex color */
+function contrastColor(hex: string): string {
+  const c = hex.replace("#", "");
+  const r = parseInt(c.substring(0, 2), 16) / 255;
+  const g = parseInt(c.substring(2, 4), 16) / 255;
+  const b = parseInt(c.substring(4, 6), 16) / 255;
+  // Relative luminance (WCAG formula)
+  const toLinear = (x: number) => x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4);
+  const L = 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
+  return L > 0.179 ? "#18181b" : "#ffffff";
+}
+
 function getNextDays(org: OrgWithData) {
   const days = [];
   const maxDays = org.maxDaysAhead ?? 30;
@@ -54,6 +66,7 @@ export function BookingWizard({ org }: { org: OrgWithData }) {
 
   const primaryColor = org.primaryColor;
   const accentColor = org.accentColor;
+  const primaryText = contrastColor(primaryColor);
 
   async function loadSlots(staffId: string, serviceId: string, dateStr: string) {
     const cacheKey = `${staffId}:${serviceId}:${dateStr}`;
@@ -145,7 +158,7 @@ export function BookingWizard({ org }: { org: OrgWithData }) {
           {org.bookingConfirmationMessage && (
             <p className="text-zinc-600 text-sm bg-white rounded-xl border p-4">{org.bookingConfirmationMessage}</p>
           )}
-          <Button className="w-full" style={{ backgroundColor: primaryColor }}
+          <Button className="w-full" style={{ backgroundColor: primaryColor, color: primaryText }}
             onClick={() => { setBooked(false); setStep(0); setService(null); setStaff(null); setDate(null); setSlot(null); setForm({ name: "", phone: "", email: "", notes: "" }); }}
           >
             Reservar otro turno
@@ -170,7 +183,7 @@ export function BookingWizard({ org }: { org: OrgWithData }) {
               {org.logoUrl ? (
                 <img src={org.logoUrl} alt={org.name} className="h-10 w-10 rounded-xl object-cover shrink-0" />
               ) : (
-                <div className="h-10 w-10 rounded-xl flex items-center justify-center text-white font-bold text-lg shrink-0" style={{ backgroundColor: primaryColor }}>
+                <div className="h-10 w-10 rounded-xl flex items-center justify-center font-bold text-lg shrink-0" style={{ backgroundColor: primaryColor, color: primaryText }}>
                   {org.name[0]}
                 </div>
               )}
@@ -261,7 +274,7 @@ export function BookingWizard({ org }: { org: OrgWithData }) {
                 {s.avatarUrl ? (
                   <img src={s.avatarUrl} alt={s.name} className="h-12 w-12 rounded-full object-cover shrink-0" />
                 ) : (
-                  <div className="h-12 w-12 rounded-full flex items-center justify-center text-white font-bold shrink-0 text-lg" style={{ backgroundColor: primaryColor }}>
+                  <div className="h-12 w-12 rounded-full flex items-center justify-center font-bold shrink-0 text-lg" style={{ backgroundColor: primaryColor, color: primaryText }}>
                     {s.name[0]}
                   </div>
                 )}
@@ -369,9 +382,9 @@ export function BookingWizard({ org }: { org: OrgWithData }) {
               </div>
               <Button
                 onClick={handleNextToSummary}
-                disabled={!form.name}
+                disabled={!form.name || !form.phone || !form.email}
                 className="w-full h-12 text-base font-semibold"
-                style={{ backgroundColor: primaryColor }}
+                style={{ backgroundColor: primaryColor, color: primaryText }}
               >
                 Revisar reserva →
               </Button>
@@ -407,7 +420,7 @@ export function BookingWizard({ org }: { org: OrgWithData }) {
               onClick={() => handleBook()}
               disabled={loading}
               className="w-full h-12 text-base font-semibold"
-              style={{ backgroundColor: primaryColor }}
+              style={{ backgroundColor: primaryColor, color: primaryText }}
             >
               {loading ? "Reservando..." : "Confirmar turno"}
             </Button>
