@@ -15,10 +15,10 @@ import { WordReveal, LineReveal } from "../components/TextReveal";
 // ─── Service selector ─────────────────────────────────────────────────────────
 
 const services = [
-  { name: "Corte clásico", dur: "30 min", price: "$3.500", icon: "✂️" },
-  { name: "Corte + Barba", dur: "45 min", price: "$5.000", icon: "🪒" },
-  { name: "Degradé", dur: "40 min", price: "$4.500", icon: "💈" },
-  { name: "Barba", dur: "20 min", price: "$2.000", icon: "🧔" },
+  { name: "Corte clásico", dur: "30 min", price: "$16.000", icon: "✂️" },
+  { name: "Corte + Barba", dur: "45 min", price: "$18.000", icon: "🪒" },
+  { name: "Reflejos", dur: "60 min", price: "$70.000", icon: "✨" },
+  { name: "Cejas", dur: "20 min", price: "$6.000", icon: "🪮" },
 ];
 
 const BookingPage: React.FC = () => {
@@ -91,7 +91,7 @@ const DateTimePage: React.FC = () => {
         <div style={{ width: 44, height: 44, background: "linear-gradient(135deg,#F97316,#FB923C)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", color: "#FFF", fontSize: 18, fontWeight: 800 }}>R</div>
         <div>
           <div style={{ fontSize: 14, fontWeight: 700, color: "#111827" }}>Rodrigo M.</div>
-          <div style={{ fontSize: 11, color: "#9CA3AF" }}>Corte clásico · 30 min · $3.500</div>
+          <div style={{ fontSize: 11, color: "#9CA3AF" }}>Corte clásico · 30 min · $16.000</div>
         </div>
       </div>
       {/* Calendar */}
@@ -155,7 +155,7 @@ const ConfirmationPage: React.FC = () => {
         <div style={{ fontSize: 12, color: "#6B7280" }}>Te enviamos los detalles por WhatsApp y email</div>
       </div>
       <div style={{ background: "#FFF", border: "1px solid #E5E7EB", borderRadius: 14, padding: "16px 24px", width: "100%", boxShadow: "0 2px 12px rgba(0,0,0,0.06)", opacity: interpolate(frame, [30, 48], [0, 1], { extrapolateRight: "clamp" }), transform: `translateY(${interpolate(frame, [30, 48], [16, 0], { extrapolateRight: "clamp" })}px)` }}>
-        {[["Servicio","Corte clásico"],["Barbero","Rodrigo M."],["Fecha","Lunes 14 de Abril, 2026"],["Hora","10:00 – 10:30"],["Precio","$3.500"]].map(([k,v]) => (
+        {[["Servicio","Corte clásico"],["Barbero","Rodrigo M."],["Fecha","Lunes 14 de Abril, 2026"],["Hora","10:00 – 10:30"],["Precio","$16.000"]].map(([k,v]) => (
           <div key={k} style={{ display: "flex", justifyContent: "space-between", padding: "7px 0", borderBottom: "1px solid #F3F4F6", fontSize: 12 }}>
             <span style={{ color: "#9CA3AF" }}>{k}</span>
             <span style={{ color: "#111827", fontWeight: 600 }}>{v}</span>
@@ -226,7 +226,7 @@ export const ClientFlowScene: React.FC = () => {
 
         <div style={{ marginBottom: 16 }}>
           {copy.headline.split("\n").map((line, i) => (
-            <WordReveal key={line} text={line} delay={i * 12} fontSize={54} fontWeight={900} color={C.white} letterSpacing="-0.03em" stagger={5} />
+            <WordReveal key={line} text={line} delay={i * 12} fontSize={54} fontWeight={900} color={C.white} letterSpacing="-0.01em" stagger={5} />
           ))}
         </div>
 

@@ -66,7 +66,7 @@ export function Sidebar({ role, orgName }: SidebarProps) {
       <div className="flex h-14 items-center border-b border-zinc-200 px-5 justify-between">
         <div>
           
-          <Image src="/logo.jpeg" alt="TusCortes" width={96} height={32} className="h-8 w-auto object-contain" />
+          <Image src="/logo.png" alt="TusCortes" width={96} height={32} className="h-8 w-auto object-contain" />
           <p className="text-xs text-zinc-400 uppercase tracking-wider font-medium leading-none">
             {role === "SUPERADMIN" ? "Super Admin" : orgName ?? ""}
           </p>
@@ -119,7 +119,7 @@ export function Sidebar({ role, orgName }: SidebarProps) {
       {/* Mobile top header */}
       <header className="md:hidden fixed top-0 inset-x-0 z-30 h-14 bg-white border-b border-zinc-200 flex items-center justify-between px-4">
         
-        <Image src="/logo.jpeg" alt="TusCortes" width={96} height={32} className="h-8 w-auto object-contain" />
+        <Image src="/logo.png" alt="TusCortes" width={96} height={32} className="h-8 w-auto object-contain" />
         <button onClick={() => setOpen(true)} className="p-1 text-zinc-600">
           <Menu className="h-5 w-5" />
         </button>

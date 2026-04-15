@@ -2,13 +2,12 @@ import React from "react";
 import {
   AbsoluteFill,
   interpolate,
-  spring,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
 import { C } from "../constants";
 import { Background } from "../components/Background";
-import { WordReveal, LineReveal, CountUp } from "../components/TextReveal";
+import { WordReveal, LineReveal } from "../components/TextReveal";
 
 const plans = [
   { name: "Starter", price: "12.500", color: C.blue, desc: "1 barbero · Turnos ilimitados" },
@@ -93,7 +92,7 @@ export const OutroScene: React.FC = () => {
               stagger={4}
             />
           </div>
-          <div>
+          <div style={{ display: "flex", justifyContent: "center" }}>
             <WordReveal
               text="desde el primer día."
               delay={35}
@@ -188,30 +187,30 @@ export const OutroScene: React.FC = () => {
           ))}
         </div>
 
-        {/* CTA Button */}
+        {/* CTA text */}
         <div style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: 10,
+          gap: 12,
           opacity: interpolate(frame, [145, 165], [0, 1], { extrapolateRight: "clamp" }),
           transform: `translateY(${interpolate(frame, [145, 165], [16, 0], { extrapolateRight: "clamp" })}px)`,
         }}>
           <div style={{
-            background: `linear-gradient(135deg, ${C.orange} 0%, #DC2626 100%)`,
+            background: `linear-gradient(135deg, ${C.primary} 0%, ${C.orange} 100%)`,
             borderRadius: 14,
             padding: "16px 52px",
             fontSize: 20,
             fontWeight: 800,
             color: C.white,
             transform: `scale(${pulse})`,
-            boxShadow: `0 8px 40px rgba(249,115,22,0.45), 0 2px 0 rgba(255,255,255,0.15) inset`,
+            boxShadow: `0 8px 40px rgba(37,99,235,0.45), 0 2px 0 rgba(255,255,255,0.15) inset`,
             letterSpacing: "-0.3px",
             cursor: "pointer",
           }}>
-            Contactanos por WhatsApp →
+            Comenzar ahora →
           </div>
-          <div style={{ fontSize: 13, color: C.dim }}>www.tuscortes.com | Nuestro sitio web</div>
+          <div style={{ fontSize: 13, color: C.dim }}>tuscortes.com</div>
         </div>
       </div>
 

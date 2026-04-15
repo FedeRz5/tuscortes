@@ -14,6 +14,8 @@ export default auth((req) => {
     pathname === "/login" ||
     pathname === "/forgot-password" ||
     pathname === "/reset-password" ||
+    pathname === "/terminos" ||
+    pathname === "/privacidad" ||
     pathname.startsWith("/b/") ||
     pathname.startsWith("/api/auth/") ||
     pathname.startsWith("/api/public/") ||

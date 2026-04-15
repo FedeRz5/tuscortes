@@ -14,10 +14,11 @@ interface StatCardProps {
   delay: number;
   accentColor: string;
   accentBg: string;
+  countFontSize?: number;
 }
 
 const BigStat: React.FC<StatCardProps> = ({
-  value, prefix = "", suffix = "", label, sublabel, icon, delay, accentColor, accentBg,
+  value, prefix = "", suffix = "", label, sublabel, icon, delay, accentColor, accentBg, countFontSize = 64,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -79,7 +80,7 @@ const BigStat: React.FC<StatCardProps> = ({
         duration={70}
         prefix={prefix}
         suffix={suffix}
-        fontSize={64}
+        fontSize={countFontSize}
         fontWeight={900}
         color={C.white}
       />
@@ -132,11 +133,10 @@ export const StatsScene: React.FC = () => {
         </div>
 
         {/* Stats grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, width: "100%" }}>
-          <BigStat value={148} suffix="+" label="Turnos este mes" sublabel="Solo en Ramos Cutz" icon="📅" delay={25} accentColor={C.blue} accentBg="rgba(96,165,250,0.15)" />
-          <BigStat value={50500} prefix="$" label="Proyectado mes" sublabel="Ingresos bajo control" icon="💰" delay={38} accentColor={C.success} accentBg="rgba(16,185,129,0.15)" />
-          <BigStat value={3} label="Barberos coordinados" sublabel="Horarios independientes" icon="✂️" delay={51} accentColor={C.orange} accentBg="rgba(249,115,22,0.15)" />
-          <BigStat value={0} suffix=" llamadas" label="Para reservar" sublabel="Todo es automático" icon="📵" delay={64} accentColor={C.purple} accentBg="rgba(167,139,250,0.15)" />
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, width: "100%", maxWidth: 1100 }}>
+          <BigStat value={148} suffix="+" label="Turnos este mes" sublabel="Solo en Ramos Cutz" icon="📅" delay={25} accentColor={C.blue} accentBg="rgba(96,165,250,0.15)" countFontSize={46} />
+          <BigStat value={8500000} prefix="$" label="Ingresos este mes" sublabel="Ingresos bajo control" icon="💰" delay={38} accentColor={C.success} accentBg="rgba(16,185,129,0.15)" countFontSize={46} />
+          <BigStat value={4} label="Barberos coordinados" sublabel="Horarios independientes" icon="✂️" delay={51} accentColor={C.orange} accentBg="rgba(129,140,248,0.15)" countFontSize={46} />
         </div>
       </div>
     </AbsoluteFill>

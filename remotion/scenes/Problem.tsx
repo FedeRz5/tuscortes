@@ -90,7 +90,7 @@ export const ProblemScene: React.FC = () => {
           fontSize={72}
           fontWeight={900}
           color={C.white}
-          letterSpacing="-0.03em"
+          letterSpacing="-0.01em"
           stagger={4}
         />
         <WordReveal
@@ -100,7 +100,7 @@ export const ProblemScene: React.FC = () => {
           fontWeight={900}
           gradient
           gradientColors={[C.white, C.orange]}
-          letterSpacing="-0.03em"
+          letterSpacing="-0.01em"
           stagger={4}
         />
 

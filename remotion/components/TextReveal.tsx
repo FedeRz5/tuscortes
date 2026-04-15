@@ -37,7 +37,7 @@ export const WordReveal: React.FC<WordRevealProps> = ({
       style={{
         display: "flex",
         flexWrap: "wrap",
-        gap: "0.28em",
+        gap: "0.42em",
         alignItems: "baseline",
         lineHeight,
       }}

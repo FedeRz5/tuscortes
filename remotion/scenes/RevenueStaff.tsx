@@ -148,7 +148,7 @@ const RevenuePage: React.FC = () => {
 // ─── Staff & Services page ────────────────────────────────────────────────────
 
 const staffList = [
-  { name: "Rodrigo M.", role: "Barbero senior", services: ["Corte", "Barba", "Degradé"], color: "#F97316" },
+  { name: "Rodrigo M.", role: "Barbero senior", services: ["Corte", "Barba", "Degradé"], color: "#818CF8" },
   { name: "Lucas P.", role: "Barbero", services: ["Corte", "Barba"], color: "#4F46E5" },
   { name: "Matías G.", role: "Barbero", services: ["Corte", "Degradé"], color: "#10B981" },
 ];

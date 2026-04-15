@@ -460,8 +460,8 @@ export const DashboardScene: React.FC = () => {
             Panel del barbero
           </div>
         </LineReveal>
-        <WordReveal text="Tu negocio," delay={8} fontSize={52} fontWeight={900} color={C.white} letterSpacing="-0.03em" stagger={4} />
-        <WordReveal text="de un vistazo." delay={20} fontSize={52} fontWeight={900} gradient gradientColors={[C.white, C.primaryLight]} letterSpacing="-0.03em" stagger={4} />
+        <WordReveal text="Tu negocio," delay={8} fontSize={52} fontWeight={900} color={C.white} letterSpacing="-0.01em" stagger={4} />
+        <WordReveal text="de un vistazo." delay={20} fontSize={52} fontWeight={900} gradient gradientColors={[C.white, C.primaryLight]} letterSpacing="-0.01em" stagger={4} />
         <LineReveal delay={36}>
           <div style={{ fontSize: 17, color: C.muted, lineHeight: 1.65, marginTop: 14, marginBottom: 22 }}>
             Métricas en tiempo real, turnos del día y todo lo que necesitás al abrir la app.
@@ -524,8 +524,8 @@ export const AppointmentsScene: React.FC = () => {
             </div>
           </div>
         </LineReveal>
-        <WordReveal text="Controlá" delay={8} fontSize={52} fontWeight={900} color={C.white} letterSpacing="-0.03em" stagger={4} />
-        <WordReveal text="cada turno." delay={16} fontSize={52} fontWeight={900} gradient gradientColors={[C.white, C.orange]} letterSpacing="-0.03em" stagger={4} />
+        <WordReveal text="Controlá" delay={8} fontSize={52} fontWeight={900} color={C.white} letterSpacing="-0.01em" stagger={4} />
+        <WordReveal text="cada turno." delay={16} fontSize={52} fontWeight={900} gradient gradientColors={[C.white, C.orange]} letterSpacing="-0.01em" stagger={4} />
         <LineReveal delay={32}>
           <div style={{ fontSize: 17, color: C.muted, lineHeight: 1.65, marginTop: 14, marginBottom: 22, textAlign: "right" }}>
             Confirmá, completá o cancelá con un clic. Filtros por fecha, barbero y estado.

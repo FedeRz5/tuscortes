@@ -4,20 +4,22 @@ export const HEIGHT = 1080;
 export const TOTAL_FRAMES = FPS * 75; // 75 seconds
 
 export const C = {
-  bg: "#07071A",
-  bgSecondary: "#0C0C28",
+  bg: "#05081A",
+  bgSecondary: "#080C24",
   surface: "rgba(255,255,255,0.045)",
   surfaceHover: "rgba(255,255,255,0.08)",
   border: "rgba(255,255,255,0.08)",
   borderStrong: "rgba(255,255,255,0.18)",
 
-  primary: "#4F46E5",
-  primaryLight: "#818CF8",
-  primaryGlow: "rgba(79,70,229,0.3)",
+  // Primary: blue profundo — serio, confiable
+  primary: "#2563EB",
+  primaryLight: "#93C5FD",
+  primaryGlow: "rgba(37,99,235,0.28)",
 
-  orange: "#F97316",
-  orangeLight: "#FDBA74",
-  orangeGlow: "rgba(249,115,22,0.3)",
+  // Accent: indigo-lavanda — reemplaza naranja, sofisticado
+  orange: "#818CF8",
+  orangeLight: "#C7D2FE",
+  orangeGlow: "rgba(129,140,248,0.28)",
 
   white: "#FFFFFF",
   text: "#E2E8F0",

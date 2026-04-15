@@ -84,7 +84,7 @@ export const ColdOpen: React.FC = () => {
             lineHeight: 1,
             transform: `scale(${logoScale})`,
             opacity: logoOpacity,
-            textShadow: `0 0 80px rgba(249,115,22,0.4), 0 0 160px rgba(249,115,22,0.15)`,
+            textShadow: `0 0 80px rgba(37,99,235,0.4), 0 0 160px rgba(129,140,248,0.2)`,
           }}
         >
           Tus<span style={{ color: "#EF4444" }}>Cortes</span>
