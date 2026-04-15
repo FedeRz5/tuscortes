@@ -2,6 +2,7 @@ import React from "react";
 import {
   AbsoluteFill,
   interpolate,
+  staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
@@ -70,7 +71,7 @@ export const OutroScene: React.FC = () => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "60px 100px 80px",
+        padding: "80px 60px",
         gap: 0,
       }}>
         {/* Headline */}
@@ -83,25 +84,27 @@ export const OutroScene: React.FC = () => {
 
           <div style={{ marginBottom: 10 }}>
             <WordReveal
-              text="Tu barbería, profesional" 
+              text="Tu barbería, profesional"
               delay={10}
-              fontSize={68}
+              fontSize={64}
               fontWeight={900}
               color={C.white}
               letterSpacing="-0.035em"
               stagger={4}
+              centered
             />
           </div>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <WordReveal
               text="desde el primer día."
               delay={35}
-              fontSize={68}
+              fontSize={64}
               fontWeight={900}
               gradient
               gradientColors={[C.primaryLight, C.orange]}
               letterSpacing="-0.035em"
               stagger={4}
+              centered
             />
           </div>
 
@@ -115,8 +118,8 @@ export const OutroScene: React.FC = () => {
         {/* Plans */}
         <div style={{
           display: "flex",
-          gap: 12,
-          marginBottom: 28,
+          gap: 16,
+          marginBottom: 32,
           opacity: plansOpacity,
           transform: `translateY(${plansY}px)`,
         }}>
@@ -124,24 +127,24 @@ export const OutroScene: React.FC = () => {
             <div key={p.name} style={{
               background: p.featured ? `linear-gradient(135deg, ${C.primary}22, ${C.orange}18)` : C.surface,
               border: `1px solid ${p.featured ? C.orange : C.border}`,
-              borderRadius: 16,
-              padding: "18px 24px",
+              borderRadius: 20,
+              padding: "28px 28px",
               textAlign: "center",
-              minWidth: 200,
+              flex: 1,
               position: "relative",
-              boxShadow: p.featured ? `0 0 0 1px ${C.orange}30, 0 8px 32px rgba(249,115,22,0.15)` : "none",
+              boxShadow: p.featured ? `0 0 0 1px ${C.orange}30, 0 12px 40px rgba(37,99,235,0.2)` : "none",
             }}>
               {p.featured && (
                 <div style={{
                   position: "absolute",
-                  top: -10,
+                  top: -12,
                   left: "50%",
                   transform: "translateX(-50%)",
-                  background: `linear-gradient(135deg, ${C.orange}, #EA580C)`,
+                  background: `linear-gradient(135deg, ${C.orange}, ${C.primary})`,
                   color: "#FFF",
-                  fontSize: 10,
+                  fontSize: 11,
                   fontWeight: 800,
-                  padding: "3px 12px",
+                  padding: "4px 16px",
                   borderRadius: 20,
                   letterSpacing: "0.08em",
                   textTransform: "uppercase",
@@ -150,11 +153,11 @@ export const OutroScene: React.FC = () => {
                   Más popular
                 </div>
               )}
-              <div style={{ fontSize: 13, fontWeight: 700, color: p.color, marginBottom: 6 }}>{p.name}</div>
-              <div style={{ fontSize: 26, fontWeight: 800, color: C.white, letterSpacing: "-0.5px", marginBottom: 6 }}>
-                ${p.price}<span style={{ fontSize: 13, fontWeight: 500, color: C.muted }}>/mes</span>
+              <div style={{ fontSize: 16, fontWeight: 700, color: p.color, marginBottom: 10 }}>{p.name}</div>
+              <div style={{ fontSize: 34, fontWeight: 900, color: C.white, letterSpacing: "-1px", marginBottom: 8 }}>
+                ${p.price}<span style={{ fontSize: 15, fontWeight: 500, color: C.muted }}>/mes</span>
               </div>
-              <div style={{ fontSize: 11, color: C.dim, lineHeight: 1.4 }}>{p.desc}</div>
+              <div style={{ fontSize: 13, color: C.dim, lineHeight: 1.5 }}>{p.desc}</div>
             </div>
           ))}
         </div>
@@ -163,54 +166,56 @@ export const OutroScene: React.FC = () => {
         <div style={{
           display: "flex",
           flexWrap: "wrap",
-          gap: 8,
+          gap: 10,
           justifyContent: "center",
-          maxWidth: 700,
-          marginBottom: 32,
+          width: "100%",
+          marginBottom: 36,
           opacity: featOpacity,
         }}>
           {features.map((f) => (
             <div key={f.label} style={{
               background: C.surface,
               border: `1px solid ${C.border}`,
-              borderRadius: 20,
-              padding: "6px 14px",
-              fontSize: 13,
+              borderRadius: 24,
+              padding: "9px 18px",
+              fontSize: 15,
               color: C.muted,
               fontWeight: 500,
               display: "flex",
               alignItems: "center",
-              gap: 6,
+              gap: 7,
             }}>
               {f.icon} {f.label}
             </div>
           ))}
         </div>
 
-        {/* CTA text */}
+        {/* CTA */}
         <div style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: 12,
+          gap: 14,
+          width: "100%",
           opacity: interpolate(frame, [145, 165], [0, 1], { extrapolateRight: "clamp" }),
           transform: `translateY(${interpolate(frame, [145, 165], [16, 0], { extrapolateRight: "clamp" })}px)`,
         }}>
           <div style={{
             background: `linear-gradient(135deg, ${C.primary} 0%, ${C.orange} 100%)`,
-            borderRadius: 14,
-            padding: "16px 52px",
-            fontSize: 20,
-            fontWeight: 800,
+            borderRadius: 18,
+            padding: "22px 0",
+            width: "100%",
+            textAlign: "center",
+            fontSize: 26,
+            fontWeight: 900,
             color: C.white,
             transform: `scale(${pulse})`,
-            boxShadow: `0 8px 40px rgba(37,99,235,0.45), 0 2px 0 rgba(255,255,255,0.15) inset`,
+            boxShadow: `0 12px 50px rgba(37,99,235,0.5), 0 2px 0 rgba(255,255,255,0.15) inset`,
             letterSpacing: "-0.3px",
-            cursor: "pointer",
           }}>
             Comenzar ahora →
           </div>
-          <div style={{ fontSize: 13, color: C.dim }}>tuscortes.com</div>
+          <div style={{ fontSize: 15, color: C.dim }}>tuscortes.com</div>
         </div>
       </div>
 
@@ -221,10 +226,21 @@ export const OutroScene: React.FC = () => {
         right: 48,
         opacity: logoOpacity * 0.35,
         textAlign: "right",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-end",
+        gap: 6,
       }}>
-        <div style={{ fontSize: 22, fontWeight: 900, color: C.white, letterSpacing: "-0.5px" }}>
-          Tus<span style={{ color: "#EF4444" }}>Cortes</span>
-        </div>
+        <img
+          src={staticFile("1.png")}
+          alt="TusCortes"
+          style={{
+            height: 36,
+            width: "auto",
+            objectFit: "contain",
+            filter: "brightness(0) invert(1)",
+          }}
+        />
         <div style={{ fontSize: 10, color: C.dim, letterSpacing: "0.1em", textTransform: "uppercase" }}>
           tuscortes.com
         </div>

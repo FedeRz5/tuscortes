@@ -212,7 +212,7 @@ export const ClientFlowScene: React.FC = () => {
 
   const copy = [
     { chip: "Vista del cliente", headline: "Reservar un turno,\nen segundos.", body: "Página personalizada para tu barbería. El cliente elige servicio, barbero y horario sin llamarte.", checks: ["Sin registrarse", "Sin app que descargar", "Funciona desde cualquier celular"] },
-    { chip: "Fecha y hora", headline: "Solo horarios\ndisponibles.", body: "El sistema bloquea automáticamente lo ya reservado. Cero solapamientos, cero llamadas de aclaración.", checks: ["Bloqueo en tiempo real", "Buffers entre turnos", "Control de máximo turnos por día"] },
+    { chip: "Fecha y hora", headline: "Solo horarios\ndisponibles.", body: "El sistema bloquea automáticamente lo ya reservado. Cero superposiciones, cero llamadas de aclaración.", checks: ["Bloqueo en tiempo real", "Buffers entre turnos", "Control de máximo turnos por día"] },
     { chip: "Confirmación", headline: "Confirmación\nautomática.", body: "El cliente recibe WhatsApp + email al instante. Incluye enlace para cancelar sin tener que llamar.", checks: ["WhatsApp y Email", "Link de cancelación", "Recordatorio automático"] },
   ][phase];
 
@@ -220,72 +220,55 @@ export const ClientFlowScene: React.FC = () => {
     <AbsoluteFill style={{ overflow: "hidden", opacity: sceneOpacity }}>
       <Background accent="indigo" intensity={0.8} />
 
-      {/* Left panel */}
-      <div style={{ position: "absolute", left: 80, top: "50%", transform: "translateY(-50%)", width: 400, zIndex: 10 }}>
-        <ChipLabel text={copy.chip} color={C.orange} bg={C.orangeGlow} border={`${C.orange}40`} />
-
-        <div style={{ marginBottom: 16 }}>
-          {copy.headline.split("\n").map((line, i) => (
-            <WordReveal key={line} text={line} delay={i * 12} fontSize={54} fontWeight={900} color={C.white} letterSpacing="-0.01em" stagger={5} />
-          ))}
-        </div>
-
-        <LineReveal delay={30}>
-          <div style={{ fontSize: 17, color: C.muted, lineHeight: 1.65, marginBottom: 24 }}>{copy.body}</div>
-        </LineReveal>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {copy.checks.map((c, i) => (
-            <div key={c} style={{
-              display: "flex", alignItems: "center", gap: 10, fontSize: 14, color: C.muted,
-              opacity: interpolate(textPhase, [40 + i * 10, 55 + i * 10], [0, 1], { extrapolateRight: "clamp" }),
-              transform: `translateX(${interpolate(textPhase, [40 + i * 10, 55 + i * 10], [-16, 0], { extrapolateRight: "clamp" })}px)`,
-            }}>
-              <div style={{ width: 20, height: 20, borderRadius: "50%", background: C.successBg, border: `1px solid ${C.success}40`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <span style={{ color: C.success, fontSize: 11 }}>✓</span>
-              </div>
-              {c}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* 3D Browser */}
+      {/* Vertical layout: text top, browser bottom */}
       <div style={{
-        position: "absolute",
-        right: 60,
-        top: "50%",
-        transform: `translateY(-50%) translateX(${browserX}px) translateY(${floatY}px)`,
-        opacity: browserOpacity,
-        perspective: "1500px",
+        position: "absolute", inset: 0,
+        display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center",
+        gap: 44, padding: "60px 60px",
       }}>
+        {/* Text block */}
+        <div style={{ width: "100%", textAlign: "center", zIndex: 10 }}>
+          <ChipLabel text={copy.chip} color={C.orange} bg={C.orangeGlow} border={`${C.orange}40`} />
+          <div style={{ marginBottom: 16 }}>
+            {copy.headline.split("\n").map((line, i) => (
+              <WordReveal key={line} text={line} delay={i * 12} fontSize={56} fontWeight={900} color={C.white} letterSpacing="-0.01em" stagger={5} centered />
+            ))}
+          </div>
+          <LineReveal delay={30}>
+            <div style={{ fontSize: 18, color: C.muted, lineHeight: 1.65, marginBottom: 20, textAlign: "center" }}>{copy.body}</div>
+          </LineReveal>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, alignItems: "center" }}>
+            {copy.checks.map((c, i) => (
+              <div key={c} style={{
+                display: "flex", alignItems: "center", gap: 10, fontSize: 15, color: C.muted,
+                opacity: interpolate(textPhase, [40 + i * 10, 55 + i * 10], [0, 1], { extrapolateRight: "clamp" }),
+                transform: `translateY(${interpolate(textPhase, [40 + i * 10, 55 + i * 10], [10, 0], { extrapolateRight: "clamp" })}px)`,
+              }}>
+                <div style={{ width: 20, height: 20, borderRadius: "50%", background: C.successBg, border: `1px solid ${C.success}40`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <span style={{ color: C.success, fontSize: 11 }}>✓</span>
+                </div>
+                {c}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Browser centered */}
         <div style={{
-          transform: "perspective(1500px) rotateY(-10deg) rotateX(2deg)",
-          transformOrigin: "center center",
+          transform: `translateX(${browserX}px) translateY(${floatY}px)`,
+          opacity: browserOpacity,
         }}>
           <BrowserWindow
             url={phase === 0 ? "tuscortes.com/b/ramos-cutz" : phase === 1 ? "tuscortes.com/b/ramos-cutz/fecha" : "tuscortes.com/b/ramos-cutz/confirmacion"}
-            width={780}
-            height={560}
+            width={920}
+            height={580}
           >
             <Sequence from={0} durationInFrames={180}><BookingPage /></Sequence>
             <Sequence from={180} durationInFrames={150}><DateTimePage /></Sequence>
             <Sequence from={330} durationInFrames={150}><ConfirmationPage /></Sequence>
           </BrowserWindow>
         </div>
-
-        {/* Shadow below */}
-        <div style={{
-          position: "absolute",
-          bottom: -30,
-          left: "5%",
-          width: "90%",
-          height: 40,
-          background: "rgba(0,0,0,0.4)",
-          borderRadius: "50%",
-          filter: "blur(20px)",
-          transform: "perspective(1500px) rotateX(80deg)",
-        }} />
       </div>
     </AbsoluteFill>
   );

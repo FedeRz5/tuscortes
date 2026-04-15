@@ -3,6 +3,7 @@ import {
   AbsoluteFill,
   interpolate,
   spring,
+  staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
@@ -73,18 +74,16 @@ export const IntroScene: React.FC = () => {
           opacity: logoOpacity,
         }}
       >
-        <div
+        <img
+          src={staticFile("1.png")}
+          alt="TusCortes"
           style={{
-            fontSize: 88,
-            fontWeight: 900,
-            color: C.white,
-            letterSpacing: "-4px",
-            lineHeight: 1,
-            textShadow: `0 0 60px ${C.primaryGlow}`,
+            height: 120,
+            width: "auto",
+            objectFit: "contain",
+            filter: `brightness(0) invert(1) drop-shadow(0 0 40px ${C.primaryGlow})`,
           }}
-        >
-          Tus<span style={{ color: "#EF4444" }}>Cortes</span>
-        </div>
+        />
 
         {/* Animated underline */}
         <div

@@ -1,45 +1,31 @@
 import React from "react";
-import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { C } from "../constants";
 
 export const ColdOpen: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // Flash from black
+  // 0-20: flash blanca
   const flashOpacity = interpolate(frame, [0, 4, 12, 20], [0, 1, 0.3, 0], {
-    extrapolateRight: "clamp",
+    extrapolateLeft: "clamp", extrapolateRight: "clamp",
   });
 
-  // Logo spring in
-  const logoProgress = spring({
-    frame: Math.max(0, frame - 8),
-    fps,
-    config: { damping: 10, stiffness: 260, mass: 0.7 },
-  });
-  const logoScale = interpolate(logoProgress, [0, 1], [0, 1]);
-  const logoOpacity = interpolate(logoProgress, [0, 0.3], [0, 1]);
+  // 20-55: logo entra suave
+  const logoOpacity = interpolate(frame, [20, 55], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const logoScale  = interpolate(frame, [20, 55], [0.75, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
-  // Glow ring expanding
-  const ringProgress = spring({
-    frame: Math.max(0, frame - 8),
-    fps,
-    config: { damping: 20, stiffness: 150 },
-  });
-  const ringScale = interpolate(ringProgress, [0, 1], [0.2, 2.2]);
-  const ringOpacity = interpolate(ringProgress, [0, 0.2, 0.7, 1], [0, 0.6, 0.3, 0]);
+  // 60-85: tagline entra
+  const tagOpacity = interpolate(frame, [60, 85], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const tagY       = interpolate(frame, [60, 85], [14, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
-  // Tagline
-  const tagProgress = spring({
-    frame: Math.max(0, frame - 30),
-    fps,
-    config: { damping: 22, stiffness: 180 },
-  });
-  const tagOpacity = interpolate(tagProgress, [0, 0.4], [0, 1]);
-  const tagY = interpolate(tagProgress, [0, 1], [16, 0]);
+  // Glow ring (decorativo, entra con el logo)
+  const ringProgress = spring({ frame: Math.max(0, frame - 20), fps, config: { damping: 20, stiffness: 100 } });
+  const ringScale = interpolate(ringProgress, [0, 1], [0.2, 2.5]);
+  const ringOpacity = interpolate(ringProgress, [0, 0.15, 0.7, 1], [0, 0.5, 0.25, 0]);
 
-  // Exit
-  const exitOpacity = interpolate(frame, [50, 65], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  // 125-150: fade out
+  const exitOpacity = interpolate(frame, [125, 150], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   return (
     <AbsoluteFill style={{ background: "#000", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
@@ -75,20 +61,18 @@ export const ColdOpen: React.FC = () => {
 
       {/* Logo */}
       <div style={{ opacity: exitOpacity, display: "flex", flexDirection: "column", alignItems: "center" }}>
-        <div
+        <img
+          src={staticFile("1.png")}
+          alt="TusCortes"
           style={{
-            fontSize: 96,
-            fontWeight: 900,
-            color: C.white,
-            letterSpacing: "-5px",
-            lineHeight: 1,
+            height: 130,
+            width: "auto",
+            objectFit: "contain",
             transform: `scale(${logoScale})`,
             opacity: logoOpacity,
-            textShadow: `0 0 80px rgba(37,99,235,0.4), 0 0 160px rgba(129,140,248,0.2)`,
+            filter: `brightness(0) invert(1) drop-shadow(0 0 50px rgba(37,99,235,0.5))`,
           }}
-        >
-          Tus<span style={{ color: "#EF4444" }}>Cortes</span>
-        </div>
+        />
 
         {/* Tagline */}
         <div

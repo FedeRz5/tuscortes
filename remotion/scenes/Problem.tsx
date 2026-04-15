@@ -81,27 +81,29 @@ export const ProblemScene: React.FC = () => {
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
-          padding: "0 200px",
+          padding: "0 70px",
         }}
       >
         <WordReveal
           text="Cada llamada perdida"
           delay={5}
-          fontSize={72}
+          fontSize={62}
           fontWeight={900}
           color={C.white}
           letterSpacing="-0.01em"
           stagger={4}
+          centered
         />
         <WordReveal
           text="es un cliente que va a la competencia."
           delay={30}
-          fontSize={72}
+          fontSize={62}
           fontWeight={900}
           gradient
           gradientColors={[C.white, C.orange]}
           letterSpacing="-0.01em"
           stagger={4}
+          centered
         />
 
         {/* Counter */}

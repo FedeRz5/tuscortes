@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { CheckCircle, ExternalLink } from "lucide-react";
+import { CheckCircle, ExternalLink, ImageIcon, Info } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { ImageUpload } from "@/components/ui/image-upload";
 import type { Organization } from "@prisma/client";
@@ -109,19 +109,84 @@ export function SettingsClient({ org }: { org: Organization }) {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex flex-col sm:flex-row gap-4">
-              <ImageUpload
-                label="Logo"
-                value={form.logoUrl || null}
-                onChange={(url) => setForm({ ...form, logoUrl: url ?? "" })}
-                aspect="square"
-              />
-              <div className="flex-1">
+              {/* Logo upload + spec */}
+              <div className="flex flex-col gap-2">
+                <ImageUpload
+                  label="Logo"
+                  value={form.logoUrl || null}
+                  onChange={(url) => setForm({ ...form, logoUrl: url ?? "" })}
+                  aspect="square"
+                />
+                <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-3 text-xs space-y-2.5">
+                  <div className="flex items-center gap-1.5 font-semibold text-zinc-700">
+                    <ImageIcon className="h-3.5 w-3.5 text-zinc-400" />
+                    Especificaciones del logo
+                  </div>
+                  <div className="flex items-center gap-3">
+                    {/* aspect ratio illustration */}
+                    <div className="shrink-0 flex items-center justify-center rounded-md border border-blue-200 bg-blue-50" style={{ width: 36, height: 36 }}>
+                      <div className="rounded-sm bg-blue-200" style={{ width: 22, height: 22 }} />
+                    </div>
+                    <div className="space-y-0.5">
+                      <p className="font-mono font-bold text-zinc-800 text-[13px]">400 × 400 px</p>
+                      <p className="text-zinc-400">Ratio 1:1 · cuadrado</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center gap-1.5 text-zinc-500">
+                      <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-zinc-200 text-[9px] font-bold text-zinc-500">✓</span>
+                      PNG con fondo transparente (ideal)
+                    </div>
+                    <div className="flex items-center gap-1.5 text-zinc-500">
+                      <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-zinc-200 text-[9px] font-bold text-zinc-500">✓</span>
+                      JPG o WebP aceptados
+                    </div>
+                    <div className="flex items-center gap-1.5 text-zinc-500">
+                      <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-zinc-200 text-[9px] font-bold text-zinc-500">↑</span>
+                      Máx. 2 MB
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Banner upload + spec */}
+              <div className="flex-1 flex flex-col gap-2">
                 <ImageUpload
                   label="Imagen de portada (banner)"
                   value={form.coverImageUrl || null}
                   onChange={(url) => setForm({ ...form, coverImageUrl: url ?? "" })}
                   aspect="wide"
                 />
+                <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-3 text-xs space-y-2.5">
+                  <div className="flex items-center gap-1.5 font-semibold text-zinc-700">
+                    <ImageIcon className="h-3.5 w-3.5 text-zinc-400" />
+                    Especificaciones del banner
+                  </div>
+                  <div className="flex items-center gap-3">
+                    {/* aspect ratio illustration */}
+                    <div className="shrink-0 flex items-center justify-center rounded-md border border-violet-200 bg-violet-50" style={{ width: 54, height: 20 }}>
+                      <div className="rounded-sm bg-violet-200" style={{ width: 46, height: 12 }} />
+                    </div>
+                    <div className="space-y-0.5">
+                      <p className="font-mono font-bold text-zinc-800 text-[13px]">1200 × 400 px</p>
+                      <p className="text-zinc-400">Ratio 3:1 · apaisado</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center gap-1.5 text-zinc-500">
+                      <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-zinc-200 text-[9px] font-bold text-zinc-500">✓</span>
+                      JPG o PNG recomendado
+                    </div>
+                    <div className="flex items-center gap-1.5 text-zinc-500">
+                      <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-zinc-200 text-[9px] font-bold text-zinc-500">✓</span>
+                      Evitá texto en los bordes
+                    </div>
+                    <div className="flex items-center gap-1.5 text-zinc-500">
+                      <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-zinc-200 text-[9px] font-bold text-zinc-500">↑</span>
+                      Máx. 5 MB
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="space-y-1.5">

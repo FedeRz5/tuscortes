@@ -11,7 +11,7 @@ import { OutroScene } from "./scenes/Outro";
 
 // ─── Scene durations (frames @ 30fps) ────────────────────────────────────────
 const D = {
-  COLD_OPEN:    65,   // 2.2s
+  COLD_OPEN:    150,  // 5s
   PROBLEM:      210,  // 7s
   CLIENT:       480,  // 16s (180+150+150)
   DASH_INTRO:   75,   // 2.5s

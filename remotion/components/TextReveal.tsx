@@ -13,6 +13,7 @@ interface WordRevealProps {
   letterSpacing?: string;
   lineHeight?: number;
   stagger?: number;
+  centered?: boolean;
 }
 
 /** Reveals text word-by-word with spring animation */
@@ -27,6 +28,7 @@ export const WordReveal: React.FC<WordRevealProps> = ({
   letterSpacing = "-0.03em",
   lineHeight = 1.05,
   stagger = 5,
+  centered = false,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -39,6 +41,7 @@ export const WordReveal: React.FC<WordRevealProps> = ({
         flexWrap: "wrap",
         gap: "0.42em",
         alignItems: "baseline",
+        justifyContent: centered ? "center" : "flex-start",
         lineHeight,
       }}
     >

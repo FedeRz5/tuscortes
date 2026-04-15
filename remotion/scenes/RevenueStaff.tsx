@@ -248,31 +248,40 @@ export const RevenueScene: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ overflow: "hidden", opacity: sceneOpacity }}>
-      <div style={{ position: "absolute", left: 64, top: "50%", transform: "translateY(-50%)", width: 320, zIndex: 10 }}>
-        <FadeSlide delay={15}>
-          <div style={{ display: "inline-block", background: C.successBg, border: `1px solid ${C.success}40`, borderRadius: 20, padding: "4px 14px", fontSize: 12, fontWeight: 700, color: C.success, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 12 }}>
-            Módulo de Ingresos
-          </div>
-          <div style={{ fontSize: 44, fontWeight: 800, color: C.white, lineHeight: 1.2, marginBottom: 14 }}>
-            Controlá tu caja
-          </div>
-          <div style={{ fontSize: 18, color: C.muted, lineHeight: 1.6 }}>
-            Seguí lo cobrado vs. pendiente por día, semana o mes. Estadísticas por barbero y exportación CSV.
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 20 }}>
-            {["Stats por barbero", "Marcar turno como cobrado", "Exportar a CSV"].map((f) => (
-              <div key={f} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 16, color: C.muted }}>
-                <span style={{ color: C.success }}>✓</span> {f}
+      <div style={{
+        position: "absolute", inset: 0,
+        display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center",
+        gap: 40, padding: "60px",
+      }}>
+        <div style={{ width: "100%", textAlign: "center", zIndex: 10 }}>
+          <FadeSlide delay={15}>
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 14 }}>
+              <div style={{ background: C.successBg, border: `1px solid ${C.success}40`, borderRadius: 20, padding: "4px 14px", fontSize: 12, fontWeight: 700, color: C.success, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+                Módulo de Ingresos
               </div>
-            ))}
-          </div>
-        </FadeSlide>
-      </div>
+            </div>
+            <div style={{ fontSize: 58, fontWeight: 800, color: C.white, lineHeight: 1.15, marginBottom: 14 }}>
+              Controlá tu caja
+            </div>
+            <div style={{ fontSize: 18, color: C.muted, lineHeight: 1.6, marginBottom: 20 }}>
+              Seguí lo cobrado vs. pendiente. Estadísticas por barbero y exportación CSV.
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, alignItems: "center" }}>
+              {["Stats por barbero", "Marcar turno como cobrado", "Exportar a CSV"].map((f) => (
+                <div key={f} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 16, color: C.muted }}>
+                  <span style={{ color: C.success }}>✓</span> {f}
+                </div>
+              ))}
+            </div>
+          </FadeSlide>
+        </div>
 
-      <div style={{ position: "absolute", right: -20, top: "50%", transform: `translateY(-50%) translateY(${browserY}px)`, opacity: browserOpacity }}>
-        <BrowserWindow url="tuscortes.com/dashboard/ingresos" width={1050} height={600} scale={0.92}>
-          <RevenuePage />
-        </BrowserWindow>
+        <div style={{ transform: `translateY(${browserY}px)`, opacity: browserOpacity }}>
+          <BrowserWindow url="tuscortes.com/dashboard/ingresos" width={950} height={500} scale={1}>
+            <RevenuePage />
+          </BrowserWindow>
+        </div>
       </div>
     </AbsoluteFill>
   );
@@ -291,31 +300,40 @@ export const StaffScene: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ overflow: "hidden", opacity: sceneOpacity }}>
-      <div style={{ position: "absolute", right: 64, top: "50%", transform: "translateY(-50%)", width: 320, zIndex: 10, textAlign: "right" }}>
-        <FadeSlide delay={15} direction="left">
-          <div style={{ display: "inline-block", background: C.purpleBg, border: `1px solid ${C.purple}40`, borderRadius: 20, padding: "4px 14px", fontSize: 12, fontWeight: 700, color: C.purple, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 12 }}>
-            Equipo y servicios
-          </div>
-          <div style={{ fontSize: 44, fontWeight: 800, color: C.white, lineHeight: 1.2, marginBottom: 14 }}>
-            Tu equipo, tus reglas
-          </div>
-          <div style={{ fontSize: 18, color: C.muted, lineHeight: 1.6 }}>
-            Agregá barberos, asignales servicios y configurá sus horarios independientemente.
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 20, alignItems: "flex-end" }}>
-            {["Foto y nombre por barbero", "Servicios por barbero", "Horarios independientes"].map((f) => (
-              <div key={f} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 16, color: C.muted }}>
-                {f} <span style={{ color: C.purple }}>✓</span>
+      <div style={{
+        position: "absolute", inset: 0,
+        display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center",
+        gap: 40, padding: "60px",
+      }}>
+        <div style={{ width: "100%", textAlign: "center", zIndex: 10 }}>
+          <FadeSlide delay={15} direction="left">
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 14 }}>
+              <div style={{ background: C.purpleBg, border: `1px solid ${C.purple}40`, borderRadius: 20, padding: "4px 14px", fontSize: 12, fontWeight: 700, color: C.purple, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+                Equipo y servicios
               </div>
-            ))}
-          </div>
-        </FadeSlide>
-      </div>
+            </div>
+            <div style={{ fontSize: 58, fontWeight: 800, color: C.white, lineHeight: 1.15, marginBottom: 14 }}>
+              Tu equipo, tus reglas
+            </div>
+            <div style={{ fontSize: 18, color: C.muted, lineHeight: 1.6, marginBottom: 20 }}>
+              Agregá barberos, asignales servicios y configurá sus horarios independientemente.
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, alignItems: "center" }}>
+              {["Foto y nombre por barbero", "Servicios por barbero", "Horarios independientes"].map((f) => (
+                <div key={f} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 16, color: C.muted }}>
+                  <span style={{ color: C.purple }}>✓</span> {f}
+                </div>
+              ))}
+            </div>
+          </FadeSlide>
+        </div>
 
-      <div style={{ position: "absolute", left: -30, top: "50%", transform: `translateY(-50%) translateX(${browserX}px)`, opacity: browserOpacity }}>
-        <BrowserWindow url="tuscortes.com/dashboard/barberos" width={1050} height={600} scale={0.92}>
-          <StaffServicesPage />
-        </BrowserWindow>
+        <div style={{ transform: `translateX(${browserX}px)`, opacity: browserOpacity }}>
+          <BrowserWindow url="tuscortes.com/dashboard/barberos" width={950} height={500} scale={1}>
+            <StaffServicesPage />
+          </BrowserWindow>
+        </div>
       </div>
     </AbsoluteFill>
   );

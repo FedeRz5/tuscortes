@@ -7,6 +7,7 @@ import { Calendar, Clock, CheckCircle, ArrowRight } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import Link from "next/link";
 import { CopyButton } from "@/components/ui/copy-button";
+import { PrintQRButton } from "@/components/ui/print-qr-button";
 
 export default async function DashboardPage() {
   const session = await getSession();
@@ -31,7 +32,7 @@ export default async function DashboardPage() {
     prisma.appointment.count({ where: { organizationId: orgId, status: "PENDING" } }),
     prisma.staff.count({ where: { organizationId: orgId, active: true } }),
     prisma.service.count({ where: { organizationId: orgId, active: true } }),
-    prisma.organization.findUnique({ where: { id: orgId }, select: { slug: true } }),
+    prisma.organization.findUnique({ where: { id: orgId }, select: { slug: true, name: true } }),
   ]);
 
   const bookingUrl = org ? `${process.env.NEXT_PUBLIC_APP_URL ?? "https://tuscortes.com"}/b/${org.slug}` : "";
@@ -110,13 +111,16 @@ export default async function DashboardPage() {
                   <code className="flex-1 text-sm font-mono text-zinc-700 truncate">{bookingUrl}</code>
                   <CopyButton text={bookingUrl} />
                 </div>
-                <Link
-                  href={bookingUrl.replace(process.env.NEXT_PUBLIC_APP_URL ?? "https://tuscortes.com", "")}
-                  target="_blank"
-                  className="inline-flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-800 font-medium"
-                >
-                  Ver página pública <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
+                <div className="flex items-center gap-3 flex-wrap">
+                  <Link
+                    href={bookingUrl.replace(process.env.NEXT_PUBLIC_APP_URL ?? "https://tuscortes.com", "")}
+                    target="_blank"
+                    className="inline-flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-800 font-medium"
+                  >
+                    Ver página pública <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                  {qrUrl && <PrintQRButton qrUrl={qrUrl} orgName={org?.name ?? ""} />}
+                </div>
               </div>
             </div>
           </CardContent>

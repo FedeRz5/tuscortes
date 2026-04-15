@@ -62,8 +62,12 @@ export function generateSlots(params: GenerateSlotsParams): TimeSlot[] {
   const endMin = toMinutes(workEnd);
 
   const now = new Date();
-  const todayStr = now.toISOString().split("T")[0];
-  const currentMin = now.getHours() * 60 + now.getMinutes();
+  // Convert to Argentina time (UTC-3) so server-side UTC doesn't block today's slots incorrectly
+  const AR_OFFSET_MS = -3 * 60 * 60 * 1000;
+  const utcMs = now.getTime() + now.getTimezoneOffset() * 60 * 1000;
+  const nowAR = new Date(utcMs + AR_OFFSET_MS);
+  const todayStr = `${nowAR.getFullYear()}-${String(nowAR.getMonth() + 1).padStart(2, "0")}-${String(nowAR.getDate()).padStart(2, "0")}`;
+  const currentMin = nowAR.getHours() * 60 + nowAR.getMinutes();
   const minAdvanceMin = minAdvanceHours * 60;
 
   const slots: TimeSlot[] = [];
@@ -76,10 +80,10 @@ export function generateSlots(params: GenerateSlotsParams): TimeSlot[] {
     // Skip slots too close in time (today only)
     if (date === todayStr && t <= currentMin + minAdvanceMin) continue;
 
-    // For future dates, check minAdvanceHours as a datetime comparison
+    // For future dates, check minAdvanceHours as a datetime comparison (using Argentina time)
     if (date > todayStr && minAdvanceHours > 0) {
       const slotDatetime = new Date(`${date}T${startTime}:00`);
-      const minDatetime = new Date(now.getTime() + minAdvanceHours * 60 * 60 * 1000);
+      const minDatetime = new Date(nowAR.getTime() + minAdvanceHours * 60 * 60 * 1000);
       if (slotDatetime < minDatetime) continue;
     }
 

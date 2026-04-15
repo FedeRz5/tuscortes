@@ -133,7 +133,7 @@ export const StatsScene: React.FC = () => {
         </div>
 
         {/* Stats grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, width: "100%", maxWidth: 1100 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 20, width: "100%", maxWidth: 700 }}>
           <BigStat value={148} suffix="+" label="Turnos este mes" sublabel="Solo en Ramos Cutz" icon="📅" delay={25} accentColor={C.blue} accentBg="rgba(96,165,250,0.15)" countFontSize={46} />
           <BigStat value={8500000} prefix="$" label="Ingresos este mes" sublabel="Ingresos bajo control" icon="💰" delay={38} accentColor={C.success} accentBg="rgba(16,185,129,0.15)" countFontSize={46} />
           <BigStat value={4} label="Barberos coordinados" sublabel="Horarios independientes" icon="✂️" delay={51} accentColor={C.orange} accentBg="rgba(129,140,248,0.15)" countFontSize={46} />

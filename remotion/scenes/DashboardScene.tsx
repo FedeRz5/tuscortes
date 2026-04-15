@@ -454,44 +454,53 @@ export const DashboardScene: React.FC = () => {
     <AbsoluteFill style={{ overflow: "hidden", opacity: sceneOpacity }}>
       <Background accent="indigo" intensity={0.85} />
 
-      <div style={{ position: "absolute", left: 80, top: "50%", transform: "translateY(-50%)", width: 380, zIndex: 10 }}>
-        <LineReveal delay={10}>
-          <div style={{ display: "inline-block", background: C.primaryGlow, border: `1px solid ${C.primary}40`, borderRadius: 20, padding: "4px 14px", fontSize: 12, fontWeight: 700, color: C.primaryLight, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 14 }}>
-            Panel del barbero
-          </div>
-        </LineReveal>
-        <WordReveal text="Tu negocio," delay={8} fontSize={52} fontWeight={900} color={C.white} letterSpacing="-0.01em" stagger={4} />
-        <WordReveal text="de un vistazo." delay={20} fontSize={52} fontWeight={900} gradient gradientColors={[C.white, C.primaryLight]} letterSpacing="-0.01em" stagger={4} />
-        <LineReveal delay={36}>
-          <div style={{ fontSize: 17, color: C.muted, lineHeight: 1.65, marginTop: 14, marginBottom: 22 }}>
-            Métricas en tiempo real, turnos del día y todo lo que necesitás al abrir la app.
-          </div>
-        </LineReveal>
-        {["Contadores animados al instante", "Turnos de hoy en orden", "Acceso a toda la gestión"].map((t, i) => (
-          <div key={t} style={{
-            display: "flex", alignItems: "center", gap: 10, fontSize: 14, color: C.muted, marginBottom: 10,
-            opacity: interpolate(frame, [45 + i * 10, 60 + i * 10], [0, 1], { extrapolateRight: "clamp" }),
-            transform: `translateX(${interpolate(frame, [45 + i * 10, 60 + i * 10], [-14, 0], { extrapolateRight: "clamp" })}px)`,
-          }}>
-            <div style={{ width: 20, height: 20, borderRadius: "50%", background: C.primaryGlow, border: `1px solid ${C.primary}40`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              <span style={{ color: C.primaryLight, fontSize: 10 }}>✓</span>
-            </div>
-            {t}
-          </div>
-        ))}
-      </div>
-
       <div style={{
-        position: "absolute", right: -20, top: "50%",
-        transform: `translateY(-50%) translateY(${browserY + floatY}px)`,
-        opacity: browserOpacity,
+        position: "absolute", inset: 0,
+        display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center",
+        gap: 40, padding: "60px",
       }}>
-        <div style={{ transform: "perspective(1500px) rotateY(-8deg) rotateX(1.5deg)", transformOrigin: "center center" }}>
-          <BrowserWindow url="tuscortes.com/dashboard" width={1050} height={600} scale={0.92}>
+        {/* Text block */}
+        <div style={{ width: "100%", textAlign: "center", zIndex: 10 }}>
+          <LineReveal delay={10}>
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 14 }}>
+              <div style={{ background: C.primaryGlow, border: `1px solid ${C.primary}40`, borderRadius: 20, padding: "4px 14px", fontSize: 12, fontWeight: 700, color: C.primaryLight, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+                Panel del barbero
+              </div>
+            </div>
+          </LineReveal>
+          <WordReveal text="Tu negocio," delay={8} fontSize={58} fontWeight={900} color={C.white} letterSpacing="-0.01em" stagger={4} centered />
+          <WordReveal text="de un vistazo." delay={20} fontSize={58} fontWeight={900} gradient gradientColors={[C.white, C.primaryLight]} letterSpacing="-0.01em" stagger={4} centered />
+          <LineReveal delay={36}>
+            <div style={{ fontSize: 18, color: C.muted, lineHeight: 1.65, marginTop: 14, marginBottom: 22, textAlign: "center" }}>
+              Métricas en tiempo real, turnos del día y todo lo que necesitás al abrir la app.
+            </div>
+          </LineReveal>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, alignItems: "center" }}>
+            {["Contadores animados al instante", "Turnos de hoy en orden", "Acceso a toda la gestión"].map((t, i) => (
+              <div key={t} style={{
+                display: "flex", alignItems: "center", gap: 10, fontSize: 15, color: C.muted,
+                opacity: interpolate(frame, [45 + i * 10, 60 + i * 10], [0, 1], { extrapolateRight: "clamp" }),
+                transform: `translateY(${interpolate(frame, [45 + i * 10, 60 + i * 10], [10, 0], { extrapolateRight: "clamp" })}px)`,
+              }}>
+                <div style={{ width: 20, height: 20, borderRadius: "50%", background: C.primaryGlow, border: `1px solid ${C.primary}40`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <span style={{ color: C.primaryLight, fontSize: 10 }}>✓</span>
+                </div>
+                {t}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Browser */}
+        <div style={{
+          transform: `translateY(${browserY + floatY}px)`,
+          opacity: browserOpacity,
+        }}>
+          <BrowserWindow url="tuscortes.com/dashboard" width={950} height={540} scale={1}>
             <DashboardMain />
           </BrowserWindow>
         </div>
-        <div style={{ position: "absolute", bottom: -28, left: "5%", width: "90%", height: 36, background: "rgba(0,0,0,0.35)", borderRadius: "50%", filter: "blur(18px)", transform: "perspective(1500px) rotateX(80deg)" }} />
       </div>
     </AbsoluteFill>
   );
@@ -516,46 +525,53 @@ export const AppointmentsScene: React.FC = () => {
     <AbsoluteFill style={{ overflow: "hidden", opacity: sceneOpacity }}>
       <Background accent="orange" intensity={0.65} />
 
-      <div style={{ position: "absolute", right: 80, top: "50%", transform: "translateY(-50%)", width: 360, zIndex: 10, textAlign: "right" }}>
-        <LineReveal delay={10}>
-          <div style={{ display: "inline-flex", justifyContent: "flex-end", marginBottom: 14 }}>
-            <div style={{ background: C.orangeGlow, border: `1px solid ${C.orange}40`, borderRadius: 20, padding: "4px 14px", fontSize: 12, fontWeight: 700, color: C.orange, letterSpacing: "0.1em", textTransform: "uppercase" }}>
-              Gestión de turnos
-            </div>
-          </div>
-        </LineReveal>
-        <WordReveal text="Controlá" delay={8} fontSize={52} fontWeight={900} color={C.white} letterSpacing="-0.01em" stagger={4} />
-        <WordReveal text="cada turno." delay={16} fontSize={52} fontWeight={900} gradient gradientColors={[C.white, C.orange]} letterSpacing="-0.01em" stagger={4} />
-        <LineReveal delay={32}>
-          <div style={{ fontSize: 17, color: C.muted, lineHeight: 1.65, marginTop: 14, marginBottom: 22, textAlign: "right" }}>
-            Confirmá, completá o cancelá con un clic. Filtros por fecha, barbero y estado.
-          </div>
-        </LineReveal>
-        {["Filtros por barbero o servicio", "Confirmar / cancelar en un clic", "Historial completo"].map((t, i) => (
-          <div key={t} style={{
-            display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 10, fontSize: 14, color: C.muted, marginBottom: 10,
-            opacity: interpolate(frame, [44 + i * 10, 58 + i * 10], [0, 1], { extrapolateRight: "clamp" }),
-            transform: `translateX(${interpolate(frame, [44 + i * 10, 58 + i * 10], [14, 0], { extrapolateRight: "clamp" })}px)`,
-          }}>
-            {t}
-            <div style={{ width: 20, height: 20, borderRadius: "50%", background: C.orangeGlow, border: `1px solid ${C.orange}40`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              <span style={{ color: C.orange, fontSize: 10 }}>✓</span>
-            </div>
-          </div>
-        ))}
-      </div>
-
       <div style={{
-        position: "absolute", left: -30, top: "50%",
-        transform: `translateY(-50%) translateX(${browserX}px) translateY(${floatY}px)`,
-        opacity: browserOpacity,
+        position: "absolute", inset: 0,
+        display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center",
+        gap: 40, padding: "60px",
       }}>
-        <div style={{ transform: "perspective(1500px) rotateY(8deg) rotateX(1.5deg)", transformOrigin: "center center" }}>
-          <BrowserWindow url="tuscortes.com/dashboard/turnos" width={1050} height={600} scale={0.92}>
+        {/* Text block */}
+        <div style={{ width: "100%", textAlign: "center", zIndex: 10 }}>
+          <LineReveal delay={10}>
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 14 }}>
+              <div style={{ background: C.orangeGlow, border: `1px solid ${C.orange}40`, borderRadius: 20, padding: "4px 14px", fontSize: 12, fontWeight: 700, color: C.orange, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+                Gestión de turnos
+              </div>
+            </div>
+          </LineReveal>
+          <WordReveal text="Controlá" delay={8} fontSize={58} fontWeight={900} color={C.white} letterSpacing="-0.01em" stagger={4} centered />
+          <WordReveal text="cada turno." delay={16} fontSize={58} fontWeight={900} gradient gradientColors={[C.white, C.orange]} letterSpacing="-0.01em" stagger={4} centered />
+          <LineReveal delay={32}>
+            <div style={{ fontSize: 18, color: C.muted, lineHeight: 1.65, marginTop: 14, marginBottom: 22, textAlign: "center" }}>
+              Confirmá, completá o cancelá con un clic. Filtros por fecha, barbero y estado.
+            </div>
+          </LineReveal>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, alignItems: "center" }}>
+            {["Filtros por barbero o servicio", "Confirmar / cancelar en un clic", "Historial completo"].map((t, i) => (
+              <div key={t} style={{
+                display: "flex", alignItems: "center", gap: 10, fontSize: 15, color: C.muted,
+                opacity: interpolate(frame, [44 + i * 10, 58 + i * 10], [0, 1], { extrapolateRight: "clamp" }),
+                transform: `translateY(${interpolate(frame, [44 + i * 10, 58 + i * 10], [10, 0], { extrapolateRight: "clamp" })}px)`,
+              }}>
+                <div style={{ width: 20, height: 20, borderRadius: "50%", background: C.orangeGlow, border: `1px solid ${C.orange}40`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <span style={{ color: C.orange, fontSize: 10 }}>✓</span>
+                </div>
+                {t}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Browser */}
+        <div style={{
+          transform: `translateX(${browserX}px) translateY(${floatY}px)`,
+          opacity: browserOpacity,
+        }}>
+          <BrowserWindow url="tuscortes.com/dashboard/turnos" width={950} height={540} scale={1}>
             <AppointmentsMain />
           </BrowserWindow>
         </div>
-        <div style={{ position: "absolute", bottom: -28, left: "5%", width: "90%", height: 36, background: "rgba(0,0,0,0.35)", borderRadius: "50%", filter: "blur(18px)", transform: "perspective(1500px) rotateX(80deg)" }} />
       </div>
     </AbsoluteFill>
   );
