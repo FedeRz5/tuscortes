@@ -1,5 +1,8 @@
 import { Resend } from "resend";
 
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://tuscortes.com";
+const DEFAULT_FROM = process.env.RESEND_FROM ?? "TusCortes <noreply@tuscortes.com>";
+
 function getResend() {
   const key = process.env.RESEND_API_KEY;
   if (!key) throw new Error("Missing RESEND_API_KEY");
@@ -37,7 +40,7 @@ function formatPrice(n: number) {
 
 export async function sendAppointmentConfirmation(params: AppointmentConfirmationParams) {
   const resend = getResend();
-  const from = process.env.RESEND_FROM ?? "TusCortes <noreply@tuscortes.com.ar>";
+  const from = DEFAULT_FROM;
 
   const dateFormatted = formatDate(params.date);
   const priceFormatted = formatPrice(params.price);
@@ -118,7 +121,7 @@ export async function sendAppointmentConfirmation(params: AppointmentConfirmatio
               ` : ""}
               <p style="margin:0;color:#9ca3af;font-size:12px;">
                 Este mail fue generado automáticamente por <strong>TusCortes</strong>.<br/>
-                tuscortes.com.ar
+                tuscortes.com
               </p>
             </td>
           </tr>
@@ -156,7 +159,7 @@ interface NewAppointmentNotificationParams {
 
 export async function sendNewAppointmentNotification(params: NewAppointmentNotificationParams) {
   const resend = getResend();
-  const from = process.env.RESEND_FROM ?? "TusCortes <noreply@tuscortes.com>";
+  const from = DEFAULT_FROM;
   const dateFormatted = formatDate(params.date);
   const priceFormatted = formatPrice(params.price);
 
@@ -243,7 +246,7 @@ interface AppointmentReminderParams {
 
 export async function sendAppointmentReminder(params: AppointmentReminderParams) {
   const resend = getResend();
-  const from = process.env.RESEND_FROM ?? "TusCortes <noreply@tuscortes.com.ar>";
+  const from = DEFAULT_FROM;
   const dateFormatted = formatDate(params.date);
   const priceFormatted = formatPrice(params.price);
 
@@ -288,7 +291,7 @@ export async function sendAppointmentReminder(params: AppointmentReminderParams)
         </tr>
         <tr>
           <td style="background:#f9fafb;border-radius:0 0 12px 12px;padding:18px 32px;text-align:center;border-top:1px solid #e5e7eb;">
-            <p style="margin:0;color:#9ca3af;font-size:12px;">TusCortes · tuscortes.com.ar</p>
+            <p style="margin:0;color:#9ca3af;font-size:12px;">TusCortes · tuscortes.com</p>
           </td>
         </tr>
       </table>
@@ -307,7 +310,7 @@ export async function sendAppointmentReminder(params: AppointmentReminderParams)
 
 export async function sendPasswordResetEmail({ to, resetUrl }: { to: string; resetUrl: string }) {
   const resend = getResend();
-  const from = process.env.RESEND_FROM ?? "TusCortes <noreply@tuscortes.com.ar>";
+  const from = DEFAULT_FROM;
 
   const html = `
 <!DOCTYPE html>
@@ -338,7 +341,7 @@ export async function sendPasswordResetEmail({ to, resetUrl }: { to: string; res
         </tr>
         <tr>
           <td style="background:#f9fafb;border-radius:0 0 12px 12px;padding:18px 32px;text-align:center;border-top:1px solid #e5e7eb;">
-            <p style="margin:0;color:#9ca3af;font-size:12px;">TusCortes · tuscortes.com.ar</p>
+            <p style="margin:0;color:#9ca3af;font-size:12px;">TusCortes · tuscortes.com</p>
           </td>
         </tr>
       </table>

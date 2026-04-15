@@ -10,7 +10,7 @@ export const POST = withErrorHandler(async (req) => {
   const parsed = ServiceSchema.safeParse(body);
   if (!parsed.success) return err(parsed.error.issues[0].message);
 
-  if (session.user.organizationId !== parsed.data.organizationId) return err("Forbidden", 403);
+  if (session.user.organizationId !== parsed.data.organizationId) return err("Sin permisos", 403);
 
   const service = await prisma.service.create({ data: parsed.data });
   return ok(service, 201);

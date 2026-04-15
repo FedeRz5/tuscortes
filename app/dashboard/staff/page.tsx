@@ -1,10 +1,10 @@
-import { auth } from "@/auth";
+import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { StaffClient } from "./staff-client";
 
 export default async function StaffPage() {
-  const session = await auth();
+  const session = await getSession();
   if (!session?.user.organizationId) redirect("/login");
 
   const staff = await prisma.staff.findMany({

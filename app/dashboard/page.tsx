@@ -1,4 +1,5 @@
-import { auth } from "@/auth";
+import Image from "next/image";
+import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,7 +9,7 @@ import Link from "next/link";
 import { CopyButton } from "@/components/ui/copy-button";
 
 export default async function DashboardPage() {
-  const session = await auth();
+  const session = await getSession();
   if (!session?.user.organizationId) redirect("/login");
 
   const orgId = session.user.organizationId;
@@ -101,8 +102,7 @@ export default async function DashboardPage() {
           <CardContent>
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
               {qrUrl && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={qrUrl} alt="QR código de reservas" className="h-[180px] w-[180px] rounded-lg border border-zinc-200 shrink-0" />
+                <Image src={qrUrl} alt="QR código de reservas" width={180} height={180} className="rounded-lg border border-zinc-200 shrink-0" unoptimized />
               )}
               <div className="space-y-3 flex-1 min-w-0">
                 <p className="text-sm text-zinc-500">Compartí este link con tus clientes o mostrá el QR en tu local.</p>

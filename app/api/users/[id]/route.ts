@@ -14,7 +14,7 @@ const PatchSchema = z.object({
 export const PATCH = withErrorHandler(async (req, ctx) => {
   const { session, error } = await requireAuth();
   if (error) return error;
-  if (session.user.role !== "SUPERADMIN") return err("Forbidden", 403);
+  if (session.user.role !== "SUPERADMIN") return err("Sin permisos", 403);
 
   const { id } = await ctx.params;
   const body = await req.json();

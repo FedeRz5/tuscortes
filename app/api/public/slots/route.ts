@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { generateSlots } from "@/lib/slots";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 export async function GET(req: Request) {
+  const ip = getClientIp(req);
+  const { allowed } = rateLimit(ip, "slots", { limit: 60, windowMs: 60 * 1000 });
+  if (!allowed) return NextResponse.json({ error: "Demasiadas solicitudes." }, { status: 429 });
+
   try {
     const { searchParams } = new URL(req.url);
     const orgSlug = searchParams.get("orgSlug");
@@ -11,11 +16,11 @@ export async function GET(req: Request) {
     const date = searchParams.get("date");
 
     if (!orgSlug || !staffId || !serviceId || !date) {
-      return NextResponse.json({ error: "Missing params" }, { status: 400 });
+      return NextResponse.json({ error: "Parámetros requeridos" }, { status: 400 });
     }
 
     const org = await prisma.organization.findUnique({ where: { slug: orgSlug, active: true } });
-    if (!org) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    if (!org) return NextResponse.json({ error: "No encontrado" }, { status: 404 });
 
     const dayOfWeek = new Date(date + "T00:00:00").getDay();
 
@@ -44,7 +49,7 @@ export async function GET(req: Request) {
         prisma.staff.findUnique({ where: { id: staffId } }),
       ]);
 
-    if (!service || service.organizationId !== org.id) return NextResponse.json({ error: "Service not found" }, { status: 404 });
+    if (!service || service.organizationId !== org.id) return NextResponse.json({ error: "Servicio no encontrado" }, { status: 404 });
     if (!staffRecord || staffRecord.organizationId !== org.id) return NextResponse.json([]);
     if (vacations.length > 0) return NextResponse.json([]);
     if (!schedule || !schedule.enabled) return NextResponse.json([]);
@@ -65,6 +70,6 @@ export async function GET(req: Request) {
     return NextResponse.json(slots);
   } catch (err) {
     console.error("[slots]", err);
-    return NextResponse.json({ error: "Internal error" }, { status: 500 });
+    return NextResponse.json({ error: "Error interno" }, { status: 500 });
   }
 }

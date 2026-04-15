@@ -10,6 +10,8 @@ export function NewAppointmentNotifier() {
 
   useEffect(() => {
     const poll = async () => {
+      // No pollear si el tab está en segundo plano
+      if (document.visibilityState !== "visible") return;
       try {
         const res = await fetch(
           `/api/dashboard/notifications?since=${encodeURIComponent(lastSinceRef.current)}`
@@ -23,7 +25,7 @@ export function NewAppointmentNotifier() {
       } catch {}
     };
 
-    const interval = setInterval(poll, 30_000);
+    const interval = setInterval(poll, 60_000);
     return () => clearInterval(interval);
   }, []);
 

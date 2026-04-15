@@ -1,10 +1,35 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://tuscortes.com";
+
 export const metadata: Metadata = {
   title: "TusCortes — Turnos online para tu barbería",
   description: "Reservá tu turno en segundos. Sin esperas, sin llamadas.",
   icons: { icon: "/logo.png" },
+  metadataBase: new URL(APP_URL),
+  openGraph: {
+    title: "TusCortes — Turnos online para tu barbería",
+    description: "Reservá tu turno en segundos. Sin esperas, sin llamadas.",
+    url: APP_URL,
+    siteName: "TusCortes",
+    locale: "es_AR",
+    type: "website",
+    images: [
+      {
+        url: "/logo.png",
+        width: 512,
+        height: 512,
+        alt: "TusCortes",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: "TusCortes — Turnos online para tu barbería",
+    description: "Reservá tu turno en segundos. Sin esperas, sin llamadas.",
+    images: ["/logo.png"],
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -10,7 +10,7 @@ export const PATCH = withErrorHandler(async (req, ctx) => {
 
   const existing = await prisma.service.findUnique({ where: { id }, select: { organizationId: true } });
   if (!existing) return err("No encontrado", 404);
-  if (existing.organizationId !== session.user.organizationId) return err("Forbidden", 403);
+  if (existing.organizationId !== session.user.organizationId) return err("Sin permisos", 403);
 
   const body = await req.json();
   const parsed = ServicePatchSchema.safeParse(body);
@@ -28,7 +28,7 @@ export const DELETE = withErrorHandler(async (_req, ctx) => {
 
   const existing = await prisma.service.findUnique({ where: { id }, select: { organizationId: true } });
   if (!existing) return err("No encontrado", 404);
-  if (existing.organizationId !== session.user.organizationId) return err("Forbidden", 403);
+  if (existing.organizationId !== session.user.organizationId) return err("Sin permisos", 403);
 
   await prisma.service.delete({ where: { id } });
   return ok({ success: true });

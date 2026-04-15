@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Check, CheckCircle2, XCircle, CreditCard } from "lucide-react";
 import { Reveal, StaggerContainer, StaggerItem } from "@/components/landing/reveal";
@@ -10,9 +11,9 @@ import { HeroBg } from "@/components/landing/hero-bg";
 
 // ─── MercadoPago ─────────────────────────────────────────────────────────────
 const MP_LINKS = {
-  STARTER: "https://mpago.la/1J6RZ4a",
-  PRO: "https://mpago.la/2S9r3ks",
-  PREMIUM: "https://mpago.la/2VmuEJi",
+  STARTER: process.env.NEXT_PUBLIC_MP_LINK_STARTER ?? "#",
+  PRO: process.env.NEXT_PUBLIC_MP_LINK_PRO ?? "#",
+  PREMIUM: process.env.NEXT_PUBLIC_MP_LINK_PREMIUM ?? "#",
 };
 
 // ─── Planes ───────────────────────────────────────────────────────────────────
@@ -110,8 +111,7 @@ export default function HomePage() {
       <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/95">
         <nav className="flex items-center justify-between px-6 py-4 max-w-6xl mx-auto">
           <div className="flex items-center">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.jpeg" alt="TusCortes" className="h-10 object-contain" />
+            <Image src="/logo.jpeg" alt="TusCortes" width={120} height={40} className="h-10 w-auto object-contain" />
           </div>
           <div className="hidden sm:flex items-center gap-6 text-sm text-gray-500">
             <a href="#como-funciona" className="hover:text-gray-900 transition-colors">Cómo funciona</a>
@@ -143,13 +143,13 @@ export default function HomePage() {
 
             <div className="hero-4 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-10">
               <Link
-                href="/login"
+                href="#planes"
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-orange-500 px-8 py-4 text-base font-bold text-white hover:bg-orange-400 transition-all shadow-lg shadow-orange-500/25"
               >
                 Ver planes <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                href="/b/demo"
+                href="/b/ramos-cutz"
                 className="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 px-8 py-4 text-base font-semibold text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all"
               >
                 Ver demo →
@@ -322,10 +322,12 @@ export default function HomePage() {
               </h2>
               <p className="text-indigo-200 mb-8 text-sm">Configurás en 5 minutos. Planes desde $12.500/mes.</p>
               <a
-                href="#planes"
+                href="https://wa.me/5491170610003?text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20TusCortes"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-xl bg-orange-500 px-10 py-4 text-base font-bold text-white hover:bg-orange-400 transition-all shadow-lg shadow-orange-500/30"
               >
-                Ver planes <ArrowRight className="h-4 w-4" />
+                Contactanos <ArrowRight className="h-4 w-4" />
               </a>
             </div>
           </Reveal>
@@ -336,13 +338,14 @@ export default function HomePage() {
       <footer className="border-t border-gray-100 px-6 py-8">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.jpeg" alt="TusCortes" className="h-8 object-contain" />
+            <Image src="/logo.jpeg" alt="TusCortes" width={96} height={32} className="h-8 w-auto object-contain" />
           </div>
           <p className="text-gray-400 text-sm">© {new Date().getFullYear()} TusCortes. Todos los derechos reservados.</p>
-          <Link href="/login" className="text-sm text-gray-400 hover:text-gray-900 transition-colors">
-            Acceder al panel →
-          </Link>
+          <div className="flex items-center gap-4 text-sm text-gray-400">
+            <Link href="/terminos" className="hover:text-gray-900 transition-colors">Términos</Link>
+            <Link href="/privacidad" className="hover:text-gray-900 transition-colors">Privacidad</Link>
+            <Link href="/login" className="hover:text-gray-900 transition-colors">Panel →</Link>
+          </div>
         </div>
       </footer>
     </div>

@@ -9,7 +9,7 @@ export const DELETE = withErrorHandler(async (_req, ctx) => {
 
   const existing = await prisma.vacationBlock.findUnique({ where: { id }, select: { organizationId: true } });
   if (!existing) return err("No encontrado", 404);
-  if (existing.organizationId !== session.user.organizationId) return err("Forbidden", 403);
+  if (existing.organizationId !== session.user.organizationId) return err("Sin permisos", 403);
 
   await prisma.vacationBlock.delete({ where: { id } });
   return ok({ success: true });

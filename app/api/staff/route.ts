@@ -12,7 +12,7 @@ export const POST = withErrorHandler(async (req) => {
   if (!parsed.success) return err(parsed.error.issues[0].message);
 
   // Verificar que el usuario pertenece a la organización
-  if (session.user.organizationId !== parsed.data.organizationId) return err("Forbidden", 403);
+  if (session.user.organizationId !== parsed.data.organizationId) return err("Sin permisos", 403);
 
   // Verificar límite de barberos según plan
   const org = await prisma.organization.findUnique({

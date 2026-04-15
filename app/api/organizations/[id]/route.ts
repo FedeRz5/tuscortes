@@ -10,7 +10,7 @@ export const PATCH = withErrorHandler(async (req, ctx) => {
   const { id } = await ctx.params;
 
   if (session.user.role !== "SUPERADMIN" && session.user.organizationId !== id) {
-    return err("Forbidden", 403);
+    return err("Sin permisos", 403);
   }
 
   const body = await req.json();
@@ -59,7 +59,7 @@ export const PATCH = withErrorHandler(async (req, ctx) => {
 export const DELETE = withErrorHandler(async (_req, ctx) => {
   const { session, error } = await requireAuth();
   if (error) return error;
-  if (session.user.role !== "SUPERADMIN") return err("Forbidden", 403);
+  if (session.user.role !== "SUPERADMIN") return err("Sin permisos", 403);
 
   const { id } = await ctx.params;
 

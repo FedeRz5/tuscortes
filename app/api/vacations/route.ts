@@ -11,7 +11,7 @@ export const POST = withErrorHandler(async (req) => {
   const parsed = VacationBlockSchema.safeParse(body);
   if (!parsed.success) return err(parsed.error.issues[0].message);
 
-  if (session.user.organizationId !== parsed.data.organizationId) return err("Forbidden", 403);
+  if (session.user.organizationId !== parsed.data.organizationId) return err("Sin permisos", 403);
 
   const org = await prisma.organization.findUnique({
     where: { id: parsed.data.organizationId },

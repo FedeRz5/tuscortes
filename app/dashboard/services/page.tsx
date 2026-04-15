@@ -1,10 +1,10 @@
-import { auth } from "@/auth";
+import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { ServicesClient } from "./services-client";
 
 export default async function ServicesPage() {
-  const session = await auth();
+  const session = await getSession();
   if (!session?.user.organizationId) redirect("/login");
 
   const services = await prisma.service.findMany({

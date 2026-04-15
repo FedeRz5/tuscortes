@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -92,8 +93,8 @@ export default function ResetPasswordPage() {
     <div className="min-h-screen flex items-center justify-center bg-zinc-50">
       <div className="w-full max-w-sm px-4">
         <div className="text-center mb-8">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.jpeg" alt="TusCortes" className="mx-auto h-20 object-contain mb-4" />
+          
+          <Image src="/logo.jpeg" alt="TusCortes" width={160} height={80} className="mx-auto h-20 w-auto object-contain mb-4" />
         </div>
         <Suspense fallback={null}>
           <ResetPasswordForm />

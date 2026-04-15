@@ -49,6 +49,9 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 // ─── Component ────────────────────────────────────────────────────────────────
+// Caché en módulo para no refetchear la misma fecha dentro de la sesión
+const calendarCache = new Map<string, { staff: StaffMember[]; appointments: Appointment[] }>();
+
 export function CalendarClient() {
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [staff, setStaff] = useState<StaffMember[]>([]);
@@ -56,12 +59,21 @@ export function CalendarClient() {
   const [loading, setLoading] = useState(true);
 
   const fetchData = useCallback(async (d: string) => {
+    const cached = calendarCache.get(d);
+    if (cached) {
+      setStaff(cached.staff);
+      setAppointments(cached.appointments);
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     try {
       const res = await fetch(`/api/dashboard/calendar?date=${d}`);
       const data = await res.json();
-      setStaff(data.staff ?? []);
-      setAppointments(data.appointments ?? []);
+      const result = { staff: data.staff ?? [], appointments: data.appointments ?? [] };
+      calendarCache.set(d, result);
+      setStaff(result.staff);
+      setAppointments(result.appointments);
     } finally {
       setLoading(false);
     }

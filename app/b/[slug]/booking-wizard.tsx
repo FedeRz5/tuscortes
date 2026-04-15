@@ -34,6 +34,9 @@ function getNextDays(org: OrgWithData) {
   return days.slice(0, maxDays);
 }
 
+// Caché de slots por {staffId}:{serviceId}:{date} para no refetchear al navegar atrás
+const slotsCache = new Map<string, TimeSlot[]>();
+
 export function BookingWizard({ org }: { org: OrgWithData }) {
   const [step, setStep] = useState(0);
   const [service, setService] = useState<Service | null>(null);
@@ -53,14 +56,23 @@ export function BookingWizard({ org }: { org: OrgWithData }) {
   const accentColor = org.accentColor;
 
   async function loadSlots(staffId: string, serviceId: string, dateStr: string) {
+    const cacheKey = `${staffId}:${serviceId}:${dateStr}`;
+    const cached = slotsCache.get(cacheKey);
+    if (cached) { setSlots(cached); return; }
+
     setLoadingSlots(true);
     setSlots([]);
-    const res = await fetch(
-      `/api/public/slots?orgSlug=${org.slug}&staffId=${staffId}&serviceId=${serviceId}&date=${dateStr}`
-    );
-    const data = await res.json();
-    setSlots(Array.isArray(data) ? data : []);
-    setLoadingSlots(false);
+    try {
+      const res = await fetch(
+        `/api/public/slots?orgSlug=${org.slug}&staffId=${staffId}&serviceId=${serviceId}&date=${dateStr}`
+      );
+      const data = await res.json();
+      const result = Array.isArray(data) ? data : [];
+      slotsCache.set(cacheKey, result);
+      setSlots(result);
+    } finally {
+      setLoadingSlots(false);
+    }
   }
 
   function selectService(s: Service) {

@@ -1,10 +1,10 @@
-import { auth } from "@/auth";
+import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { AppointmentsClient } from "./appointments-client";
 
 export default async function AppointmentsPage() {
-  const session = await auth();
+  const session = await getSession();
   if (!session?.user.organizationId) redirect("/login");
 
   const today = new Date().toISOString().split("T")[0];
@@ -16,6 +16,7 @@ export default async function AppointmentsPage() {
     },
     include: { service: true, staff: true },
     orderBy: [{ date: "asc" }, { startTime: "asc" }],
+    take: 200,
   });
 
   return <AppointmentsClient appointments={appointments} />;

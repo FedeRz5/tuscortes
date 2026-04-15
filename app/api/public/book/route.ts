@@ -7,8 +7,13 @@ import { generateSlots } from "@/lib/slots";
 import { sendAppointmentConfirmation, sendNewAppointmentNotification } from "@/lib/email";
 import { sendAppointmentConfirmationWA, sendNewAppointmentNotificationWA } from "@/lib/whatsapp";
 import { generateCancelToken } from "@/lib/cancel-token";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 export const POST = withErrorHandler(async (req) => {
+  const ip = getClientIp(req);
+  const { allowed } = rateLimit(ip, "book", { limit: 5, windowMs: 10 * 60 * 1000 });
+  if (!allowed) return err("Demasiados intentos. Intentá de nuevo en unos minutos.", 429);
+
   const body = await req.json();
   const parsed = BookingSchema.safeParse(body);
   if (!parsed.success) return err(parsed.error.issues[0].message);
@@ -16,7 +21,7 @@ export const POST = withErrorHandler(async (req) => {
   const { orgSlug, staffId, serviceId, date, startTime, clientName, clientPhone, clientEmail, notes } = parsed.data;
 
   const org = await prisma.organization.findUnique({ where: { slug: orgSlug, active: true } });
-  if (!org) return err("Organization not found", 404);
+  if (!org) return err("Barbería no encontrada", 404);
 
   // Verificar límite mensual de turnos según plan
   const limits = getLimits(org.plan);
@@ -49,7 +54,7 @@ export const POST = withErrorHandler(async (req) => {
   });
 
   if (!schedule || !schedule.enabled) {
-    return err("Staff not available on this day", 409);
+    return err("El barbero no trabaja ese día", 409);
   }
 
   // Re-validar disponibilidad del slot (evitar race conditions)

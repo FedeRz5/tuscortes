@@ -22,10 +22,16 @@ function addMinutes(time: string, min: number) {
 async function main() {
   console.log("🌱 Seeding database...");
 
-  const SUPERADMIN_EMAIL    = process.env.SEED_SUPERADMIN_EMAIL    ?? "admin@tuscortes.com";
-  const SUPERADMIN_PASSWORD = process.env.SEED_SUPERADMIN_PASSWORD ?? "admin123";
-  const DEMO_EMAIL          = process.env.SEED_DEMO_EMAIL          ?? "owner@ramoscutz.com";
-  const DEMO_PASSWORD       = process.env.SEED_DEMO_PASSWORD       ?? "demo123";
+  const SUPERADMIN_EMAIL    = process.env.SEED_SUPERADMIN_EMAIL;
+  const SUPERADMIN_PASSWORD = process.env.SEED_SUPERADMIN_PASSWORD;
+  const DEMO_EMAIL          = process.env.SEED_DEMO_EMAIL;
+  const DEMO_PASSWORD       = process.env.SEED_DEMO_PASSWORD;
+
+  if (!SUPERADMIN_EMAIL || !SUPERADMIN_PASSWORD || !DEMO_EMAIL || !DEMO_PASSWORD) {
+    throw new Error(
+      "Missing required seed env vars. Set SEED_SUPERADMIN_EMAIL, SEED_SUPERADMIN_PASSWORD, SEED_DEMO_EMAIL, SEED_DEMO_PASSWORD in your .env file."
+    );
+  }
 
   // ─── Superadmin ───────────────────────────────────────────────────────────
   const superadminHash = await hash(SUPERADMIN_PASSWORD, 12);

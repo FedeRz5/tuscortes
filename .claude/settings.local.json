@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh repo *)",
+      "WebFetch(domain:github.com)",
+      "Skill(update-config)",
+      "Skill(update-config:*)",
+      "Bash(npx tsc *)",
+      "Bash(node_modules/.bin/tsc --noEmit)",
+      "Bash(grep -r \"styled-components\\\\|emotion\\\\|styled\\\\`\\\\|css\\\\`\" \"/c/Users/feder/OneDrive/Documentos/GitHub/tuscortes/app\" \"/c/Users/feder/OneDrive/Documentos/GitHub/tuscortes/components\" \"/c/Users/feder/OneDrive/Documentos/GitHub/tuscortes/lib\")",
+      "Bash(xargs wc *)",
+      "Bash(npm uninstall *)",
+      "Bash(sed -i 's|import { useState } from \"react\";|import Image from \"next/image\";\\\\nimport { useState } from \"react\";|' app/forgot-password/page.tsx)",
+      "Bash(sed -i 's|import { Suspense, useState } from \"react\";|import Image from \"next/image\";\\\\nimport { Suspense, useState } from \"react\";|' app/reset-password/page.tsx)",
+      "Bash(sed -i 's|import { useEffect, useState } from \"react\";|import Image from \"next/image\";\\\\nimport { useEffect, useState } from \"react\";|' components/layout/sidebar.tsx)",
+      "Bash(sed -i 's|{/\\\\* eslint-disable-next-line @next\\\\/next\\\\/no-img-element \\\\*/}\\\\s*||g' components/layout/sidebar.tsx)",
+      "Bash(sed -i 's|<img src=\"/logo.jpeg\" alt=\"TusCortes\" className=\"h-8 object-contain\" />|<Image src=\"/logo.jpeg\" alt=\"TusCortes\" width={96} height={32} className=\"h-8 w-auto object-contain\" />|g' components/layout/sidebar.tsx)",
+      "Bash(xargs sed *)"
+    ],
+    "defaultMode": "bypassPermissions"
+  },
+  "skipDangerousModePermissionPrompt": true
+}

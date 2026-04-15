@@ -1,11 +1,11 @@
-import { auth } from "@/auth";
+import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { hasFeature } from "@/lib/plans";
 import { RevenueClient } from "./revenue-client";
 
 export default async function RevenuePage() {
-  const session = await auth();
+  const session = await getSession();
   if (!session?.user.organizationId) redirect("/login");
 
   const org = await prisma.organization.findUnique({
@@ -41,7 +41,7 @@ export default async function RevenuePage() {
 
   const orgId = session.user.organizationId;
 
-  const [todayApts, weekApts, monthApts, recentApts, allMonthApts] = await Promise.all([
+  const [todayApts, weekApts, monthApts, recentApts] = await Promise.all([
     prisma.appointment.findMany({
       where: { organizationId: orgId, date: todayStr, status: { notIn: ["CANCELLED"] } },
       include: { service: true, staff: true },
@@ -60,17 +60,13 @@ export default async function RevenuePage() {
       orderBy: [{ date: "desc" }, { startTime: "desc" }],
       take: 100,
     }),
-    prisma.appointment.findMany({
-      where: { organizationId: orgId, date: { gte: monthStartStr, lte: todayStr }, status: { notIn: ["CANCELLED"] } },
-      include: { service: { select: { price: true } }, staff: { select: { id: true, name: true } } },
-    }),
   ]);
 
   const sum = (apts: typeof todayApts) => apts.reduce((acc, a) => acc + a.service.price, 0);
   const paidSum = (apts: typeof todayApts) => apts.filter((a) => a.paid).reduce((acc, a) => acc + a.service.price, 0);
 
   const staffMap: Record<string, { name: string; count: number; total: number; collected: number }> = {};
-  for (const apt of allMonthApts) {
+  for (const apt of monthApts) {
     const { id, name } = apt.staff;
     if (!staffMap[id]) staffMap[id] = { name, count: 0, total: 0, collected: 0 };
     staffMap[id].count++;

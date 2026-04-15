@@ -1,4 +1,4 @@
-import { auth } from "@/auth";
+import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/layout/sidebar";
 import prisma from "@/lib/prisma";
@@ -6,7 +6,7 @@ import { Providers } from "@/components/providers";
 import { NewAppointmentNotifier } from "@/components/notifications/new-appointment-notifier";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const session = await auth();
+  const session = await getSession();
   if (!session) redirect("/login");
 
   let orgName: string | undefined;
