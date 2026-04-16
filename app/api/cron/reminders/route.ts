@@ -3,12 +3,10 @@ import { sendAppointmentReminder } from "@/lib/email";
 import { sendAppointmentReminderWA } from "@/lib/whatsapp";
 
 export const GET = async (req: Request) => {
-  // Verificar autenticación del cron (solo en producción)
-  if (process.env.NODE_ENV === "production") {
-    const auth = req.headers.get("authorization");
-    if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
-      return new Response("No autorizado", { status: 401 });
-    }
+  // Verificar autenticación del cron siempre
+  const auth = req.headers.get("authorization");
+  if (!auth || auth !== `Bearer ${process.env.CRON_SECRET}`) {
+    return new Response("No autorizado", { status: 401 });
   }
 
   // Mañana en Argentina

@@ -109,13 +109,33 @@ export const POST = withErrorHandler(async (req) => {
     throw e;
   }
 
-  // Notificaciones al cliente (email + WhatsApp)
+  // Buscar dueño y preparar notificaciones en paralelo
   const cancelToken = generateCancelToken(appointment.id);
   const origin = new URL(req.url).origin;
   const cancelUrl = `${origin}/b/cancel?id=${appointment.id}&token=${cancelToken}`;
 
+  const owner = await prisma.user.findFirst({
+    where: { organizationId: org.id, role: "OWNER" },
+    select: { email: true },
+  });
+
+  const notifications: Promise<unknown>[] = [
+    // WhatsApp cliente (siempre)
+    sendAppointmentConfirmationWA({
+      clientPhone,
+      clientName,
+      orgName: org.name,
+      orgPhone: org.phone,
+      service: service.name,
+      staff: staffMember.name,
+      date,
+      startTime,
+      endTime: slot.endTime,
+    }),
+  ];
+
   if (clientEmail) {
-    sendAppointmentConfirmation({
+    notifications.push(sendAppointmentConfirmation({
       to: clientEmail,
       clientName,
       orgName: org.name,
@@ -129,29 +149,11 @@ export const POST = withErrorHandler(async (req) => {
       endTime: slot.endTime,
       price: service.price,
       cancelUrl,
-    }).catch((e) => console.error("[email] Error cliente:", e));
+    }));
   }
 
-  sendAppointmentConfirmationWA({
-    clientPhone,
-    clientName,
-    orgName: org.name,
-    orgPhone: org.phone,
-    service: service.name,
-    staff: staffMember.name,
-    date,
-    startTime,
-    endTime: slot.endTime,
-  }).catch((e) => console.error("[whatsapp] Error cliente:", e));
-
-  // Notificaciones al dueño (email + WhatsApp)
-  const owner = await prisma.user.findFirst({
-    where: { organizationId: org.id, role: "OWNER" },
-    select: { email: true },
-  });
-
   if (owner?.email) {
-    sendNewAppointmentNotification({
+    notifications.push(sendNewAppointmentNotification({
       to: owner.email,
       orgName: org.name,
       clientName,
@@ -164,11 +166,11 @@ export const POST = withErrorHandler(async (req) => {
       endTime: slot.endTime,
       price: service.price,
       notes,
-    }).catch((e) => console.error("[email] Error dueño:", e));
+    }));
   }
 
   if (org.phone) {
-    sendNewAppointmentNotificationWA({
+    notifications.push(sendNewAppointmentNotificationWA({
       ownerPhone: org.phone,
       clientName,
       clientPhone,
@@ -177,8 +179,14 @@ export const POST = withErrorHandler(async (req) => {
       date,
       startTime,
       endTime: slot.endTime,
-    }).catch((e) => console.error("[whatsapp] Error dueño:", e));
+    }));
   }
+
+  // Esperar todas las notificaciones en paralelo — evita que Vercel corte la función antes de enviar
+  const results = await Promise.allSettled(notifications);
+  results.forEach((r, i) => {
+    if (r.status === "rejected") console.error(`[notifications] Error #${i}:`, r.reason);
+  });
 
   return ok(appointment, 201);
 });

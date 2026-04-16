@@ -39,7 +39,15 @@ export function rateLimit(
 }
 
 export function getClientIp(req: Request): string {
-  const forwarded = (req.headers as Headers).get("x-forwarded-for");
-  if (forwarded) return forwarded.split(",")[0].trim();
+  const headers = req.headers as Headers;
+  // Vercel setea x-real-ip con la IP real del cliente, no manipulable por el cliente
+  const realIp = headers.get("x-real-ip");
+  if (realIp) return realIp.trim();
+  // x-forwarded-for: tomar el ÚLTIMO valor (puesto por el proxy de confianza, no el cliente)
+  const forwarded = headers.get("x-forwarded-for");
+  if (forwarded) {
+    const parts = forwarded.split(",");
+    return parts[parts.length - 1].trim();
+  }
   return "unknown";
 }

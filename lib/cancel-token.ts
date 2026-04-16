@@ -1,7 +1,9 @@
-import { createHmac } from "crypto";
+import { createHmac, timingSafeEqual } from "crypto";
 
-function secret() {
-  return process.env.CANCEL_SECRET ?? process.env.AUTH_SECRET ?? "tuscortes-cancel";
+function secret(): string {
+  const s = process.env.CANCEL_SECRET ?? process.env.AUTH_SECRET;
+  if (!s) throw new Error("Missing CANCEL_SECRET or AUTH_SECRET env variable");
+  return s;
 }
 
 export function generateCancelToken(appointmentId: string): string {
@@ -9,5 +11,11 @@ export function generateCancelToken(appointmentId: string): string {
 }
 
 export function verifyCancelToken(appointmentId: string, token: string): boolean {
-  return generateCancelToken(appointmentId) === token;
+  try {
+    const expected = generateCancelToken(appointmentId);
+    // timingSafeEqual previene timing attacks
+    return timingSafeEqual(Buffer.from(expected), Buffer.from(token));
+  } catch {
+    return false;
+  }
 }

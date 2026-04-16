@@ -30,7 +30,8 @@
       "Bash(node -e \"const crypto = require\\('crypto'\\); const secret = 'tuscortes-cancel'; const id = 'test-id'; const token = crypto.createHmac\\('sha256', secret\\).update\\(id\\).digest\\('hex'\\).slice\\(0, 32\\); console.log\\('Token:', token\\); console.log\\('Token length:', token.length\\);\")",
       "Bash(node -e \"const crypto = require\\('crypto'\\); function generateCancelToken\\(appointmentId\\) { return crypto.createHmac\\('sha256', 'tuscortes-cancel'\\).update\\(appointmentId\\).digest\\('hex'\\).slice\\(0, 32\\); } const token = generateCancelToken\\('apt-123'\\); const token2 = generateCancelToken\\('apt-124'\\); console.log\\('Token for apt-123:', token\\); console.log\\('Token for apt-124:', token2\\); console.log\\('Different:', token !== token2\\);\")",
       "Bash(xargs grep *)",
-      "Bash(grep -r 'prisma\\\\.$queryRaw\\\\|prisma\\\\.$executeRaw\\\\|sql`' /c/Users/feder/OneDrive/Documentos/GitHub/tuscortes/app '--include=*.ts')"
+      "Bash(grep -r 'prisma\\\\.$queryRaw\\\\|prisma\\\\.$executeRaw\\\\|sql`' /c/Users/feder/OneDrive/Documentos/GitHub/tuscortes/app '--include=*.ts')",
+      "Bash(node -e \"console.log\\(require\\('crypto'\\).randomBytes\\(32\\).toString\\('hex'\\)\\)\")"
     ],
     "defaultMode": "bypassPermissions"
   },
