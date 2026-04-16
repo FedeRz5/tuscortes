@@ -32,25 +32,66 @@ export const GET = withErrorHandler(async (req) => {
     orderBy: [{ date: "asc" }, { startTime: "asc" }],
   });
 
-  // Sanitiza strings para prevenir CSV injection (fórmulas que empiezan con =, +, -, @)
-  const csvStr = (s: string) => `"${s.replace(/^[=+\-@\t\r]/, "'$&").replace(/"/g, '""')}"`;
+  // Sanitiza strings para prevenir CSV injection
+  const s = (v: string) => `"${String(v ?? "").replace(/^[=+\-@\t\r]/, "'$&").replace(/"/g, '""')}"`;
 
-  const header = "Fecha,Hora,Cliente,Teléfono,Servicio,Barbero,Precio,Estado,Cobrado";
-  const rows = appointments.map((a) =>
-    [
-      a.date,
-      a.startTime,
-      csvStr(a.clientName),
-      csvStr(a.clientPhone),
-      csvStr(a.service.name),
-      csvStr(a.staff.name),
-      a.service.price.toFixed(2),
-      a.status,
-      a.paid ? "Sí" : "No",
-    ].join(",")
-  );
+  // Fecha ISO → DD/MM/YYYY
+  const fmtDate = (d: string) => {
+    const [y, m, day] = d.split("-");
+    return `${day}/${m}/${y}`;
+  };
 
-  const csv = [header, ...rows].join("\n");
+  // Precio → $12.500
+  const fmtPrice = (n: number) =>
+    "$" + Math.round(n).toLocaleString("es-AR");
+
+  const STATUS_LABEL: Record<string, string> = {
+    CONFIRMED: "Confirmado",
+    COMPLETED: "Completado",
+    PENDING: "Pendiente",
+    CANCELLED: "Cancelado",
+  };
+
+  const totalCobrado = appointments.filter((a) => a.paid).reduce((sum, a) => sum + a.service.price, 0);
+  const totalPorCobrar = appointments.filter((a) => !a.paid).reduce((sum, a) => sum + a.service.price, 0);
+  const exportDate = fmtDate(new Date().toISOString().split("T")[0]);
+
+  // Separador ; para Excel en español
+  const SEP = ";";
+  const row = (...cols: string[]) => cols.join(SEP);
+
+  const lines = [
+    // Encabezado del documento
+    row(s(`Reporte de Ingresos — ${org.name}`), "", "", "", "", "", "", "", ""),
+    row(s(`Exportado el ${exportDate}`), "", "", "", "", "", "", "", ""),
+    row("", "", "", "", "", "", "", "", ""),
+    // Columnas
+    row("Fecha", "Hora inicio", "Hora fin", "Cliente", "Teléfono", "Servicio", "Barbero", "Precio", "Estado", "Cobrado"),
+    // Datos
+    ...appointments.map((a) =>
+      row(
+        fmtDate(a.date),
+        a.startTime,
+        a.endTime,
+        s(a.clientName),
+        s(a.clientPhone ?? ""),
+        s(a.service.name),
+        s(a.staff.name),
+        fmtPrice(a.service.price),
+        STATUS_LABEL[a.status] ?? a.status,
+        a.paid ? "Sí" : "No",
+      )
+    ),
+    // Totales
+    row("", "", "", "", "", "", "", "", "", ""),
+    row("", "", "", "", "", "", "", s("Total cobrado"), s(fmtPrice(totalCobrado)), ""),
+    row("", "", "", "", "", "", "", s("Por cobrar"), s(fmtPrice(totalPorCobrar)), ""),
+    row("", "", "", "", "", "", "", s("TOTAL"), s(fmtPrice(totalCobrado + totalPorCobrar)), ""),
+  ];
+
+  // BOM UTF-8 para que Excel abra correctamente los acentos
+  const BOM = "\uFEFF";
+  const csv = BOM + lines.join("\r\n");
   const filename = `ingresos-${org.name.replace(/\s+/g, "-").toLowerCase()}-${new Date().toISOString().split("T")[0]}.csv`;
 
   return new NextResponse(csv, {
