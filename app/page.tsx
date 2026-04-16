@@ -55,7 +55,7 @@ function MockupTilt() {
               <div className="h-3 w-3 rounded-full bg-green-400/70" />
             </div>
             <div className="flex-1 bg-white border border-gray-200 rounded-md px-3 py-1 text-xs text-gray-400 font-mono">
-              tuscortes.com/barberia-carlos
+              tuscortes.com/the-barber-club
             </div>
           </div>
           <div className="bg-white p-5 space-y-4">
@@ -64,7 +64,7 @@ function MockupTilt() {
                 <span className="text-white font-black text-sm">BC</span>
               </div>
               <div>
-                <p className="font-bold text-gray-900 text-sm">Barbería Carlos</p>
+                <p className="font-bold text-gray-900 text-sm">The Barber Club</p>
                 <p className="text-xs text-gray-400">Palermo, Buenos Aires</p>
               </div>
               <div className="ml-auto">
@@ -344,12 +344,9 @@ export default function HomePage() {
               >
                 Ver planes <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link
-                href="/b/ramos-cutz"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 px-8 py-4 text-base font-semibold text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all"
-              >
+              <span className="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 px-8 py-4 text-base font-semibold text-gray-300 cursor-not-allowed select-none">
                 Ver demo →
-              </Link>
+              </span>
             </div>
 
             <div className="hero-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-400 justify-center lg:justify-start">
@@ -424,6 +421,19 @@ export default function HomePage() {
           </div>
           <p className="text-gray-400 text-sm">© {new Date().getFullYear()} TusCortes. Todos los derechos reservados.</p>
           <div className="flex items-center gap-4 text-sm text-gray-400">
+            <a
+              href="https://www.instagram.com/tuscortes.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-pink-500 transition-colors"
+              aria-label="Instagram"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
+              </svg>
+            </a>
             <Link href="/terminos" className="hover:text-gray-900 transition-colors">Términos</Link>
             <Link href="/privacidad" className="hover:text-gray-900 transition-colors">Privacidad</Link>
             <Link href="/login" className="hover:text-gray-900 transition-colors">Panel →</Link>

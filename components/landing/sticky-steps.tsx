@@ -183,8 +183,8 @@ const BOOK_LOOP = 600 + 13 * 55 + 300 + 12 * 50 + 900 + 2000;
 function CardBook({ active }: { active: boolean }) {
   const [cycle, setCycle] = useState(0);
   const nombre = useTyping("Martín García", 600, 55, cycle);
-  const telefono = useTyping("11 4523-9801", 600 + 13 * 55 + 300, 50, cycle);
-  const allTyped = telefono === "11 4523-9801";
+  const telefono = useTyping("11 7061-0003", 600 + 13 * 55 + 300, 50, cycle);
+  const allTyped = telefono === "11 7061-0003";
   const [confirmed, setConfirmed] = useState(false);
 
   useEffect(() => {
@@ -232,7 +232,7 @@ function CardBook({ active }: { active: boolean }) {
               <p className="text-[9px] text-gray-400 mb-0.5">Teléfono</p>
               <div className="flex items-center h-4">
                 <span className="text-xs text-gray-800 font-medium">{telefono}</span>
-                {telefono.length > 0 && telefono !== "11 4523-9801" && (
+                {telefono.length > 0 && telefono !== "11 7061-0003" && (
                   <motion.span
                     className="inline-block w-[1px] h-[11px] bg-indigo-400 ml-[1px]"
                     animate={{ opacity: [1, 0, 1] }}
