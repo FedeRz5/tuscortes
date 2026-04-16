@@ -1,13 +1,208 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Check, CheckCircle2, XCircle, CreditCard } from "lucide-react";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import { Reveal, StaggerContainer, StaggerItem } from "@/components/landing/reveal";
-import { MagneticButton } from "@/components/landing/magnetic-button";
 import { StickySteps } from "@/components/landing/sticky-steps";
 import { HeroBg } from "@/components/landing/hero-bg";
+
+// ─── Hook: tilt 3D ───────────────────────────────────────────────────────────
+function useTilt(maxDeg = 12) {
+  const rx = useMotionValue(0);
+  const ry = useMotionValue(0);
+  // Springs devuelven MotionValue<number> — framer-motion los interpreta como grados
+  const rotateX = useSpring(rx, { stiffness: 200, damping: 20 });
+  const rotateY = useSpring(ry, { stiffness: 200, damping: 20 });
+
+  const onMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    rx.set(-y * maxDeg * 2);
+    ry.set(x * maxDeg * 2);
+  }, [rx, ry, maxDeg]);
+
+  const onMouseLeave = useCallback(() => {
+    rx.set(0);
+    ry.set(0);
+  }, [rx, ry]);
+
+  return { rotateX, rotateY, onMouseMove, onMouseLeave };
+}
+
+// ─── Mockup with 3D tilt ─────────────────────────────────────────────────────
+function MockupTilt() {
+  const { rotateX, rotateY, onMouseMove, onMouseLeave } = useTilt(10);
+  return (
+    // El perspective va en el wrapper, no en el motion.div
+    <div className="hero-2 flex-1 w-full max-w-lg lg:max-w-none" style={{ perspective: "800px" }}>
+    <motion.div
+      className="w-full"
+      style={{ rotateX, rotateY }}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+    >
+      <div className="relative">
+        <div className="absolute -inset-4 bg-indigo-500/10 rounded-3xl blur-2xl" />
+        <div className="relative rounded-2xl border border-gray-200 bg-white shadow-2xl shadow-gray-200/80 overflow-hidden">
+          <div className="bg-gray-50 border-b border-gray-200 px-4 py-3 flex items-center gap-3">
+            <div className="flex gap-1.5">
+              <div className="h-3 w-3 rounded-full bg-red-400/70" />
+              <div className="h-3 w-3 rounded-full bg-yellow-400/70" />
+              <div className="h-3 w-3 rounded-full bg-green-400/70" />
+            </div>
+            <div className="flex-1 bg-white border border-gray-200 rounded-md px-3 py-1 text-xs text-gray-400 font-mono">
+              tuscortes.com/barberia-carlos
+            </div>
+          </div>
+          <div className="bg-white p-5 space-y-4">
+            <div className="flex items-center gap-3 pb-4 border-b border-gray-100">
+              <div className="h-12 w-12 rounded-xl bg-indigo-600 flex items-center justify-center shrink-0">
+                <span className="text-white font-black text-sm">BC</span>
+              </div>
+              <div>
+                <p className="font-bold text-gray-900 text-sm">Barbería Carlos</p>
+                <p className="text-xs text-gray-400">Palermo, Buenos Aires</p>
+              </div>
+              <div className="ml-auto">
+                <span className="text-xs bg-green-50 text-green-600 font-semibold px-2 py-1 rounded-full border border-green-100">Abierto</span>
+              </div>
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Elegí un servicio</p>
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { name: "Corte clásico", price: "$3.500", time: "30 min", active: true },
+                  { name: "Corte + barba", price: "$5.500", time: "50 min", active: false },
+                ].map((s) => (
+                  <div key={s.name} className={`rounded-xl border p-3 cursor-pointer transition-all ${s.active ? "border-indigo-500 bg-indigo-50" : "border-gray-100 hover:border-gray-200"}`}>
+                    <p className={`text-xs font-bold ${s.active ? "text-indigo-700" : "text-gray-700"}`}>{s.name}</p>
+                    <p className={`text-xs mt-0.5 ${s.active ? "text-indigo-500" : "text-gray-400"}`}>{s.price} · {s.time}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Elegí un horario</p>
+              <div className="grid grid-cols-4 gap-1.5">
+                {["09:00","09:30","10:00","10:30","11:00","11:30","14:00","14:30"].map((h, i) => (
+                  <div key={h} className={`text-xs text-center py-1.5 rounded-lg font-medium transition-all ${i === 2 ? "bg-indigo-600 text-white" : i === 5 ? "bg-gray-100 text-gray-300 line-through" : "bg-gray-50 text-gray-600 hover:bg-indigo-50"}`}>
+                    {h}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="pt-1">
+              <div className="w-full bg-orange-500 text-white text-sm font-bold rounded-xl py-3 text-center">
+                Confirmar turno →
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+    </div>
+  );
+}
+
+// ─── Floating orbs ───────────────────────────────────────────────────────────
+const ORBS = [
+  { size: 320, top: "8%",  left: "5%",  color: "radial-gradient(circle, rgba(99,102,241,0.25) 0%, transparent 70%)",  dur: 7,  delay: 0 },
+  { size: 240, top: "55%", left: "60%", color: "radial-gradient(circle, rgba(249,115,22,0.20) 0%, transparent 70%)",  dur: 9,  delay: 1.5 },
+  { size: 180, top: "20%", left: "80%", color: "radial-gradient(circle, rgba(139,92,246,0.20) 0%, transparent 70%)", dur: 11, delay: 3 },
+];
+
+function FloatingOrbs() {
+  return (
+    <>
+      {ORBS.map((orb, i) => (
+        <motion.div
+          key={i}
+          className="absolute pointer-events-none select-none"
+          style={{
+            width: orb.size,
+            height: orb.size,
+            top: orb.top,
+            left: orb.left,
+            background: orb.color,
+            borderRadius: "50%",
+            filter: "blur(2px)",
+          }}
+          animate={{ y: [0, -28, 0, 16, 0], opacity: [0.7, 1, 0.8, 1, 0.7] }}
+          transition={{ duration: orb.dur, delay: orb.delay, repeat: Infinity, ease: "easeInOut" }}
+        />
+      ))}
+    </>
+  );
+}
+
+// ─── Plan card with 3D tilt ───────────────────────────────────────────────────
+type PlanFeature = { text: string; ok: boolean };
+type Plan = {
+  name: string; price: string; period: string; desc: string;
+  popular: boolean; href: string; features: PlanFeature[]; cta: string;
+};
+
+function PlanCard({ plan }: { plan: Plan }) {
+  const { rotateX, rotateY, onMouseMove, onMouseLeave } = useTilt(6);
+  return (
+    <div style={{ perspective: "600px" }} className={plan.popular ? "scale-[1.04]" : ""}>
+    <motion.div
+      className={`relative rounded-2xl p-7 flex flex-col ${
+        plan.popular
+          ? "bg-indigo-600 text-white shadow-xl shadow-indigo-500/20"
+          : "bg-white border border-gray-200 shadow-sm"
+      }`}
+      style={{ rotateX, rotateY }}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      whileHover={{ y: -4 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+    >
+      {plan.popular && (
+        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-orange-500 px-4 py-1 text-xs font-bold text-white whitespace-nowrap shadow-lg shadow-orange-500/30">
+          El más elegido
+        </div>
+      )}
+
+      <div className="mb-6">
+        <p className={`text-xs font-semibold uppercase tracking-widest mb-1 ${plan.popular ? "text-indigo-200" : "text-gray-400"}`}>{plan.name}</p>
+        <div className="flex items-end gap-1 mb-2">
+          <span className={`text-4xl font-black ${plan.popular ? "text-white" : "text-gray-900"}`}>{plan.price}</span>
+          {plan.period && <span className={`text-sm mb-1.5 ${plan.popular ? "text-indigo-200" : "text-gray-400"}`}>{plan.period}</span>}
+        </div>
+        <p className={`text-sm ${plan.popular ? "text-indigo-100" : "text-gray-400"}`}>{plan.desc}</p>
+      </div>
+
+      <ul className="space-y-3 mb-8 flex-1">
+        {plan.features.map(({ text, ok }) => (
+          <li key={text} className="flex items-start gap-2.5 text-sm">
+            {ok
+              ? <CheckCircle2 className={`h-4 w-4 shrink-0 mt-0.5 ${plan.popular ? "text-indigo-200" : "text-indigo-500"}`} />
+              : <XCircle className="h-4 w-4 text-gray-300 shrink-0 mt-0.5" />
+            }
+            <span className={ok ? (plan.popular ? "text-white" : "text-gray-700") : "text-gray-300"}>{text}</span>
+          </li>
+        ))}
+      </ul>
+
+      <a
+        href={plan.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`block w-full text-center rounded-xl px-6 py-3 text-sm font-bold transition-opacity hover:opacity-90 ${
+          plan.popular ? "bg-white text-indigo-600" : "bg-indigo-600 text-white"
+        }`}
+      >
+        {plan.cta}
+      </a>
+    </motion.div>
+    </div>
+  );
+}
 
 // ─── MercadoPago ─────────────────────────────────────────────────────────────
 const MP_LINKS = {
@@ -17,7 +212,7 @@ const MP_LINKS = {
 };
 
 // ─── Planes ───────────────────────────────────────────────────────────────────
-const PLANS = [
+const PLANS: Plan[] = [
   {
     name: "Starter",
     price: "$12.500",
@@ -125,6 +320,7 @@ export default function HomePage() {
 
       {/* ── Hero ── */}
       <section className="relative min-h-[92vh] flex flex-col items-center justify-center px-6 pt-16 pb-16 overflow-hidden">
+        <FloatingOrbs />
         <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
 
           {/* Texto */}
@@ -166,75 +362,8 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Mockup browser */}
-          <div className="hero-2 flex-1 w-full max-w-lg lg:max-w-none">
-            <div className="relative">
-              {/* Glow detrás */}
-              <div className="absolute -inset-4 bg-indigo-500/10 rounded-3xl blur-2xl" />
-              {/* Browser chrome */}
-              <div className="relative rounded-2xl border border-gray-200 bg-white shadow-2xl shadow-gray-200/80 overflow-hidden">
-                {/* Barra del browser */}
-                <div className="bg-gray-50 border-b border-gray-200 px-4 py-3 flex items-center gap-3">
-                  <div className="flex gap-1.5">
-                    <div className="h-3 w-3 rounded-full bg-red-400/70" />
-                    <div className="h-3 w-3 rounded-full bg-yellow-400/70" />
-                    <div className="h-3 w-3 rounded-full bg-green-400/70" />
-                  </div>
-                  <div className="flex-1 bg-white border border-gray-200 rounded-md px-3 py-1 text-xs text-gray-400 font-mono">
-                    tuscortes.com/barberia-carlos
-                  </div>
-                </div>
-                {/* Contenido simulado de la página de reservas */}
-                <div className="bg-white p-5 space-y-4">
-                  {/* Header de la barbería */}
-                  <div className="flex items-center gap-3 pb-4 border-b border-gray-100">
-                    <div className="h-12 w-12 rounded-xl bg-indigo-600 flex items-center justify-center shrink-0">
-                      <span className="text-white font-black text-sm">BC</span>
-                    </div>
-                    <div>
-                      <p className="font-bold text-gray-900 text-sm">Barbería Carlos</p>
-                      <p className="text-xs text-gray-400">Palermo, Buenos Aires</p>
-                    </div>
-                    <div className="ml-auto">
-                      <span className="text-xs bg-green-50 text-green-600 font-semibold px-2 py-1 rounded-full border border-green-100">Abierto</span>
-                    </div>
-                  </div>
-                  {/* Selección de servicio */}
-                  <div>
-                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Elegí un servicio</p>
-                    <div className="grid grid-cols-2 gap-2">
-                      {[
-                        { name: "Corte clásico", price: "$3.500", time: "30 min", active: true },
-                        { name: "Corte + barba", price: "$5.500", time: "50 min", active: false },
-                      ].map((s) => (
-                        <div key={s.name} className={`rounded-xl border p-3 cursor-pointer transition-all ${s.active ? "border-indigo-500 bg-indigo-50" : "border-gray-100 hover:border-gray-200"}`}>
-                          <p className={`text-xs font-bold ${s.active ? "text-indigo-700" : "text-gray-700"}`}>{s.name}</p>
-                          <p className={`text-xs mt-0.5 ${s.active ? "text-indigo-500" : "text-gray-400"}`}>{s.price} · {s.time}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  {/* Selección de horario */}
-                  <div>
-                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Elegí un horario</p>
-                    <div className="grid grid-cols-4 gap-1.5">
-                      {["09:00","09:30","10:00","10:30","11:00","11:30","14:00","14:30"].map((h, i) => (
-                        <div key={h} className={`text-xs text-center py-1.5 rounded-lg font-medium transition-all ${i === 2 ? "bg-indigo-600 text-white" : i === 5 ? "bg-gray-100 text-gray-300 line-through" : "bg-gray-50 text-gray-600 hover:bg-indigo-50"}`}>
-                          {h}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  {/* Botón confirmar */}
-                  <div className="pt-1">
-                    <div className="w-full bg-orange-500 text-white text-sm font-bold rounded-xl py-3 text-center">
-                      Confirmar turno →
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          {/* Mockup browser con tilt 3D */}
+          <MockupTilt />
 
         </div>
       </section>
@@ -258,54 +387,7 @@ export default function HomePage() {
           <StaggerContainer className="grid grid-cols-1 sm:grid-cols-3 gap-6 items-start">
             {PLANS.map((plan) => (
               <StaggerItem key={plan.name}>
-                <div
-                  className={`relative rounded-2xl p-7 flex flex-col transition-transform hover:-translate-y-1 ${
-                    plan.popular
-                      ? "bg-indigo-600 text-white shadow-xl shadow-indigo-500/20"
-                      : "bg-white border border-gray-200 shadow-sm"
-                  }`}
-                  style={plan.popular ? { scale: 1.04 } : {}}
-                >
-                  {plan.popular && (
-                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-orange-500 px-4 py-1 text-xs font-bold text-white whitespace-nowrap shadow-lg shadow-orange-500/30">
-                      El más elegido
-                    </div>
-                  )}
-
-                  <div className="mb-6">
-                    <p className={`text-xs font-semibold uppercase tracking-widest mb-1 ${plan.popular ? "text-indigo-200" : "text-gray-400"}`}>{plan.name}</p>
-                    <div className="flex items-end gap-1 mb-2">
-                      <span className={`text-4xl font-black ${plan.popular ? "text-white" : "text-gray-900"}`}>{plan.price}</span>
-                      {plan.period && <span className={`text-sm mb-1.5 ${plan.popular ? "text-indigo-200" : "text-gray-400"}`}>{plan.period}</span>}
-                    </div>
-                    <p className={`text-sm ${plan.popular ? "text-indigo-100" : "text-gray-400"}`}>{plan.desc}</p>
-                  </div>
-
-                  <ul className="space-y-3 mb-8 flex-1">
-                    {plan.features.map(({ text, ok }) => (
-                      <li key={text} className="flex items-start gap-2.5 text-sm">
-                        {ok
-                          ? <CheckCircle2 className={`h-4 w-4 shrink-0 mt-0.5 ${plan.popular ? "text-indigo-200" : "text-indigo-500"}`} />
-                          : <XCircle className="h-4 w-4 text-gray-300 shrink-0 mt-0.5" />
-                        }
-                        <span className={ok ? (plan.popular ? "text-white" : "text-gray-700") : "text-gray-300"}>{text}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <a
-                    href={plan.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`block w-full text-center rounded-xl px-6 py-3 text-sm font-bold transition-opacity hover:opacity-90 ${
-                      plan.popular
-                        ? "bg-white text-indigo-600"
-                        : "bg-indigo-600 text-white"
-                    }`}
-                  >
-                    {plan.cta}
-                  </a>
-                </div>
+                <PlanCard plan={plan} />
               </StaggerItem>
             ))}
           </StaggerContainer>
