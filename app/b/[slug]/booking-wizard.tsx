@@ -37,8 +37,10 @@ function getNextDays(org: OrgWithData) {
   for (let i = 0; i < maxDays + 7; i++) {
     const d = new Date();
     d.setDate(d.getDate() + i);
+    // Usar fecha local (no UTC) para evitar que a partir de las 21hs AR el día cambie
+    const date = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
     days.push({
-      date: d.toISOString().split("T")[0],
+      date,
       label: d.toLocaleDateString("es-AR", { weekday: "short", day: "numeric", month: "short" }),
       dayOfWeek: d.getDay(),
     });
