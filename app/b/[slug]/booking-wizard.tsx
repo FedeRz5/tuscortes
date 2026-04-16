@@ -145,7 +145,32 @@ export function BookingWizard({ org }: { org: OrgWithData }) {
   const sortedStaff = [...org.staff].sort((a, b) => a.order - b.order);
   const sortedServices = [...org.services].sort((a, b) => a.order - b.order);
   const staffWorkDays = staff?.schedules.map((s) => s.dayOfWeek) ?? [];
-  const days = getNextDays(org).filter((d) => staff ? staffWorkDays.includes(d.dayOfWeek) : true);
+
+  // Fecha de hoy en hora local del browser (no UTC)
+  const todayLocal = (() => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  })();
+
+  // Si hay un barbero seleccionado, filtrar hoy si ya pasó el último slot posible
+  // (workEnd del barbero para hoy - durationMin del servicio <= hora actual)
+  const isTodayAvailable = (() => {
+    if (!staff || !service) return true;
+    const todaySchedule = staff.schedules.find((s) => s.dayOfWeek === new Date().getDay());
+    if (!todaySchedule || !todaySchedule.enabled) return false;
+    const [endH, endM] = todaySchedule.endTime.split(":").map(Number);
+    const lastSlotMin = endH * 60 + endM - service.durationMin;
+    const now = new Date();
+    const nowMin = now.getHours() * 60 + now.getMinutes();
+    const advanceMin = (org.minAdvanceHours ?? 0) * 60;
+    return lastSlotMin > nowMin + advanceMin;
+  })();
+
+  const days = getNextDays(org).filter((d) => {
+    if (staff && !staffWorkDays.includes(d.dayOfWeek)) return false;
+    if (d.date === todayLocal && !isTodayAvailable) return false;
+    return true;
+  });
 
   if (booked) {
     return (
