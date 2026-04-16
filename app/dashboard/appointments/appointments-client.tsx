@@ -23,9 +23,19 @@ const STATUS_BADGE: Record<string, "warning" | "info" | "success" | "danger" | "
 export function AppointmentsClient({ appointments: initial }: { appointments: AppointmentFull[] }) {
   const [appointments, setAppointments] = useState(initial);
   const [filterStatus, setFilterStatus] = useState("ALL");
+  const [filterStaff, setFilterStaff] = useState("ALL");
+  const [order, setOrder] = useState<"asc" | "desc">("asc");
 
-  const filtered =
-    filterStatus === "ALL" ? appointments : appointments.filter((a) => a.status === filterStatus);
+  // Lista de barberos únicos
+  const staffList = Array.from(new Map(initial.map((a) => [a.staff.id, a.staff])).values());
+
+  const filtered = appointments
+    .filter((a) => filterStatus === "ALL" || a.status === filterStatus)
+    .filter((a) => filterStaff === "ALL" || a.staff.id === filterStaff)
+    .sort((a, b) => {
+      const cmp = a.date.localeCompare(b.date) || a.startTime.localeCompare(b.startTime);
+      return order === "asc" ? cmp : -cmp;
+    });
 
   // Group by date
   const byDate = filtered.reduce<Record<string, AppointmentFull[]>>((acc, apt) => {
@@ -33,6 +43,10 @@ export function AppointmentsClient({ appointments: initial }: { appointments: Ap
     acc[apt.date].push(apt);
     return acc;
   }, {});
+
+  const dateKeys = Object.keys(byDate).sort((a, b) =>
+    order === "asc" ? a.localeCompare(b) : b.localeCompare(a)
+  );
 
   async function updateStatus(id: string, status: string) {
     const res = await fetch(`/api/appointments/${id}`, {
@@ -51,33 +65,58 @@ export function AppointmentsClient({ appointments: initial }: { appointments: Ap
           <h1 className="text-2xl font-bold text-zinc-900">Turnos</h1>
           <p className="text-zinc-500 text-sm mt-1">Próximos turnos agendados</p>
         </div>
-        <Select value={filterStatus} onValueChange={setFilterStatus}>
-          <SelectTrigger className="w-full sm:w-44">
-            <SelectValue placeholder="Filtrar por estado" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="ALL">Todos</SelectItem>
-            {STATUS_OPTIONS.map((s) => (
-              <SelectItem key={s} value={s}>{STATUS_LABELS[s]}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex flex-wrap gap-2">
+          {/* Filtro barbero */}
+          <Select value={filterStaff} onValueChange={setFilterStaff}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="Barbero" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ALL">Todos los barberos</SelectItem>
+              {staffList.map((s) => (
+                <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {/* Filtro estado */}
+          <Select value={filterStatus} onValueChange={setFilterStatus}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="Estado" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ALL">Todos</SelectItem>
+              {STATUS_OPTIONS.map((s) => (
+                <SelectItem key={s} value={s}>{STATUS_LABELS[s]}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {/* Orden */}
+          <Select value={order} onValueChange={(v) => setOrder(v as "asc" | "desc")}>
+            <SelectTrigger className="w-40">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="asc">↑ Hoy primero</SelectItem>
+              <SelectItem value="desc">↓ Más lejanos primero</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
-      {Object.keys(byDate).length === 0 ? (
+      {dateKeys.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center text-zinc-400">
             No hay turnos para mostrar
           </CardContent>
         </Card>
       ) : (
-        Object.entries(byDate).map(([date, apts]) => (
+        dateKeys.map((date) => (
           <div key={date}>
             <h2 className="text-sm font-semibold text-zinc-500 uppercase tracking-wider mb-3">
               {formatDate(date)}
             </h2>
             <div className="space-y-3">
-              {apts.map((apt) => (
+              {byDate[date].map((apt) => (
                 <Card key={apt.id}>
                   <CardContent className="p-4">
                     <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">

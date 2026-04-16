@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatPrice, formatDate } from "@/lib/utils";
-import { DollarSign, TrendingUp, Calendar, Download, CheckCircle2, Circle } from "lucide-react";
+import { Download, CheckCircle2, Circle } from "lucide-react";
 import type { Appointment, Service, Staff } from "@prisma/client";
 
 type AppointmentFull = Appointment & { service: Service; staff: Staff };
@@ -117,7 +117,7 @@ export function RevenueClient({ stats, staffStats, appointments: initial, canExp
       </div>
 
       {/* Stats cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Card>
           <CardContent className="p-5">
             <div className="flex items-center gap-3 mb-3">
@@ -127,6 +127,7 @@ export function RevenueClient({ stats, staffStats, appointments: initial, canExp
               <p className="text-sm font-medium text-zinc-500">Cobrado</p>
             </div>
             <p className="text-2xl font-bold text-zinc-900">{formatPrice(current.collected)}</p>
+            <p className="text-xs text-zinc-400 mt-1">{current.count} turno{current.count !== 1 ? "s" : ""}</p>
           </CardContent>
         </Card>
 
@@ -136,22 +137,9 @@ export function RevenueClient({ stats, staffStats, appointments: initial, canExp
               <div className="p-2 rounded-lg bg-amber-100">
                 <Circle className="h-4 w-4 text-amber-600" />
               </div>
-              <p className="text-sm font-medium text-zinc-500">Pendiente</p>
+              <p className="text-sm font-medium text-zinc-500">Por cobrar</p>
             </div>
             <p className="text-2xl font-bold text-zinc-900">{formatPrice(pending)}</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-5">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 rounded-lg bg-blue-100">
-                <TrendingUp className="h-4 w-4 text-blue-600" />
-              </div>
-              <p className="text-sm font-medium text-zinc-500">Proyectado</p>
-            </div>
-            <p className="text-2xl font-bold text-zinc-900">{formatPrice(current.total)}</p>
-            <p className="text-xs text-zinc-400 mt-1">{current.count} turno{current.count !== 1 ? "s" : ""}</p>
           </CardContent>
         </Card>
       </div>
