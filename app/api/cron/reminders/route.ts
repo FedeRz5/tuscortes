@@ -11,12 +11,11 @@ export const GET = async (req: Request) => {
     }
   }
 
-  // Calcular fecha de mañana en zona horaria de Argentina
+  // Mañana en Argentina
   const tomorrowStr = new Intl.DateTimeFormat("sv-SE", {
     timeZone: "America/Argentina/Buenos_Aires",
   }).format(new Date(Date.now() + 24 * 60 * 60 * 1000));
 
-  // Buscar turnos de mañana que no tengan recordatorio enviado (máx 200 para evitar timeout)
   const appointments = await prisma.appointment.findMany({
     where: {
       date: tomorrowStr,
@@ -24,11 +23,7 @@ export const GET = async (req: Request) => {
       reminderSentAt: null,
     },
     take: 200,
-    include: {
-      service: true,
-      staff: true,
-      organization: true,
-    },
+    include: { service: true, staff: true, organization: true },
   });
 
   let sent = 0;
@@ -37,7 +32,6 @@ export const GET = async (req: Request) => {
   for (const apt of appointments) {
     const org = apt.organization;
 
-    // Email
     if (apt.clientEmail) {
       try {
         await sendAppointmentReminder({
@@ -59,7 +53,6 @@ export const GET = async (req: Request) => {
       }
     }
 
-    // WhatsApp
     try {
       await sendAppointmentReminderWA({
         clientPhone: apt.clientPhone,
@@ -77,7 +70,6 @@ export const GET = async (req: Request) => {
       errors++;
     }
 
-    // Marcar como enviado
     await prisma.appointment.update({
       where: { id: apt.id },
       data: { reminderSentAt: new Date() },
