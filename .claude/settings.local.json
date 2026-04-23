@@ -31,7 +31,13 @@
       "Bash(node -e \"const crypto = require\\('crypto'\\); function generateCancelToken\\(appointmentId\\) { return crypto.createHmac\\('sha256', 'tuscortes-cancel'\\).update\\(appointmentId\\).digest\\('hex'\\).slice\\(0, 32\\); } const token = generateCancelToken\\('apt-123'\\); const token2 = generateCancelToken\\('apt-124'\\); console.log\\('Token for apt-123:', token\\); console.log\\('Token for apt-124:', token2\\); console.log\\('Different:', token !== token2\\);\")",
       "Bash(xargs grep *)",
       "Bash(grep -r 'prisma\\\\.$queryRaw\\\\|prisma\\\\.$executeRaw\\\\|sql`' /c/Users/feder/OneDrive/Documentos/GitHub/tuscortes/app '--include=*.ts')",
-      "Bash(node -e \"console.log\\(require\\('crypto'\\).randomBytes\\(32\\).toString\\('hex'\\)\\)\")"
+      "Bash(node -e \"console.log\\(require\\('crypto'\\).randomBytes\\(32\\).toString\\('hex'\\)\\)\")",
+      "Bash(npx prisma *)",
+      "Bash(npx dotenv-cli *)",
+      "Bash(DATABASE_URL=\"postgresql://postgres.rmogpvkmnnjfgqdfvfrw:9yiPpGGA41JmOiPK@aws-1-us-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1\" DIRECT_URL=\"postgresql://postgres.rmogpvkmnnjfgqdfvfrw:9yiPpGGA41JmOiPK@aws-1-us-east-1.pooler.supabase.com:5432/postgres\" npx prisma migrate dev --name add_staff_email)",
+      "Bash(set DIRECT_URL=postgresql://postgres.rmogpvkmnnjfgqdfvfrw:9yiPpGGA41JmOiPK@aws-1-us-east-1.pooler.supabase.com:5432/postgres)",
+      "Bash(DIRECT_URL=\"postgresql://postgres.rmogpvkmnnjfgqdfvfrw:9yiPpGGA41JmOiPK@aws-1-us-east-1.pooler.supabase.com:5432/postgres\" DATABASE_URL=\"postgresql://postgres.rmogpvkmnnjfgqdfvfrw:9yiPpGGA41JmOiPK@aws-1-us-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1\" npx prisma db push)",
+      "Bash(DIRECT_URL=\"postgresql://postgres.rmogpvkmnnjfgqdfvfrw:9yiPpGGA41JmOiPK@aws-1-us-east-1.pooler.supabase.com:5432/postgres\" DATABASE_URL=\"postgresql://postgres.rmogpvkmnnjfgqdfvfrw:9yiPpGGA41JmOiPK@aws-1-us-east-1.pooler.supabase.com:5432/postgres\" npx prisma db push)"
     ],
     "defaultMode": "bypassPermissions"
   },

@@ -18,6 +18,7 @@ export const StaffSchema = z.object({
   name: z.string().min(1, "El nombre es requerido").max(100),
   bio: z.string().max(500).optional().nullable(),
   avatarUrl: z.string().url().optional().nullable().or(z.literal("")),
+  email: z.string().email("Email inválido").optional().nullable().or(z.literal("")),
   maxAppointmentsPerDay: z.number().int().min(1).optional().nullable(),
   active: z.boolean().optional(),
   order: z.number().int().optional(),

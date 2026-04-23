@@ -4,7 +4,7 @@ import { getLimits } from "@/lib/plans";
 import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { generateSlots } from "@/lib/slots";
-import { sendAppointmentConfirmation, sendNewAppointmentNotification } from "@/lib/email";
+import { sendAppointmentConfirmation, sendNewAppointmentNotification, sendStaffNewAppointmentNotification } from "@/lib/email";
 import { sendAppointmentConfirmationWA, sendNewAppointmentNotificationWA } from "@/lib/whatsapp";
 import { generateCancelToken } from "@/lib/cancel-token";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
@@ -165,6 +165,22 @@ export const POST = withErrorHandler(async (req) => {
       startTime,
       endTime: slot.endTime,
       price: service.price,
+      notes,
+    }));
+  }
+
+  if (staffMember.email) {
+    notifications.push(sendStaffNewAppointmentNotification({
+      to: staffMember.email,
+      staffName: staffMember.name,
+      orgName: org.name,
+      clientName,
+      clientPhone,
+      clientEmail,
+      service: service.name,
+      date,
+      startTime,
+      endTime: slot.endTime,
       notes,
     }));
   }

@@ -14,7 +14,7 @@ import type { Staff, WorkSchedule } from "@prisma/client";
 
 type StaffWithSchedules = Staff & { schedules: WorkSchedule[] };
 
-const EMPTY_FORM = { name: "", bio: "", avatarUrl: "", maxAppointmentsPerDay: "" };
+const EMPTY_FORM = { name: "", bio: "", avatarUrl: "", email: "", maxAppointmentsPerDay: "" };
 
 export function StaffClient({ staff: initial, orgId }: { staff: StaffWithSchedules[]; orgId: string }) {
   const [staff, setStaff] = useState(
@@ -37,6 +37,7 @@ export function StaffClient({ staff: initial, orgId }: { staff: StaffWithSchedul
       name: s.name,
       bio: s.bio ?? "",
       avatarUrl: s.avatarUrl ?? "",
+      email: s.email ?? "",
       maxAppointmentsPerDay: s.maxAppointmentsPerDay?.toString() ?? "",
     });
     setOpen(true);
@@ -50,6 +51,7 @@ export function StaffClient({ staff: initial, orgId }: { staff: StaffWithSchedul
       name: form.name,
       bio: form.bio || null,
       avatarUrl: form.avatarUrl || null,
+      email: form.email || null,
       maxAppointmentsPerDay: form.maxAppointmentsPerDay ? parseInt(form.maxAppointmentsPerDay) : null,
       organizationId: orgId,
     };
@@ -133,6 +135,11 @@ export function StaffClient({ staff: initial, orgId }: { staff: StaffWithSchedul
                 <Label>Bio (opcional)</Label>
                 <Textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder="Breve descripción..." rows={2} />
               </div>
+              <div className="space-y-1.5">
+                <Label>Email del barbero (opcional)</Label>
+                <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="juan@mail.com" />
+                <p className="text-xs text-zinc-400">Si lo cargás, el barbero recibe una notificación por cada nuevo turno asignado.</p>
+              </div>
               <ImageUpload
                 label="Foto (opcional)"
                 value={form.avatarUrl || null}
@@ -204,9 +211,10 @@ export function StaffClient({ staff: initial, orgId }: { staff: StaffWithSchedul
                   <div className="flex-1 min-w-0">
                     <CardTitle className="text-base">{s.name}</CardTitle>
                     {s.bio && <p className="text-sm text-zinc-500 truncate">{s.bio}</p>}
-                    {s.maxAppointmentsPerDay && (
-                      <p className="text-xs text-zinc-400 mt-0.5">Máx. {s.maxAppointmentsPerDay} turnos/día</p>
-                    )}
+                    <div className="flex flex-wrap gap-x-3 mt-0.5">
+                      {s.email && <p className="text-xs text-zinc-400">{s.email}</p>}
+                      {s.maxAppointmentsPerDay && <p className="text-xs text-zinc-400">Máx. {s.maxAppointmentsPerDay} turnos/día</p>}
+                    </div>
                   </div>
 
                   {/* Actions */}

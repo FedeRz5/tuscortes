@@ -63,6 +63,7 @@ model Staff {
   name                 String
   bio                  String?
   avatarUrl            String?
+  email                String?                      // Notification email for the barber
   order                Int            @default(0)   // Display order in booking page
   maxAppointmentsPerDay Int?                        // null = unlimited
   active               Boolean        @default(true)

@@ -358,6 +358,78 @@ export async function sendPasswordResetEmail({ to, resetUrl }: { to: string; res
   });
 }
 
+interface StaffNewAppointmentParams {
+  to: string;
+  staffName: string;
+  orgName: string;
+  clientName: string;
+  clientPhone: string;
+  clientEmail?: string | null;
+  service: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  notes?: string | null;
+}
+
+export async function sendStaffNewAppointmentNotification(params: StaffNewAppointmentParams) {
+  const resend = getResend();
+  const from = DEFAULT_FROM;
+  const dateFormatted = formatDate(params.date);
+
+  const html = `
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/></head>
+<body style="margin:0;padding:0;background:#f4f4f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f5;padding:32px 16px;">
+    <tr><td align="center">
+      <table width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;">
+        <tr>
+          <td style="background:#111827;border-radius:12px 12px 0 0;padding:28px 32px;text-align:center;">
+            <p style="margin:0;color:#9ca3af;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;">TusCortes · ${escapeHtml(params.orgName)}</p>
+            <h1 style="margin:8px 0 0;color:#ffffff;font-size:22px;font-weight:800;">✂️ Nuevo turno para vos</h1>
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#ffffff;padding:32px;">
+            <p style="margin:0 0 20px;color:#374151;font-size:15px;">
+              Hola <strong>${escapeHtml(params.staffName)}</strong>, te reservaron un turno nuevo.
+            </p>
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#f9fafb;border-radius:10px;margin-bottom:20px;">
+              <tr><td style="padding:20px 24px;">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  ${row("👤 Cliente", params.clientName)}
+                  ${row("✂️ Servicio", params.service)}
+                  ${row("📅 Fecha", dateFormatted)}
+                  ${row("🕐 Horario", `${params.startTime} — ${params.endTime}`)}
+                  ${row("📞 Teléfono", params.clientPhone)}
+                  ${params.clientEmail ? row("✉️ Email", params.clientEmail) : ""}
+                  ${params.notes ? row("📝 Notas", params.notes) : ""}
+                </table>
+              </td></tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#f9fafb;border-radius:0 0 12px 12px;padding:18px 32px;text-align:center;border-top:1px solid #e5e7eb;">
+            <p style="margin:0;color:#9ca3af;font-size:12px;">TusCortes · tuscortes.com</p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`.trim();
+
+  await resend.emails.send({
+    from,
+    to: params.to,
+    subject: `Nuevo turno — ${params.clientName} · ${params.startTime} del ${dateFormatted}`,
+    html,
+  });
+}
+
 function row(label: string, value: string) {
   return `
     <tr>
