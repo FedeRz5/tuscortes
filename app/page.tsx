@@ -2,7 +2,7 @@
 
 export const dynamic = "force-static";
 
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Check, CheckCircle2, XCircle, CreditCard } from "lucide-react";
@@ -138,6 +138,98 @@ function FloatingOrbs() {
         />
       ))}
     </>
+  );
+}
+
+// ─── Contact form ────────────────────────────────────────────────────────────
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="group/field space-y-1.5">
+      <label className="block text-[11px] font-semibold uppercase tracking-widest text-white/30 group-focus-within/field:text-[#E7FF51]/70 transition-colors">
+        {label}
+      </label>
+      {children}
+    </div>
+  );
+}
+
+function ContactForm() {
+  const [form, setForm] = useState({ name: "", email: "", barberia: "", idea: "" });
+  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
+
+  async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setStatus("loading");
+    const res = await fetch("/api/public/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
+    setStatus(res.ok ? "done" : "error");
+  }
+
+  const inputClass = "w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:bg-white/8 focus:border-[#E7FF51]/50 focus:shadow-[0_0_0_3px_rgba(231,255,81,0.08)] transition-all";
+
+  if (status === "done") {
+    return (
+      <motion.div
+        className="flex flex-col items-center justify-center py-16 gap-4"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      >
+        <motion.div
+          className="h-16 w-16 rounded-full bg-[#E7FF51]/10 border border-[#E7FF51]/30 flex items-center justify-center"
+          animate={{ boxShadow: ["0 0 0px rgba(231,255,81,0)", "0 0 28px rgba(231,255,81,0.25)", "0 0 0px rgba(231,255,81,0)"] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          <Check className="h-7 w-7 text-[#E7FF51]" strokeWidth={2.5} />
+        </motion.div>
+        <div className="text-center">
+          <p className="text-white font-black text-xl">¡Recibimos tu consulta!</p>
+          <p className="text-white/40 text-sm mt-1">Te respondemos en menos de 24hs.</p>
+        </div>
+      </motion.div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Field label="Tu nombre">
+          <input required placeholder="Ej: Juan García" value={form.name}
+            onChange={e => setForm(f => ({ ...f, name: e.target.value }))} className={inputClass} />
+        </Field>
+        <Field label="Tu correo">
+          <input required type="email" placeholder="tu@email.com" value={form.email}
+            onChange={e => setForm(f => ({ ...f, email: e.target.value }))} className={inputClass} />
+        </Field>
+      </div>
+      <Field label="Nombre de tu barbería">
+        <input required placeholder="Ej: The Barber Club" value={form.barberia}
+          onChange={e => setForm(f => ({ ...f, barberia: e.target.value }))} className={inputClass} />
+      </Field>
+      <Field label="¿Qué tenés en mente?">
+        <textarea required rows={3} placeholder="Contanos sobre tu barbería, cuántos barberos tenés, qué necesitás..." value={form.idea}
+          onChange={e => setForm(f => ({ ...f, idea: e.target.value }))} className={`${inputClass} resize-none`} />
+      </Field>
+      {status === "error" && (
+        <p className="text-red-400 text-xs flex items-center gap-1.5">
+          <XCircle className="h-3.5 w-3.5" /> Algo salió mal, intentá de nuevo.
+        </p>
+      )}
+      <button
+        type="submit"
+        disabled={status === "loading"}
+        className="group/btn w-full rounded-xl bg-[#E7FF51] py-4 text-sm font-black text-black hover:bg-[#d4f000] active:scale-[0.99] transition-all shadow-lg shadow-[#E7FF51]/15 disabled:opacity-50 flex items-center justify-center gap-2"
+      >
+        {status === "loading" ? (
+          <>Enviando...</>
+        ) : (
+          <>Enviar consulta <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" /></>
+        )}
+      </button>
+    </form>
   );
 }
 
@@ -396,21 +488,41 @@ export default function HomePage() {
 
       {/* ── CTA Final ── */}
       <section className="px-6 py-24 border-t border-black/10">
-        <div className="max-w-2xl mx-auto text-center">
+        <div className="max-w-5xl mx-auto">
           <Reveal>
-            <div className="rounded-3xl bg-[#111111] px-8 py-16">
-              <h2 className="text-3xl sm:text-4xl font-black mb-3 leading-tight text-white">
-                Empezá a recibir turnos<br />online desde hoy.
-              </h2>
-              <p className="text-white/50 mb-8 text-sm">Configurás en 5 minutos. Planes desde $12.500/mes.</p>
-              <a
-                href="https://wa.me/5491170610003?text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20TusCortes"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl bg-[#E7FF51] px-10 py-4 text-base font-bold text-black hover:bg-[#d4f000] transition-all shadow-lg shadow-[#E7FF51]/20"
-              >
-                Contactanos <ArrowRight className="h-4 w-4" />
-              </a>
+            <div className="rounded-3xl bg-[#111111] overflow-hidden">
+              <div className="grid grid-cols-1 lg:grid-cols-2">
+                {/* Left: copy */}
+                <div className="px-10 py-12 flex flex-col justify-between border-b border-white/8 lg:border-b-0 lg:border-r lg:border-white/8">
+                  <div>
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-[#E7FF51]/20 bg-[#E7FF51]/8 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-[#E7FF51] mb-6">
+                      ✦ Hablemos
+                    </span>
+                    <h2 className="text-3xl sm:text-4xl font-black leading-tight text-white mb-4">
+                      Empezá a recibir<br />turnos online<br />desde hoy.
+                    </h2>
+                    <p className="text-white/40 text-sm leading-relaxed">
+                      Completá el formulario y nos ponemos en contacto en menos de 24hs.
+                    </p>
+                  </div>
+                  <div className="mt-10 space-y-3">
+                    {[
+                      "Pagos vía MercadoPago",
+                      "Soporte por WhatsApp incluido",
+                      "Cancelás cuando querés",
+                    ].map(t => (
+                      <div key={t} className="flex items-center gap-2.5 text-sm text-white/50">
+                        <div className="h-1.5 w-1.5 rounded-full bg-[#E7FF51]" />
+                        {t}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {/* Right: form */}
+                <div className="px-10 py-12">
+                  <ContactForm />
+                </div>
+              </div>
             </div>
           </Reveal>
         </div>
