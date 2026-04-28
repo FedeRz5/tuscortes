@@ -145,7 +145,7 @@ function FloatingOrbs() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="group/field space-y-1.5">
-      <label className="block text-[11px] font-semibold uppercase tracking-widest text-white/30 group-focus-within/field:text-[#E7FF51]/70 transition-colors">
+      <label className="block text-[11px] font-semibold uppercase tracking-widest text-white/90 group-focus-within/field:text-[#E7FF51] transition-colors">
         {label}
       </label>
       {children}
@@ -168,7 +168,7 @@ function ContactForm() {
     setStatus(res.ok ? "done" : "error");
   }
 
-  const inputClass = "w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:bg-white/8 focus:border-[#E7FF51]/50 focus:shadow-[0_0_0_3px_rgba(231,255,81,0.08)] transition-all";
+  const inputClass = "w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder-white/50 focus:outline-none focus:bg-white/8 focus:border-[#E7FF51]/50 focus:shadow-[0_0_0_3px_rgba(231,255,81,0.08)] transition-all";
 
   if (status === "done") {
     return (
