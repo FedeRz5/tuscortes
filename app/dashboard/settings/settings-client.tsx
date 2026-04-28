@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { CheckCircle, ExternalLink, ImageIcon, Info } from "lucide-react";
+import { CheckCircle, ExternalLink, ImageIcon, Link2, Unlink } from "lucide-react";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { Switch } from "@/components/ui/switch";
@@ -14,6 +15,19 @@ import { ImageUpload } from "@/components/ui/image-upload";
 import type { Organization } from "@prisma/client";
 
 export function SettingsClient({ org }: { org: Organization }) {
+  const searchParams = useSearchParams();
+  const [mpToast, setMpToast] = useState<"connected" | "error" | null>(null);
+
+  useEffect(() => {
+    const mp = searchParams.get("mp");
+    if (mp === "connected" || mp === "error") {
+      setMpToast(mp);
+      setTimeout(() => setMpToast(null), 5000);
+      // Limpiar el query param sin recargar
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  }, [searchParams]);
+
   const [form, setForm] = useState({
     name: org.name,
     description: org.description ?? "",
@@ -31,6 +45,8 @@ export function SettingsClient({ org }: { org: Organization }) {
     showTiktok: org.showTiktok,
     minAdvanceHours: org.minAdvanceHours,
     maxDaysAhead: org.maxDaysAhead,
+    depositEnabled: org.depositEnabled,
+    depositAmount: org.depositAmount ?? 0,
   });
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -52,6 +68,15 @@ export function SettingsClient({ org }: { org: Organization }) {
 
   return (
     <div className="space-y-6 max-w-2xl w-full">
+      {mpToast && (
+        <div className={`rounded-xl px-4 py-3 text-sm font-medium flex items-center gap-2 ${mpToast === "connected" ? "bg-green-100 text-green-800 border border-green-200" : "bg-red-100 text-red-800 border border-red-200"}`}>
+          {mpToast === "connected" ? (
+            <><CheckCircle className="h-4 w-4 shrink-0" /> MercadoPago conectado correctamente. ¡Ya podés activar las señas!</>
+          ) : (
+            <><Unlink className="h-4 w-4 shrink-0" /> No se pudo conectar MercadoPago. Intentá de nuevo.</>
+          )}
+        </div>
+      )}
       <div>
         <h1 className="text-2xl font-bold text-zinc-900">Configuración</h1>
         <p className="text-zinc-500 text-sm mt-1">Personalizá tu barbería</p>
@@ -318,6 +343,75 @@ export function SettingsClient({ org }: { org: Organization }) {
             </div>
           </CardContent>
         </Card>
+
+        {/* Seña anticipada */}
+        {(org.plan === "PRO" || org.plan === "PREMIUM") && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Seña anticipada</CardTitle>
+              <CardDescription>Requerí un pago parcial al momento de reservar para reducir ausentismo</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Conexión MP */}
+              <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4 flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm font-semibold text-zinc-800">
+                    {org.mpAccessToken ? "MercadoPago conectado" : "Conectar MercadoPago"}
+                  </p>
+                  <p className="text-xs text-zinc-500 mt-0.5">
+                    {org.mpAccessToken
+                      ? "Tu cuenta está vinculada. Las señas van directo a tu MP."
+                      : "Necesario para recibir señas. El dinero va directo a tu cuenta."}
+                  </p>
+                </div>
+                {org.mpAccessToken ? (
+                  <span className="flex items-center gap-1.5 text-sm text-green-600 font-medium shrink-0">
+                    <Link2 className="h-4 w-4" /> Conectado
+                  </span>
+                ) : (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="shrink-0"
+                    onClick={() => window.location.href = "/api/mp/connect"}
+                  >
+                    <Link2 className="h-4 w-4" /> Conectar
+                  </Button>
+                )}
+              </div>
+
+              {org.mpAccessToken && (
+                <>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium">Requerir seña al reservar</p>
+                      <p className="text-xs text-zinc-500">Los turnos quedan pendientes hasta que el cliente pague</p>
+                    </div>
+                    <Switch
+                      checked={form.depositEnabled}
+                      onCheckedChange={(v) => setForm({ ...form, depositEnabled: v })}
+                    />
+                  </div>
+
+                  {form.depositEnabled && (
+                    <div className="space-y-1.5">
+                      <Label>Monto de la seña ($)</Label>
+                      <Input
+                        type="number"
+                        min={0}
+                        value={form.depositAmount}
+                        onChange={(e) => setForm({ ...form, depositAmount: parseInt(e.target.value) || 0 })}
+                        placeholder="Ej: 2000"
+                      />
+                      <p className="text-xs text-zinc-400">Se descuenta del total al momento del servicio</p>
+                    </div>
+                  )}
+                </>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         <div className="flex items-center gap-3">
           <Button type="submit" disabled={loading}>

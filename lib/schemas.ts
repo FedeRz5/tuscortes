@@ -67,6 +67,8 @@ export const OrganizationPatchSchema = z.object({
   active: z.boolean().optional(),
   plan: z.enum(["FREE", "PRO", "PREMIUM"]).optional(),
   adminNotes: z.string().max(2000).optional().nullable(),
+  depositEnabled: z.boolean().optional(),
+  depositAmount: z.number().int().min(0).optional().nullable(),
 });
 
 export const AppointmentPatchSchema = z.object({

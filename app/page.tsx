@@ -535,7 +535,7 @@ export default function HomePage() {
           <p className="text-gray-400 text-sm">© {new Date().getFullYear()} TusCortes. Todos los derechos reservados.</p>
           <div className="flex items-center gap-4 text-sm text-gray-400">
             <a
-              href="https://www.instagram.com/tuscortesapp/"
+              href="https://www.instagram.com/tuscortes.app/"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-pink-500 transition-colors"

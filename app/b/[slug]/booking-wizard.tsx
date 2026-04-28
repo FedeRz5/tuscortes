@@ -136,9 +136,28 @@ export function BookingWizard({ org }: { org: OrgWithData }) {
       }),
     });
     const data = await res.json();
+    if (!res.ok) { setLoading(false); setError(data.error ?? "Error al reservar. Intentá nuevamente."); return; }
+
+    slotsCache.clear();
+
+    // Si requiere seña, crear preference y redirigir a MP
+    if (data.requiresDeposit) {
+      const prefRes = await fetch("/api/public/mp/preference", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ appointmentId: data.appointmentId }),
+      });
+      const prefData = await prefRes.json();
+      if (!prefRes.ok || !prefData.initPoint) {
+        setLoading(false);
+        setError("Error al iniciar el pago. Intentá nuevamente.");
+        return;
+      }
+      window.location.href = prefData.initPoint;
+      return;
+    }
+
     setLoading(false);
-    if (!res.ok) { setError(data.error ?? "Error al reservar. Intentá nuevamente."); return; }
-    slotsCache.clear(); // Invalidar caché para que el slot aparezca bloqueado en la próxima reserva
     setBooked(true);
   }
 

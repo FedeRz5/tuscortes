@@ -44,6 +44,11 @@ model Organization {
   active       Boolean       @default(true)
   plan         String        @default("FREE")
   adminNotes   String?
+  depositEnabled Boolean     @default(false)
+  depositAmount  Int?                          // Monto de seña en pesos
+  mpAccessToken  String?                       // OAuth token del dueño en MP
+  mpRefreshToken String?
+  mpUserId       String?
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 
@@ -163,6 +168,10 @@ model Appointment {
   notes          String?
   status         String       @default("PENDING")
   paid           Boolean      @default(false)   // Cobrado en caja
+  depositStatus  String?                        // PENDING_PAYMENT | PAID | NA
+  depositAmount  Int?                           // Monto de seña pagado
+  mpPaymentId    String?                        // ID del pago en MP
+  mpPreferenceId String?                        // ID de la preference de MP
   reminderSentAt DateTime?                      // Fecha en que se envió el recordatorio
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt

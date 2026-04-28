@@ -146,6 +146,11 @@ export function AppointmentsClient({ appointments: initial }: { appointments: Ap
                           {apt.notes && (
                             <p className="text-sm text-zinc-400 mt-1 italic">{apt.notes}</p>
                           )}
+                          {apt.depositStatus === "PAID" && apt.depositAmount != null && (
+                            <span className="inline-flex items-center gap-1 mt-1.5 text-xs font-semibold bg-[#E7FF51] text-[#111111] px-2 py-0.5 rounded-full">
+                              Seña paga: ${apt.depositAmount.toLocaleString("es-AR")}
+                            </span>
+                          )}
                         </div>
                       </div>
                       <div className="flex items-center gap-2 shrink-0 ml-17 sm:ml-0">

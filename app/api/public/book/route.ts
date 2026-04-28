@@ -85,6 +85,8 @@ export const POST = withErrorHandler(async (req) => {
     return err("Ese horario ya no está disponible. Por favor elegí otro.", 409);
   }
 
+  const requiresDeposit = org.depositEnabled && !!org.depositAmount && !!org.mpAccessToken;
+
   let appointment;
   try {
     appointment = await prisma.appointment.create({
@@ -99,7 +101,9 @@ export const POST = withErrorHandler(async (req) => {
         clientPhone,
         clientEmail,
         notes,
-        status: "CONFIRMED",
+        status: requiresDeposit ? "PENDING_PAYMENT" : "CONFIRMED",
+        depositStatus: requiresDeposit ? "PENDING_PAYMENT" : "NA",
+        depositAmount: requiresDeposit ? org.depositAmount : null,
       },
     });
   } catch (e) {
@@ -107,6 +111,11 @@ export const POST = withErrorHandler(async (req) => {
       return err("Ese horario ya fue tomado por otra persona. Por favor elegí otro.", 409);
     }
     throw e;
+  }
+
+  // Si requiere seña, devolver el appointmentId para que el cliente pague
+  if (requiresDeposit) {
+    return ok({ requiresDeposit: true, appointmentId: appointment.id, depositAmount: org.depositAmount }, 201);
   }
 
   // Buscar dueño y preparar notificaciones en paralelo
