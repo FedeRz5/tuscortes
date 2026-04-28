@@ -31,7 +31,7 @@ export function SettingsClient({ org }: { org: Organization }) {
   const [form, setForm] = useState({
     name: org.name,
     description: org.description ?? "",
-    phone: org.phone ?? "",
+    phone: org.phone ? org.phone.replace(/[\s\-().]/g, "") : "",
     address: org.address ?? "",
     primaryColor: org.primaryColor,
     accentColor: org.accentColor,
@@ -67,7 +67,7 @@ export function SettingsClient({ org }: { org: Organization }) {
   const bookingUrl = `/b/${org.slug}`;
 
   return (
-    <div className="space-y-6 max-w-2xl w-full">
+    <div className="space-y-6 max-w-2xl w-full pb-8">
       {mpToast && (
         <div className={`rounded-xl px-4 py-3 text-sm font-medium flex items-center gap-2 ${mpToast === "connected" ? "bg-green-100 text-green-800 border border-green-200" : "bg-red-100 text-red-800 border border-red-200"}`}>
           {mpToast === "connected" ? (
