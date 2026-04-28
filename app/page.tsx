@@ -305,10 +305,11 @@ export default function HomePage() {
       <HeroBg />
 
       {/* ── Navbar ── */}
-      <header className="sticky top-0 z-50 border-b border-black/10 bg-[#F1F1F1]/95 backdrop-blur-sm">
+      <header className="sticky top-0 z-50 border-b border-black/10 bg-[#F1F1F1]/95 backdrop-blur-sm overflow-hidden">
         <nav className="flex items-center justify-between px-6 py-2 max-w-6xl mx-auto">
-          <div className="flex items-center">
-            <Image src="/logo.png" alt="TusCortes" width={200} height={64} className="h-14 w-auto object-contain" />
+          <div className="relative flex items-center group h-20">
+            <Image src="/Tuscortes-negro.png" alt="TusCortes" width={200} height={64} className="h-20 w-auto object-contain transition-opacity duration-200 group-hover:opacity-0" unoptimized />
+            <Image src="/TusCortes-verde.png" alt="TusCortes" width={200} height={64} className="h-20 w-auto object-contain transition-opacity duration-200 opacity-0 group-hover:opacity-100 absolute inset-0" unoptimized />
           </div>
           <div className="hidden sm:flex items-center gap-6 text-sm text-black/50">
             <a href="#como-funciona" className="hover:text-black transition-colors">Cómo funciona</a>
@@ -418,8 +419,9 @@ export default function HomePage() {
       {/* ── Footer ── */}
       <footer className="border-t border-black/10 px-6 py-8">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center">
-            <Image src="/logo.png" alt="TusCortes" width={96} height={32} className="h-8 w-auto object-contain" />
+          <div className="relative flex items-center group h-8">
+            <Image src="/Tuscortes-negro.png" alt="TusCortes" width={96} height={32} className="h-8 w-auto object-contain transition-opacity duration-200 group-hover:opacity-0" unoptimized />
+            <Image src="/TusCortes-verde.png" alt="TusCortes" width={96} height={32} className="h-8 w-auto object-contain transition-opacity duration-200 opacity-0 group-hover:opacity-100 absolute inset-0" unoptimized />
           </div>
           <p className="text-gray-400 text-sm">© {new Date().getFullYear()} TusCortes. Todos los derechos reservados.</p>
           <div className="flex items-center gap-4 text-sm text-gray-400">
