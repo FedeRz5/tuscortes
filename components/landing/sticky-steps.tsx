@@ -50,7 +50,7 @@ function CardSetup({ active }: { active: boolean }) {
           animate={active ? { opacity: 1, x: 0 } : { opacity: 0, x: 16 }}
           transition={{ delay: i * 0.18, duration: 0.4 }}
         >
-          <div className="mt-0.5 h-4 w-4 rounded-full bg-indigo-500 flex items-center justify-center shrink-0">
+          <div className="mt-0.5 h-4 w-4 rounded-full bg-[#111111] flex items-center justify-center shrink-0">
             <Check className="h-2.5 w-2.5 text-white" strokeWidth={3} />
           </div>
           <div>
@@ -61,7 +61,7 @@ function CardSetup({ active }: { active: boolean }) {
       ))}
       <motion.div
         key={`${key}-btn`}
-        className="w-full bg-orange-500 text-white text-[11px] font-bold rounded-xl py-2.5 mt-1 text-center"
+        className="w-full bg-[#E7FF51] text-black text-[11px] font-bold rounded-xl py-2.5 mt-1 text-center"
         initial={{ opacity: 0, y: 8 }}
         animate={active ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
         transition={{ delay: 0.56, duration: 0.4 }}
@@ -115,7 +115,7 @@ function CardShare({ active }: { active: boolean }) {
             <span className="text-[9px] font-mono text-gray-700 truncate leading-none">
               {url}
               <motion.span
-                className="inline-block w-[1px] h-[9px] bg-indigo-400 ml-[1px] align-middle"
+                className="inline-block w-[1px] h-[9px] bg-[#111111] ml-[1px] align-middle"
                 animate={{ opacity: [1, 0, 1] }}
                 transition={{ duration: 0.75, repeat: Infinity }}
               />
@@ -126,7 +126,7 @@ function CardShare({ active }: { active: boolean }) {
           {!copied ? (
             <motion.div
               key="copy"
-              className="flex items-center justify-center gap-1.5 w-full text-[10px] font-bold rounded-lg py-1.5 bg-indigo-500/15 text-indigo-400 border border-indigo-500/25"
+              className="flex items-center justify-center gap-1.5 w-full text-[10px] font-bold rounded-lg py-1.5 bg-[#111111]/8 text-[#111111] border border-[#111111]/15"
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ duration: 0.15 }}
             >
@@ -210,8 +210,8 @@ function CardBook({ active }: { active: boolean }) {
         {!confirmed ? (
           <motion.div key={`form-${cycle}`} className="space-y-2.5" exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.2 }}>
             <p className="text-gray-400 text-[10px] font-semibold uppercase tracking-wider">Tus datos</p>
-            <div className="rounded-xl bg-indigo-500/10 border border-indigo-500/20 px-3 py-2">
-              <p className="text-[9px] text-indigo-400 font-medium">Carlos · Corte · Lun 10:00hs</p>
+            <div className="rounded-xl bg-[#E7FF51]/20 border border-[#E7FF51]/40 px-3 py-2">
+              <p className="text-[9px] text-[#111111]/70 font-medium">Carlos · Corte · Lun 10:00hs</p>
             </div>
             {/* Nombre */}
             <div className="rounded-xl bg-gray-50 border border-gray-200 px-3 py-2">
@@ -220,7 +220,7 @@ function CardBook({ active }: { active: boolean }) {
                 <span className="text-xs text-gray-800 font-medium">{nombre}</span>
                 {nombre !== "Martín García" && nombre.length > 0 && (
                   <motion.span
-                    className="inline-block w-[1px] h-[11px] bg-indigo-400 ml-[1px]"
+                    className="inline-block w-[1px] h-[11px] bg-[#111111] ml-[1px]"
                     animate={{ opacity: [1, 0, 1] }}
                     transition={{ duration: 0.65, repeat: Infinity }}
                   />
@@ -234,7 +234,7 @@ function CardBook({ active }: { active: boolean }) {
                 <span className="text-xs text-gray-800 font-medium">{telefono}</span>
                 {telefono.length > 0 && telefono !== "11 7061-0003" && (
                   <motion.span
-                    className="inline-block w-[1px] h-[11px] bg-indigo-400 ml-[1px]"
+                    className="inline-block w-[1px] h-[11px] bg-[#111111] ml-[1px]"
                     animate={{ opacity: [1, 0, 1] }}
                     transition={{ duration: 0.65, repeat: Infinity }}
                   />
@@ -243,7 +243,7 @@ function CardBook({ active }: { active: boolean }) {
             </div>
             <motion.div
               className={`w-full text-[11px] font-bold rounded-xl py-2.5 text-center transition-colors ${
-                allTyped ? "bg-orange-500 text-white" : "bg-gray-200 text-gray-400"
+                allTyped ? "bg-[#E7FF51] text-black" : "bg-gray-200 text-gray-400"
               }`}
               animate={allTyped ? { scale: [1, 1.03, 1] } : {}}
               transition={{ duration: 0.35 }}
@@ -277,7 +277,7 @@ function CardBook({ active }: { active: boolean }) {
               <p className="text-[10px] text-zinc-400 mt-1">Carlos · Lunes 10:00hs</p>
             </div>
             <motion.div
-              className="text-[9px] text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 rounded-full px-3 py-1"
+              className="text-[9px] text-[#111111]/60 bg-[#E7FF51]/20 border border-[#E7FF51]/40 rounded-full px-3 py-1"
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
@@ -329,8 +329,8 @@ function Step({ step, index }: { step: typeof STEPS[0]; index: number }) {
         animate={{ opacity: inView ? 1 : 0.4, x: inView ? 0 : -10 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-500/10 border border-indigo-500/20">
-          <span className="text-lg font-black text-indigo-400">{step.number}</span>
+        <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E7FF51] border border-[#E7FF51]">
+          <span className="text-lg font-black text-[#111111]">{step.number}</span>
         </div>
         <h3 className="text-2xl sm:text-3xl font-black">{step.title}</h3>
         <p className="text-gray-500 leading-relaxed max-w-sm">{step.desc}</p>
@@ -341,10 +341,10 @@ function Step({ step, index }: { step: typeof STEPS[0]; index: number }) {
               key={j}
               className={`h-1 rounded-full transition-all duration-300 ${
                 j === index
-                  ? "w-6 bg-indigo-400"
+                  ? "w-6 bg-[#111111]"
                   : j < index
-                  ? "w-2 bg-indigo-600/50"
-                  : "w-2 bg-zinc-700"
+                  ? "w-2 bg-[#111111]/40"
+                  : "w-2 bg-[#111111]/15"
               }`}
             />
           ))}

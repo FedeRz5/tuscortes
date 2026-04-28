@@ -126,7 +126,7 @@
 }
 
 .gradient-text-orange {
-  background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+  background: linear-gradient(135deg, #E7FF51 0%, #d4f000 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -166,11 +166,18 @@
   pointer-events: none;
 }
 
+/* ─── Selection ──────────────────────────────────────────────────────────── */
+
+*::selection {
+  background: #E7FF51 !important;
+  color: #111111 !important;
+}
+
 /* ─── Base ────────────────────────────────────────────────────────────────── */
 
 body {
-  background: #ffffff;
-  color: #111827;
+  background: #F1F1F1;
+  color: #111111;
   font-family: system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
 }

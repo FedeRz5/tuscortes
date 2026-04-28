@@ -46,7 +46,7 @@ function MockupTilt() {
       onMouseLeave={onMouseLeave}
     >
       <div className="relative">
-        <div className="absolute -inset-4 bg-indigo-500/10 rounded-3xl blur-2xl" />
+        <div className="absolute -inset-4 bg-[#E7FF51]/15 rounded-3xl blur-2xl" />
         <div className="relative rounded-2xl border border-gray-200 bg-white shadow-2xl shadow-gray-200/80 overflow-hidden">
           <div className="bg-gray-50 border-b border-gray-200 px-4 py-3 flex items-center gap-3">
             <div className="flex gap-1.5">
@@ -60,8 +60,8 @@ function MockupTilt() {
           </div>
           <div className="bg-white p-5 space-y-4">
             <div className="flex items-center gap-3 pb-4 border-b border-gray-100">
-              <div className="h-12 w-12 rounded-xl bg-indigo-600 flex items-center justify-center shrink-0">
-                <span className="text-white font-black text-sm">BC</span>
+              <div className="h-12 w-12 rounded-xl bg-[#111111] flex items-center justify-center shrink-0">
+                <span className="text-[#E7FF51] font-black text-sm">BC</span>
               </div>
               <div>
                 <p className="font-bold text-gray-900 text-sm">The Barber Club</p>
@@ -78,9 +78,9 @@ function MockupTilt() {
                   { name: "Corte clásico", price: "$3.500", time: "30 min", active: true },
                   { name: "Corte + barba", price: "$5.500", time: "50 min", active: false },
                 ].map((s) => (
-                  <div key={s.name} className={`rounded-xl border p-3 cursor-pointer transition-all ${s.active ? "border-indigo-500 bg-indigo-50" : "border-gray-100 hover:border-gray-200"}`}>
-                    <p className={`text-xs font-bold ${s.active ? "text-indigo-700" : "text-gray-700"}`}>{s.name}</p>
-                    <p className={`text-xs mt-0.5 ${s.active ? "text-indigo-500" : "text-gray-400"}`}>{s.price} · {s.time}</p>
+                  <div key={s.name} className={`rounded-xl border p-3 cursor-pointer transition-all ${s.active ? "border-[#111111] bg-[#E7FF51]/15" : "border-gray-100 hover:border-gray-200"}`}>
+                    <p className={`text-xs font-bold ${s.active ? "text-[#111111]" : "text-gray-700"}`}>{s.name}</p>
+                    <p className={`text-xs mt-0.5 ${s.active ? "text-[#111111]/60" : "text-gray-400"}`}>{s.price} · {s.time}</p>
                   </div>
                 ))}
               </div>
@@ -89,14 +89,14 @@ function MockupTilt() {
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Elegí un horario</p>
               <div className="grid grid-cols-4 gap-1.5">
                 {["09:00","09:30","10:00","10:30","11:00","11:30","14:00","14:30"].map((h, i) => (
-                  <div key={h} className={`text-xs text-center py-1.5 rounded-lg font-medium transition-all ${i === 2 ? "bg-indigo-600 text-white" : i === 5 ? "bg-gray-100 text-gray-300 line-through" : "bg-gray-50 text-gray-600 hover:bg-indigo-50"}`}>
+                  <div key={h} className={`text-xs text-center py-1.5 rounded-lg font-medium transition-all ${i === 2 ? "bg-[#111111] text-[#E7FF51]" : i === 5 ? "bg-gray-100 text-gray-300 line-through" : "bg-gray-50 text-gray-600 hover:bg-[#E7FF51]/20"}`}>
                     {h}
                   </div>
                 ))}
               </div>
             </div>
             <div className="pt-1">
-              <div className="w-full bg-orange-500 text-white text-sm font-bold rounded-xl py-3 text-center">
+              <div className="w-full bg-[#E7FF51] text-black text-sm font-bold rounded-xl py-3 text-center">
                 Confirmar turno →
               </div>
             </div>
@@ -110,9 +110,9 @@ function MockupTilt() {
 
 // ─── Floating orbs ───────────────────────────────────────────────────────────
 const ORBS = [
-  { size: 320, top: "8%",  left: "5%",  color: "radial-gradient(circle, rgba(99,102,241,0.25) 0%, transparent 70%)",  dur: 7,  delay: 0 },
-  { size: 240, top: "55%", left: "60%", color: "radial-gradient(circle, rgba(249,115,22,0.20) 0%, transparent 70%)",  dur: 9,  delay: 1.5 },
-  { size: 180, top: "20%", left: "80%", color: "radial-gradient(circle, rgba(139,92,246,0.20) 0%, transparent 70%)", dur: 11, delay: 3 },
+  { size: 400, top: "5%",  left: "2%",  color: "radial-gradient(circle, rgba(231,255,81,0.50) 0%, transparent 70%)",  dur: 7,  delay: 0 },
+  { size: 280, top: "50%", left: "55%", color: "radial-gradient(circle, rgba(231,255,81,0.25) 0%, transparent 70%)",  dur: 9,  delay: 1.5 },
+  { size: 200, top: "15%", left: "78%", color: "radial-gradient(circle, rgba(231,255,81,0.18) 0%, transparent 70%)",  dur: 11, delay: 3 },
 ];
 
 function FloatingOrbs() {
@@ -153,8 +153,8 @@ function PlanCard({ plan }: { plan: Plan }) {
     <motion.div
       className={`relative rounded-2xl p-7 flex flex-col ${
         plan.popular
-          ? "bg-indigo-600 text-white shadow-xl shadow-indigo-500/20"
-          : "bg-white border border-gray-200 shadow-sm"
+          ? "bg-[#111111] text-white shadow-xl shadow-black/20"
+          : "bg-white border border-black/10 shadow-sm"
       }`}
       style={{ rotateX, rotateY }}
       onMouseMove={onMouseMove}
@@ -163,28 +163,28 @@ function PlanCard({ plan }: { plan: Plan }) {
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
       {plan.popular && (
-        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-orange-500 px-4 py-1 text-xs font-bold text-white whitespace-nowrap shadow-lg shadow-orange-500/30">
+        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-[#E7FF51] px-4 py-1 text-xs font-bold text-black whitespace-nowrap shadow-lg shadow-[#E7FF51]/30">
           El más elegido
         </div>
       )}
 
       <div className="mb-6">
-        <p className={`text-xs font-semibold uppercase tracking-widest mb-1 ${plan.popular ? "text-indigo-200" : "text-gray-400"}`}>{plan.name}</p>
+        <p className={`text-xs font-semibold uppercase tracking-widest mb-1 ${plan.popular ? "text-white/50" : "text-black/40"}`}>{plan.name}</p>
         <div className="flex items-end gap-1 mb-2">
-          <span className={`text-4xl font-black ${plan.popular ? "text-white" : "text-gray-900"}`}>{plan.price}</span>
-          {plan.period && <span className={`text-sm mb-1.5 ${plan.popular ? "text-indigo-200" : "text-gray-400"}`}>{plan.period}</span>}
+          <span className={`text-4xl font-black ${plan.popular ? "text-white" : "text-[#111111]"}`}>{plan.price}</span>
+          {plan.period && <span className={`text-sm mb-1.5 ${plan.popular ? "text-white/50" : "text-black/40"}`}>{plan.period}</span>}
         </div>
-        <p className={`text-sm ${plan.popular ? "text-indigo-100" : "text-gray-400"}`}>{plan.desc}</p>
+        <p className={`text-sm ${plan.popular ? "text-white/60" : "text-black/50"}`}>{plan.desc}</p>
       </div>
 
       <ul className="space-y-3 mb-8 flex-1">
         {plan.features.map(({ text, ok }) => (
           <li key={text} className="flex items-start gap-2.5 text-sm">
             {ok
-              ? <CheckCircle2 className={`h-4 w-4 shrink-0 mt-0.5 ${plan.popular ? "text-indigo-200" : "text-indigo-500"}`} />
-              : <XCircle className="h-4 w-4 text-gray-300 shrink-0 mt-0.5" />
+              ? <CheckCircle2 className={`h-4 w-4 shrink-0 mt-0.5 ${plan.popular ? "text-[#E7FF51]" : "text-[#111111]"}`} />
+              : <XCircle className="h-4 w-4 text-black/20 shrink-0 mt-0.5" />
             }
-            <span className={ok ? (plan.popular ? "text-white" : "text-gray-700") : "text-gray-300"}>{text}</span>
+            <span className={ok ? (plan.popular ? "text-white" : "text-[#111111]") : "text-black/25"}>{text}</span>
           </li>
         ))}
       </ul>
@@ -193,8 +193,8 @@ function PlanCard({ plan }: { plan: Plan }) {
         href={plan.href}
         target="_blank"
         rel="noopener noreferrer"
-        className={`block w-full text-center rounded-xl px-6 py-3 text-sm font-bold transition-opacity hover:opacity-90 ${
-          plan.popular ? "bg-white text-indigo-600" : "bg-indigo-600 text-white"
+        className={`block w-full text-center rounded-xl px-6 py-3 text-sm font-bold transition-all hover:opacity-90 ${
+          plan.popular ? "bg-[#E7FF51] text-black" : "bg-[#111111] text-white"
         }`}
       >
         {plan.cta}
@@ -299,20 +299,20 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 overflow-x-hidden">
+    <div className="min-h-screen bg-[#F1F1F1] text-[#111111] overflow-x-hidden">
       <HeroBg />
 
       {/* ── Navbar ── */}
-      <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/95">
+      <header className="sticky top-0 z-50 border-b border-black/10 bg-[#F1F1F1]/95 backdrop-blur-sm">
         <nav className="flex items-center justify-between px-6 py-2 max-w-6xl mx-auto">
           <div className="flex items-center">
             <Image src="/logo.png" alt="TusCortes" width={200} height={64} className="h-14 w-auto object-contain" />
           </div>
-          <div className="hidden sm:flex items-center gap-6 text-sm text-gray-500">
-            <a href="#como-funciona" className="hover:text-gray-900 transition-colors">Cómo funciona</a>
-            <a href="#planes" className="hover:text-gray-900 transition-colors">Planes</a>
+          <div className="hidden sm:flex items-center gap-6 text-sm text-black/50">
+            <a href="#como-funciona" className="hover:text-black transition-colors">Cómo funciona</a>
+            <a href="#planes" className="hover:text-black transition-colors">Planes</a>
           </div>
-          <Link href="/login" className="text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500 transition-colors px-5 py-2.5 rounded-xl">
+          <Link href="/login" className="text-sm font-bold text-black bg-[#E7FF51] hover:bg-[#d4f000] transition-colors px-5 py-2.5 rounded-xl">
             Ingresar
           </Link>
         </nav>
@@ -325,14 +325,14 @@ export default function HomePage() {
 
           {/* Texto */}
           <div className="flex-1 text-center lg:text-left">
-            <h1 className="hero-1 text-5xl sm:text-6xl font-black tracking-tight leading-[1.05] mb-2 text-gray-900">
+            <h1 className="hero-1 text-5xl sm:text-6xl font-black tracking-tight leading-[1.05] mb-2 text-[#111111]">
               Dejá de gestionar
             </h1>
             <h1 className="hero-2 text-5xl sm:text-6xl font-black tracking-tight leading-[1.05] mb-8">
               <span className="gradient-text-orange">turnos por WhatsApp</span>
             </h1>
 
-            <p className="hero-3 text-lg text-gray-500 max-w-md mb-10 leading-relaxed mx-auto lg:mx-0">
+            <p className="hero-3 text-lg text-black/50 max-w-md mb-10 leading-relaxed mx-auto lg:mx-0">
               Tu barbería tiene su propia página de reservas online. Los clientes
               eligen día y horario de forma autónoma — sin llamadas, sin olvidos, sin interrupciones.
             </p>
@@ -340,19 +340,19 @@ export default function HomePage() {
             <div className="hero-4 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-10">
               <Link
                 href="#planes"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-orange-500 px-8 py-4 text-base font-bold text-white hover:bg-orange-400 transition-all shadow-lg shadow-orange-500/25"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#E7FF51] px-8 py-4 text-base font-bold text-black hover:bg-[#d4f000] transition-all shadow-lg shadow-[#E7FF51]/30"
               >
                 Ver planes <ArrowRight className="h-4 w-4" />
               </Link>
-              <span className="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 px-8 py-4 text-base font-semibold text-gray-300 cursor-not-allowed select-none">
+              <span className="inline-flex items-center justify-center gap-2 rounded-xl border border-black/15 px-8 py-4 text-base font-semibold text-black/25 cursor-not-allowed select-none">
                 Ver demo →
               </span>
             </div>
 
-            <div className="hero-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-400 justify-center lg:justify-start">
+            <div className="hero-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-black/40 justify-center lg:justify-start">
               {["Pagos por MercadoPago", "Cancela cuando quieras", "Listo en 5 minutos"].map((t) => (
                 <span key={t} className="flex items-center gap-1.5">
-                  <Check className="h-3.5 w-3.5 text-indigo-500 shrink-0" />
+                  <Check className="h-3.5 w-3.5 text-[#111111] shrink-0" />
                   {t}
                 </span>
               ))}
@@ -371,12 +371,12 @@ export default function HomePage() {
       </div>
 
       {/* ── Pricing ── */}
-      <section id="planes" className="px-6 py-24 border-t border-gray-100 bg-gray-50/50">
+      <section id="planes" className="px-6 py-24 border-t border-black/10">
         <div className="max-w-5xl mx-auto">
           <Reveal className="text-center mb-14">
-            <h2 className="text-3xl sm:text-4xl font-black mb-3 text-gray-900">Un plan para cada etapa de tu barbería</h2>
-            <p className="text-gray-400 text-sm flex items-center justify-center gap-2">
-              <CreditCard className="h-4 w-4 text-gray-400" />
+            <h2 className="text-3xl sm:text-4xl font-black mb-3 text-[#111111]">Un plan para cada etapa de tu barbería</h2>
+            <p className="text-black/40 text-sm flex items-center justify-center gap-2">
+              <CreditCard className="h-4 w-4" />
               Pagos vía MercadoPago · Cancela cuando quieras
             </p>
           </Reveal>
@@ -392,19 +392,19 @@ export default function HomePage() {
       </section>
 
       {/* ── CTA Final ── */}
-      <section className="px-6 py-24 border-t border-gray-100">
+      <section className="px-6 py-24 border-t border-black/10">
         <div className="max-w-2xl mx-auto text-center">
           <Reveal>
-            <div className="rounded-3xl bg-indigo-600 px-8 py-16">
+            <div className="rounded-3xl bg-[#111111] px-8 py-16">
               <h2 className="text-3xl sm:text-4xl font-black mb-3 leading-tight text-white">
                 Empezá a recibir turnos<br />online desde hoy.
               </h2>
-              <p className="text-indigo-200 mb-8 text-sm">Configurás en 5 minutos. Planes desde $12.500/mes.</p>
+              <p className="text-white/50 mb-8 text-sm">Configurás en 5 minutos. Planes desde $12.500/mes.</p>
               <a
                 href="https://wa.me/5491170610003?text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20TusCortes"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl bg-orange-500 px-10 py-4 text-base font-bold text-white hover:bg-orange-400 transition-all shadow-lg shadow-orange-500/30"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#E7FF51] px-10 py-4 text-base font-bold text-black hover:bg-[#d4f000] transition-all shadow-lg shadow-[#E7FF51]/20"
               >
                 Contactanos <ArrowRight className="h-4 w-4" />
               </a>
@@ -414,7 +414,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Footer ── */}
-      <footer className="border-t border-gray-100 px-6 py-8">
+      <footer className="border-t border-black/10 px-6 py-8">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center">
             <Image src="/logo.png" alt="TusCortes" width={96} height={32} className="h-8 w-auto object-contain" />
