@@ -74,6 +74,7 @@ export const DELETE = withErrorHandler(async (_req, ctx) => {
     });
   }
 
+  await prisma.user.deleteMany({ where: { organizationId: id } });
   await prisma.organization.delete({ where: { id } });
   return ok({ deleted: true });
 });
