@@ -94,7 +94,7 @@ export default function ResetPasswordPage() {
       <div className="w-full max-w-sm px-4">
         <div className="text-center mb-8">
           
-          <Image src="/logo.png" alt="TusCortes" width={160} height={80} className="mx-auto h-20 w-auto object-contain mb-4" />
+          <Image src="/Tuscortes-negro.png" alt="TusCortes" width={160} height={80} className="mx-auto h-20 w-auto object-contain mb-4" />
         </div>
         <Suspense fallback={null}>
           <ResetPasswordForm />

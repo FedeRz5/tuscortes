@@ -84,7 +84,7 @@ export default function PrivacidadPage() {
       <header className="bg-white border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/">
-            <Image src="/logo.png" alt="TusCortes" width={120} height={40} className="h-9 w-auto object-contain" />
+            <Image src="/Tuscortes-negro.png" alt="TusCortes" width={120} height={40} className="h-9 w-auto object-contain" />
           </Link>
           <Link
             href="/"
