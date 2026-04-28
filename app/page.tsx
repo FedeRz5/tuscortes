@@ -420,11 +420,8 @@ export default function HomePage() {
 
           {/* Texto */}
           <div className="flex-1 text-center lg:text-left">
-            <h1 className="hero-1 text-5xl sm:text-6xl font-black tracking-tight leading-[1.05] mb-2 text-[#111111]">
-              Dejá de gestionar
-            </h1>
-            <h1 className="hero-2 text-5xl sm:text-6xl font-black tracking-tight leading-[1.05] mb-8">
-              <span className="gradient-text-orange">turnos por WhatsApp</span>
+            <h1 className="hero-1 text-5xl sm:text-6xl font-black tracking-tight leading-[1.05] mb-8 text-[#111111]">
+              Dejá de gestionar<br />turnos por WhatsApp
             </h1>
 
             <p className="hero-3 text-lg text-black/50 max-w-md mb-10 leading-relaxed mx-auto lg:mx-0">
