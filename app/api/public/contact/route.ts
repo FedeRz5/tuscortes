@@ -25,7 +25,7 @@ export const POST = withErrorHandler(async (req) => {
 
   await resend.emails.send({
     from: process.env.RESEND_FROM ?? "TusCortes <noreply@tuscortes.com>",
-    to: "federeiz8@gmail.com",
+    to: process.env.CONTACT_EMAIL ?? "hola@tuscortes.com",
     replyTo: email,
     subject: `Nueva consulta de ${name} — ${barberia}`,
     html: `
