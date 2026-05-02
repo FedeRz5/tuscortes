@@ -42,7 +42,11 @@
       "Bash(git checkout *)",
       "Bash(git push *)",
       "Bash(git config *)",
-      "Bash(gh auth *)"
+      "Bash(gh auth *)",
+      "Bash(openssl rand *)",
+      "Bash(echo \"AUTH_SECRET=$\\(openssl rand -base64 32\\)\")",
+      "Bash(echo \"CRON_SECRET=$\\(openssl rand -hex 32\\)\")",
+      "Bash(echo \"CANCEL_SECRET=$\\(openssl rand -hex 32\\)\")"
     ],
     "defaultMode": "bypassPermissions"
   },
