@@ -46,7 +46,8 @@
       "Bash(openssl rand *)",
       "Bash(echo \"AUTH_SECRET=$\\(openssl rand -base64 32\\)\")",
       "Bash(echo \"CRON_SECRET=$\\(openssl rand -hex 32\\)\")",
-      "Bash(echo \"CANCEL_SECRET=$\\(openssl rand -hex 32\\)\")"
+      "Bash(echo \"CANCEL_SECRET=$\\(openssl rand -hex 32\\)\")",
+      "Bash(node -e \"const b = require\\('bcryptjs'\\); b.hash\\('Pelagrillo0800\\\\$', 12\\).then\\(h => console.log\\(h\\)\\);\")"
     ],
     "defaultMode": "bypassPermissions"
   },
