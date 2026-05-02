@@ -38,7 +38,11 @@
       "Bash(set DIRECT_URL=postgresql://postgres.rmogpvkmnnjfgqdfvfrw:9yiPpGGA41JmOiPK@aws-1-us-east-1.pooler.supabase.com:5432/postgres)",
       "Bash(DIRECT_URL=\"postgresql://postgres.rmogpvkmnnjfgqdfvfrw:9yiPpGGA41JmOiPK@aws-1-us-east-1.pooler.supabase.com:5432/postgres\" DATABASE_URL=\"postgresql://postgres.rmogpvkmnnjfgqdfvfrw:9yiPpGGA41JmOiPK@aws-1-us-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1\" npx prisma db push)",
       "Bash(DIRECT_URL=\"postgresql://postgres.rmogpvkmnnjfgqdfvfrw:9yiPpGGA41JmOiPK@aws-1-us-east-1.pooler.supabase.com:5432/postgres\" DATABASE_URL=\"postgresql://postgres.rmogpvkmnnjfgqdfvfrw:9yiPpGGA41JmOiPK@aws-1-us-east-1.pooler.supabase.com:5432/postgres\" npx prisma db push)",
-      "WebFetch(domain:lemon.me)"
+      "WebFetch(domain:lemon.me)",
+      "Bash(git checkout *)",
+      "Bash(git push *)",
+      "Bash(git config *)",
+      "Bash(gh auth *)"
     ],
     "defaultMode": "bypassPermissions"
   },
